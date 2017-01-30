@@ -11,7 +11,6 @@ import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    private static final String TAG = "DrawGeojsonLineActivity";
 
     private MapView mapView;
     private MapboxMap mapboxMap;
@@ -30,9 +29,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(MapboxMap mapboxMap) {
         this.mapboxMap = mapboxMap;
-        new DrawGeoJson(mapboxMap).execute();
-        MarkerViewOptions markerViewOptions = new MarkerViewOptions().position(new LatLng(46.78868330000, -71.29073110000));
-        mapboxMap.addMarker(markerViewOptions);
+        new DrawGeoJson(mapboxMap,this).execute();
     }
 
     @Override
