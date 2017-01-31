@@ -16,6 +16,8 @@ public class Point {
         this.title = Title;
         this.description = Description;
     }
+    public Point(){
+    }
 
 
     public String getDescription() {

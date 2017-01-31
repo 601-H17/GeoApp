@@ -47,7 +47,7 @@ public class DrawGeoJson extends AsyncTask<Void, Void, List<LatLng>> {
 
         ArrayList<LatLng> pointsLine = new ArrayList<>();
         ArrayList<LatLng> pointDoors = new ArrayList<>();
-        ArrayList<Point> pointDescriptionAndTitle = new ArrayList<>();
+        Point descriptionTitle = new Point();
 
         String request;
         try {
@@ -80,27 +80,21 @@ public class DrawGeoJson extends AsyncTask<Void, Void, List<LatLng>> {
                                 LatLng latLng = new LatLng(coord.getDouble(1), coord.getDouble(0));
                                 pointsLine.add(latLng);
                             }
-                        }else if(!TextUtils.isEmpty(type) && type.equalsIgnoreCase("Point")){
-                            JSONObject properties = feature.getJSONObject("properties");
-                            if (properties != null) {
-                                JSONObject tags = properties.getJSONObject("tags");
-                                Point point = new Point(tags.getString("barrier"),tags.getString("bicycle"));
-                                pointDescriptionAndTitle.add(point);
-                            }else{
-                                Point point = new Point("null","null");
-                                pointDescriptionAndTitle.add(point);
-                            }
+                        }
+                        else if(!TextUtils.isEmpty(type) && type.equalsIgnoreCase("Point")){
                             JSONArray coords = geometry.getJSONArray("coordinates");
                             LatLng latLng = new LatLng(coords.getDouble(1), coords.getDouble(0));
                             pointDoors.add(latLng);
+                            JSONObject description = feature.getJSONObject("properties");
+                            descriptionTitle = new Point(description.getString("barrier"),description.getString("foot"));
+
                         }
                     }
                     numberFeatures++;
                     drawLines(pointsLine);
-                    drawDoors(pointDoors,pointDescriptionAndTitle);
+                    drawDoors(pointDoors,descriptionTitle);
                     pointsLine = new ArrayList<>();
                     pointDoors = new ArrayList<>();
-
                 }
         } catch (Exception exception) {
             Log.e("TAG", "Exception Loading GeoJSON: " + exception.toString());
@@ -114,23 +108,24 @@ public class DrawGeoJson extends AsyncTask<Void, Void, List<LatLng>> {
                 if (pointsLine.size() > 0) {
                     mapboxMap.addPolyline(new PolylineOptions()
                             .addAll(pointsLine)
-                            .color(Color.parseColor("#3bb2d0"))
-                            .width(1));
+                            .color(Color.parseColor("#ffffff"))
+                            .width(2));
         }
     }
-    private void drawDoors(List<LatLng> pointDoors,List<Point> pointDescriptionAndTitle) {
+    private void drawDoors(List<LatLng> pointDoors,Point point) {
         super.onPostExecute(pointDoors);
 
         IconFactory iconFactory = IconFactory.getInstance(context);
-        Drawable iconDrawable = ContextCompat.getDrawable(context, R.drawable.door);
+        Drawable iconDrawable = ContextCompat.getDrawable(context, R.drawable.pin);
         Icon icon = iconFactory.fromDrawable(iconDrawable);
 
-        for (int i=0;i<pointDoors.size();i++) {
+        if(pointDoors.size() > 0) {
             mapboxMap.addMarker(new MarkerViewOptions()
-                     .position(pointDoors.get(i))
-                     .title(pointDescriptionAndTitle.get(i).getTitle())
-                     .snippet(pointDescriptionAndTitle.get(i).getDescription())
-                     .icon(icon));
+                     .position(pointDoors.get(0))
+                    .title(point.getTitle())
+                    .snippet(point.getDescription())
+                    .icon(icon)
+                    );
         }
     }
 }
