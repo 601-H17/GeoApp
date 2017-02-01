@@ -5,10 +5,10 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="0dp"
+    android:paddingLeft="0dp"
+    android:paddingRight="0dp"
+    android:paddingTop="0dp"
     tools:context="com.example.julien.geoapp.MainActivity">
 
     <com.mapbox.mapboxsdk.maps.MapView
@@ -19,6 +19,7 @@
         mapbox:center_longitude="-71.28739276585"
         mapbox:zoom="16"
         mapbox:zoom_min="16"
-       />
+        >
+    </com.mapbox.mapboxsdk.maps.MapView>
 
 </RelativeLayout>

@@ -85,9 +85,12 @@ public class DrawGeoJson extends AsyncTask<Void, Void, List<LatLng>> {
                             JSONArray coords = geometry.getJSONArray("coordinates");
                             LatLng latLng = new LatLng(coords.getDouble(1), coords.getDouble(0));
                             pointDoors.add(latLng);
-                            JSONObject description = feature.getJSONObject("properties");
-                            descriptionTitle = new Point(description.getString("barrier"),description.getString("foot"));
-
+                            try {
+                                JSONObject description = feature.getJSONObject("properties");
+                                descriptionTitle = new Point("DISPONIBLE: " + description.getString("entrance"), "LOCAL: " + description.getString("ref"));
+                            }catch (Exception exception) {
+                                Log.e("TAG", "Exception Loading GeoJSON");
+                            }
                         }
                     }
                     numberFeatures++;
