@@ -57,9 +57,26 @@ public class SPSData implements Comparable<SPSData>{
 
     }
 
+    SPSData(String bssid, int freq, long lat, long lng, int tx_pwr, int rx_pwr, int averages, int env, long app_id){
+        this.bssid = bssid;
+        this.freq = freq;
+        this.lat = lat;
+        this.lng = lng;
+        this.tx_pwr = tx_pwr;
+        this.rx_pwr = rx_pwr;
+        this.num_of_averages = averages;
+        this.seen = new Date();
+        this.environment = env;
+        this.app_id = app_id;
+
+        this.distanceCalc(tx_pwr, rx_pwr, freq, env);
+        this.distances.add(this.distance);
+
+    }
+
     @Override
     public int compareTo(SPSData otherData) {
-        if (this.bssid.toString().equals(otherData.bssid.toString()) && this.dev_id == otherData.dev_id)
+        if (this.bssid.toString().equals(otherData.bssid.toString())/* && this.dev_id == otherData.dev_id*/)
         {
             return 1;
         } else {

@@ -47,7 +47,7 @@ public class SubPos {
             if (wifiScanList.size() != 0) {
                 SPSNodes.killAgedNodes(age);
                 for (int i = 0; i < wifiScanList.size(); i++) {
-                    if (wifiScanList.get(i).SSID.startsWith("SPS")) {
+                    if (wifiScanList.get(i).SSID.startsWith("CSF")) {
                         SPSNodes.addLocation(wifiScanList.get(i).SSID.toCharArray(),
                                 wifiScanList.get(i).level,
                                 wifiScanList.get(i).BSSID,

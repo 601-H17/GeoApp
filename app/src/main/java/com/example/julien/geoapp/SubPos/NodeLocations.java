@@ -89,8 +89,22 @@ public class NodeLocations {
     public void addLocation(char[] ssid, int rx_pwr, String bssid, int freq, long application_id,
                             boolean offset_mapping, boolean three_d_mapping)
     {
-        SPSData location = new SPSData(averages);
-        location.decodeSSID(ssid, rx_pwr, freq, bssid);
+        //SPSData location = new SPSData(averages);
+        //location.decodeSSID(ssid, rx_pwr, freq, bssid);
+
+
+        //TODO: Déterminer la longitude et latitude avec la mac_address en faisant une requête API.
+        long lat = 0;
+        long lng = 0;
+
+        //TODO: Déterminer le tx_pwr d'une façon ou d'une autre.
+        int tx_pwr = 0;
+
+        //TODO: Comprendre et déterminer le coefficient -> "Env".
+        int env = 0;
+
+        SPSData location = new SPSData(bssid, freq, lat, lng, tx_pwr, rx_pwr, averages, env, application_id);
+
         if (location.app_id == application_id && location.off_map == offset_mapping &&
                 location.three_d_map == three_d_mapping) {
             locations.add(location);
