@@ -1,7 +1,7 @@
 # Travis CI - GeoApp v0.021
 notifications:
   slack: 601-h17-eq2:pdSywKBC71uiHz8xYNbNXBEA
-
+  
 language: android
 sudo: required
 jdk: oraclejdk8
@@ -15,8 +15,7 @@ cache:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
     - $HOME/.android/build-cache
-before_install:
- - chmod +x gradlew
+    
 android:
   components:
     - platform-tools
@@ -31,3 +30,4 @@ android:
     - ./gradlew clean lint
     - ./gradlew buildNative assembleDebug
     - ./gradlew compileDebugAndroidTestSources
+	
