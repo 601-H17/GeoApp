@@ -15,6 +15,9 @@ cache:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
     - $HOME/.android/build-cache
+
+before_install:
+ - chmod +x gradlew
     
 android:
   components:
@@ -30,4 +33,4 @@ android:
     - ./gradlew clean lint
     - ./gradlew buildNative assembleDebug
     - ./gradlew compileDebugAndroidTestSources
-	
+  
