@@ -30,4 +30,6 @@ dependencies {
     compile ('com.mapbox.mapboxsdk:mapbox-android-sdk:4.2.1@aar') {
         transitive = true
     }
+    compile 'com.github.arimorty:floatingsearchview:2.0.3'
+
 }
