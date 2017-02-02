@@ -6,10 +6,10 @@ language: android
 sudo: required
 jdk: oraclejdk8
 
-# Avoid uploading the cache after every build
 before_install:
  - chmod +x gradlew
 
+# Avoid uploading the cache after every build
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
   - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
@@ -38,7 +38,6 @@ before_script:
   - android-wait-for-emulator
   - adb devices
   - adb shell input keyevent 82 &
-  - ./gradlew connectedCheck -PdisablePreDex --stacktrace
 script:
   - ./gradlew clean lint
   - ./gradlew buildNative assembleDebug
