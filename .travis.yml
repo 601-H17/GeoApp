@@ -1,7 +1,7 @@
 # Travis CI - GeoApp v0.021
 notifications:
   slack: 601-h17-eq2:pdSywKBC71uiHz8xYNbNXBEA
-  
+
 language: android
 sudo: required
 jdk: oraclejdk8
@@ -18,24 +18,23 @@ cache:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
     - $HOME/.android/build-cache
-    
+
 android:
   components:
     - platform-tools
     - tools
     - build-tools-25.0.2
-    - android-23
+    - android-25
+    - extra-android-m2repository
   licenses:
     - 'android-sdk-preview-license-52d11cd2'
     - 'android-sdk-license-.+'
     - 'google-gdk-license-.+'
-
-  before_script:
-    - echo no | android create avd --force -n test -t android-23 --abi armeabi-v7a
-    - emulator -avd test -no-skin -no-audio -no-window &
-    - android-wait-for-emulator
-  script:
-    - ./gradlew clean lint
-    - ./gradlew buildNative assembleDebug
-    - ./gradlew compileDebugAndroidTestSources
-  
+before_script:
+  - echo no | android create avd --force -n test -t android-25 --abi armeabi-v7a
+  - emulator -avd test -no-skin -no-audio -no-window &
+  - android-wait-for-emulator
+script:
+  - ./gradlew clean lint
+  - ./gradlew buildNative assembleDebug
+  - ./gradlew compileDebugAndroidTestSources
