@@ -42,5 +42,3 @@ before_script:
   - adb shell input keyevent 82 &
 script:
   - ./gradlew test
-  - ./gradlew compileDebugAndroidTestSources
-  - ./gradlew build connectedAndroidTest
