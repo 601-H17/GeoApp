@@ -1,19 +1,10 @@
 package com.example.julien.geoapp;
-import android.animation.ObjectAnimator;
-import android.animation.TypeEvaluator;
-import android.animation.ValueAnimator;
 import android.graphics.PointF;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 
 import com.arlib.floatingsearchview.FloatingSearchView;
 import com.mapbox.mapboxsdk.MapboxAccountManager;
-import com.mapbox.mapboxsdk.annotations.Marker;
-import com.mapbox.mapboxsdk.annotations.MarkerOptions;
-import com.mapbox.mapboxsdk.annotations.MarkerViewOptions;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
@@ -21,50 +12,31 @@ import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Projection;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
 
     private MapView mapView;
     private MapboxMap mapboxMap;
-    private FloatingSearchView mSearchView;
-
+    private Local local;
     private LatLng centerCoordinates;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         MapboxAccountManager.start(this, getString(R.string.access_token));
-
         setContentView(R.layout.activity_main);
-        mSearchView = (FloatingSearchView)findViewById(R.id.mSearchView);
         mapView = (MapView) findViewById(R.id.mapview);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.menu_main, menu);
-//        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-//        SearchView searchView = (SearchView) menu.findItem(R.id.search_bar).getActionView();
-//        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-//        searchView.setIconifiedByDefault(false);
-//        return true;
-//    }
-//
-//    mSearchView.setOnMenuItemClickListener(new FloatingSearchView.OnMenuItemClickListener() {
-//        @Override
-//        public void onMenuItemSelected(MenuItem item) {
-//
-//        }
-//    });
-
     @Override
     public void onMapReady(final MapboxMap mapboxMap) {
         this.mapboxMap = mapboxMap;
-        new DrawGeoJson(mapboxMap,this).execute();
-
+        new DrawGeoJsonMaps(mapboxMap,this).execute();
+        new DrawGeoJsonPath(mapboxMap,this,"G-164","G-116").execute();
         final Projection projection = mapboxMap.getProjection();
         final int width = mapView.getMeasuredWidth();
         final int height = mapView.getMeasuredHeight();

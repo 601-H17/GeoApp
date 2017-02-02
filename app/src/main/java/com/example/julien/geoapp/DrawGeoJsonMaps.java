@@ -29,7 +29,7 @@ import java.util.List;
  * Created by Julien on 2017-01-30.
  */
 
-public class DrawGeoJson extends AsyncTask<Void, Void, List<LatLng>> {
+public class DrawGeoJsonMaps extends AsyncTask<Void, Void, List<LatLng>> {
 
 
     private MapboxMap mapboxMap;
@@ -37,7 +37,7 @@ public class DrawGeoJson extends AsyncTask<Void, Void, List<LatLng>> {
     private String routeMap = "/map";
     private String apiUrl = "https://csf-geo-app.herokuapp.com/api";
 
-    public DrawGeoJson(MapboxMap mapboxMap,Context context) {
+    public DrawGeoJsonMaps(MapboxMap mapboxMap, Context context) {
         this.mapboxMap = mapboxMap;
         this.context = context;
     }
@@ -117,7 +117,6 @@ public class DrawGeoJson extends AsyncTask<Void, Void, List<LatLng>> {
     }
     private void drawDoors(List<LatLng> pointDoors,Point point) {
         super.onPostExecute(pointDoors);
-
         IconFactory iconFactory = IconFactory.getInstance(context);
         Drawable iconDrawable = ContextCompat.getDrawable(context, R.drawable.pin);
         Icon icon = iconFactory.fromDrawable(iconDrawable);
