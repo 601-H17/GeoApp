@@ -40,9 +40,3 @@ before_script:
   - adb shell input keyevent 82 &
 script:
   - ./gradlew test
-  - ./gradlew jacocoTestReport
-  - ./gradlew connectedCheck
-before_install:
-  - pip install --user codecov #Install codecov
-after_before_install:
-  - codecov #Run codecov
