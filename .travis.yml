@@ -3,7 +3,7 @@ notifications:
   slack: 601-h17-eq2:pdSywKBC71uiHz8xYNbNXBEA
 
 language: android
-sudo: required
+sudo: false
 jdk: oraclejdk8
 
 # Avoid uploading the cache after every build
