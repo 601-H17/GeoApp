@@ -1,0 +1,13 @@
+---
+checked_completion: true
+completion_version: 1.8.6
+last_check:
+  etag: '"79d270b90f4757857a1d05c806f6684f"'
+  version: 1.8.6
+  at: 1486389282
+endpoints:
+  https://api.travis-ci.org/:
+    access_token: 
+repos:
+  601-H17/GeoApp:
+    endpoint: https://api.travis-ci.org/
