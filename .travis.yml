@@ -32,9 +32,9 @@ deploy:
   api_key:
     secure: ty1O4TD5Cbw+L0tDqNJdnPVh4bMlAC7L9CKZXpmbcd+ukm/HAgHVzGJHW1ApBQ93PWRZg1Khcdjxet3BhfHtEDWe0ZTQvgo7hR2WIyL8hXWj7U5WHdR+h+tmBz9BBqU7ztQ1QJk2lppTZk7GvmxDOYZaiCifywupo5FLkrpWnYOL3kvlKDLl86m52OAqeqJFxImF/y6S6P8sESlhNDLAhqVwFAng/QuF/VFt/44hlfI9jv7s4WoZz7kBwcLXKi/jJr7NRvb4WgVqiCgjSFQtJ9zWbGC9dIf0Sw9vUleN0r3tgWNfzDHgKsAZQ/nRZoMPBJJ+8Skft3tiOPUinJmKiL7oAja7lap9RIXRhufMOX0jiVojytJDAjilfj9puIXJ57zwMNOVCfBQXQDi7aFgjVBvd85a6vUi3ljoDbuQ5QsUpmyT3EgLDOw+x2aX4Fpx5crsWrbSaLZC5J8rGPy0Xg8iswQgTvCgpkGdFSzClHGG7MGGA3B2+AQG4m1LMThQ6s9UxfwGP094Ax+uOE0Dk1SlsMCJWFartTWTA/i74HTajLbxhTHgEAy904HGzN03X7q3UKP8ZSk6vUAAkZ/l3kBAEYIZxouS3vEZotmUcjmk/It5H5kQoQBjhvScKBKXmUn7LX2FUaVGGHvO9BmorUM3ffuCRgxev81j1ybPVHA=
   file: GeoApp/build/outputs/apk/app-release.apk
-  file_glob: "true"
   skip_cleanup: true
   on:
     repo: 601-H17/GeoApp
+    tags: true
 after_success:
   - sh set_tags.sh
