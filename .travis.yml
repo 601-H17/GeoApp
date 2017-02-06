@@ -20,6 +20,7 @@ android:
  components:
    - tools
    - platform-tools
+   - tools
    - android-25
    - build-tools-25.0.2
 before_script:
