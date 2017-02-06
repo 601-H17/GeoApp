@@ -1,4 +1,4 @@
-package com.example.julien.geoapp;
+package com.example.julien.geoapp.models;
 
 import com.mapbox.mapboxsdk.geometry.LatLng;
 

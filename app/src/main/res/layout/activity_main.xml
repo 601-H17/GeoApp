@@ -10,7 +10,7 @@
     android:paddingLeft="0dp"
     android:paddingRight="0dp"
     android:paddingTop="0dp"
-    tools:context="com.example.julien.geoapp.MainActivity">
+    tools:context="com.example.julien.geoapp.activitys.MainActivity">
 
     <ImageView
         android:layout_width="wrap_content"
@@ -28,6 +28,8 @@
         mapbox:center_longitude="-71.28739276585"
         mapbox:zoom="16"
         mapbox:zoom_min="16"
+        mapbox:compass_enabled="false"
+
         >
     </com.mapbox.mapboxsdk.maps.MapView>
 

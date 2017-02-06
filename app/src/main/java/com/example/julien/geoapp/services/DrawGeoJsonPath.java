@@ -1,4 +1,4 @@
-package com.example.julien.geoapp;
+package com.example.julien.geoapp.services;
 
 import android.content.Context;
 import android.graphics.Color;
