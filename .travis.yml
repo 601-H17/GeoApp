@@ -3,31 +3,25 @@ notifications:
  slack: 601-h17-eq2:pdSywKBC71uiHz8xYNbNXBEA
 
 language: android
-sudo: false
+sudo: required
 jdk: oraclejdk8
 
 # Avoid uploading the cache after every build
 before_cache:
- - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+ - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
 cache:
  directories:
-   - $HOME/.m2
-   - $HOME/.gradle
-   - $HOME/.gradle/caches
-   - $HOME/.gradle/wrapper
-   - $HOME/.gradle/daemon
-   - $HOME/.gradle/native
+   - $HOME/.gradle/caches/
+   - $HOME/.gradle/wrapper/
    - $HOME/.android/build-cache
 
 android:
  components:
    - tools
    - platform-tools
-   - tools
    - android-25
    - build-tools-25.0.2
-   - extra-android-m2repository
 before_script:
  - chmod +x gradlew
 script:
