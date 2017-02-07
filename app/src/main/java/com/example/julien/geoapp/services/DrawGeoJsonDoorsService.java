@@ -63,7 +63,7 @@ public class DrawGeoJsonDoorsService{
                         pointDoors.add(latLng);
                         try {
                             JSONObject description = feature.getJSONObject("properties");
-                            descriptionTitle = new Point("DISPONIBLE: " + description.getString("entrance"), "LOCAL: " + description.getString("ref"));
+                            descriptionTitle = new Point(description.getString("ref"),"DISPONIBLE: " + description.getString("entrance"));
                             doorsInformation.add(descriptionTitle);
                         }catch (Exception exception) {
                             Log.e("TAG", "Exception Loading GeoJSON");
@@ -95,9 +95,6 @@ public class DrawGeoJsonDoorsService{
                 markers.add(mark);
             }
         }
-        for(int i=0;i<markers.size();i++){
-            mapboxMap.addMarker(markers.get(i).visible(true));
-        }
     }
 
     public void drawDoors(){
@@ -105,10 +102,21 @@ public class DrawGeoJsonDoorsService{
             mapboxMap.addMarker(markers.get(i).visible(true));
         }
     }
-    public void hideDoors(){
-        for(int i=0;i<markers.size();i++){
-           // mapboxMap.removeMarker((Marker) markers.get(i));
+    public LatLng getDoorsLocation(String name){
+        LatLng error = new LatLng(0,0);
+        for(int i=0;i<doorsInformation.size();i++){
+            if(doorsInformation.get(i).getTitle().equals(name)){
+                return pointDoors.get(i);
+            }
         }
+        return error;
+    }
+    public String[] getDoorsListTitle(){
+        String[] list = new String[doorsInformation.size()];
+        for(int i=0;i<doorsInformation.size();i++){
+           list[i] = doorsInformation.get(i).getTitle();
+        }
+        return list;
     }
 
 }

@@ -2,15 +2,9 @@ package com.example.julien.geoapp.services;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
-import android.support.v4.content.ContextCompat;
-import android.text.TextUtils;
 import android.util.Log;
 
-import com.mapbox.mapboxsdk.annotations.Icon;
-import com.mapbox.mapboxsdk.annotations.IconFactory;
-import com.mapbox.mapboxsdk.annotations.MarkerViewOptions;
 import com.mapbox.mapboxsdk.annotations.PolylineOptions;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
@@ -29,7 +23,7 @@ import java.util.List;
  * Created by Julien on 2017-01-30.
  */
 
-public class DrawGeoJsonPath  extends AsyncTask<Void, Void, List<LatLng>>{
+public class DrawGeoJsonPathService extends AsyncTask<Void, Void, List<LatLng>>{
 
 
     private MapboxMap mapboxMap;
@@ -37,7 +31,7 @@ public class DrawGeoJsonPath  extends AsyncTask<Void, Void, List<LatLng>>{
     private String routeMap;
     private String apiUrl = " http://csf-geo-app.herokuapp.com/api/path?";
 
-    public DrawGeoJsonPath(MapboxMap mapboxMap, Context context,String localA,String localB) {
+    public DrawGeoJsonPathService(MapboxMap mapboxMap, Context context, String localA, String localB) {
         this.mapboxMap = mapboxMap;
         this.context = context;
         this.routeMap = "localA="+localA+"&localB="+localB;

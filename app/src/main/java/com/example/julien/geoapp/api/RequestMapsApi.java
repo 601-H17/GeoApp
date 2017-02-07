@@ -3,14 +3,12 @@ package com.example.julien.geoapp.api;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.example.julien.geoapp.activitys.MainActivity;
-import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.example.julien.geoapp.activity.MainActivity;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
 
 /**
  * Created by Julien on 2017-02-06.

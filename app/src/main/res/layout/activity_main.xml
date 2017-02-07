@@ -6,11 +6,11 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="0dp"
-    android:paddingLeft="0dp"
-    android:paddingRight="0dp"
-    android:paddingTop="0dp"
-    tools:context="com.example.julien.geoapp.activitys.MainActivity">
+    android:paddingBottom="10dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingTop="10dp"
+    tools:context="com.example.julien.geoapp.activity.MainActivity">
 
     <ImageView
         android:layout_width="wrap_content"
@@ -29,22 +29,7 @@
         mapbox:zoom="16"
         mapbox:zoom_min="16"
         mapbox:compass_enabled="false"
-
         >
     </com.mapbox.mapboxsdk.maps.MapView>
-
-    <com.arlib.floatingsearchview.FloatingSearchView
-        android:id="@+id/mSearchView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingStart="2dp"
-        android:paddingEnd="2dp"
-        app:floatingSearch_searchHint="Search..."
-        app:floatingSearch_suggestionsListAnimDuration="250"
-        app:floatingSearch_showSearchKey="false"
-        app:floatingSearch_leftActionMode="showHamburger"
-        app:floatingSearch_close_search_on_keyboard_dismiss="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>
