@@ -26,7 +26,7 @@ import java.util.List;
  * Created by Julien on 2017-01-30.
  */
 
-public class DrawGeoJsonDoorsService{
+public class DrawGeoJsonDoorsService {
 
 
     private MapboxMap mapboxMap;
@@ -46,31 +46,29 @@ public class DrawGeoJsonDoorsService{
         saveDoors();
     }
 
-    private void saveDoors(){
+    private void saveDoors() {
         Point descriptionTitle = new Point();
         try {
             JSONObject json = new JSONObject(request);
             JSONArray features = json.getJSONArray("features");
-            int numberFeatures = 0;
-            while (numberFeatures <= features.length()) {
-                JSONObject feature = features.getJSONObject(numberFeatures);
+            for (int fn = 0; fn <= features.length(); fn++) {
+                JSONObject feature = features.getJSONObject(fn);
                 JSONObject geometry = feature.getJSONObject("geometry");
                 if (geometry != null) {
                     String type = geometry.getString("type");
-                    if(!TextUtils.isEmpty(type) && type.equalsIgnoreCase("Point")){
+                    if (!TextUtils.isEmpty(type) && type.equalsIgnoreCase("Point")) {
                         JSONArray coords = geometry.getJSONArray("coordinates");
                         LatLng latLng = new LatLng(coords.getDouble(1), coords.getDouble(0));
                         pointDoors.add(latLng);
                         try {
                             JSONObject description = feature.getJSONObject("properties");
-                            descriptionTitle = new Point(description.getString("ref"),"DISPONIBLE: " + description.getString("entrance"));
+                            descriptionTitle = new Point(description.getString("ref"), "DISPONIBLE: " + description.getString("entrance"));
                             doorsInformation.add(descriptionTitle);
-                        }catch (Exception exception) {
+                        } catch (Exception exception) {
                             Log.e("TAG", "Exception Loading GeoJSON");
                         }
                     }
                 }
-                numberFeatures++;
             }
         } catch (Exception exception) {
             Log.e("TAG", "Exception Loading GeoJSON: " + exception.toString());
@@ -83,8 +81,8 @@ public class DrawGeoJsonDoorsService{
         Drawable iconDrawable = ContextCompat.getDrawable(context, R.drawable.pin);
         Icon icon = iconFactory.fromDrawable(iconDrawable);
 
-        if(pointDoors.size() > 0) {
-            for(int i=0;i<pointDoors.size();i++) {
+        if (pointDoors.size() > 0) {
+            for (int i = 0; i < pointDoors.size(); i++) {
                 MarkerViewOptions mark = (new MarkerViewOptions()
                         .position(pointDoors.get(i))
                         .title(doorsInformation.get(i).getTitle())
@@ -97,24 +95,32 @@ public class DrawGeoJsonDoorsService{
         }
     }
 
-    public void drawDoors(){
-        for(int i=0;i<markers.size();i++){
+    public void drawDoors() {
+        for (int i = 0; i < markers.size(); i++) {
             mapboxMap.addMarker(markers.get(i).visible(true));
         }
     }
-    public LatLng getDoorsLocation(String name){
-        LatLng error = new LatLng(0,0);
-        for(int i=0;i<doorsInformation.size();i++){
-            if(doorsInformation.get(i).getTitle().equals(name)){
+
+    public LatLng getDoorsLocation(String name) {
+        LatLng error = new LatLng(0, 0);
+        for (int i = 0; i < doorsInformation.size(); i++) {
+            if (doorsInformation.get(i).getTitle().equals(name)) {
                 return pointDoors.get(i);
             }
         }
         return error;
     }
-    public String[] getDoorsListTitle(){
-        String[] list = new String[doorsInformation.size()];
-        for(int i=0;i<doorsInformation.size();i++){
-           list[i] = doorsInformation.get(i).getTitle();
+
+    public String[] getDoorsListTitle() {
+        String[] list = {"error API"};
+        try {
+            list = new String[doorsInformation.size()];
+            for (int i = 0; i < doorsInformation.size(); i++) {
+                list[i] = doorsInformation.get(i).getTitle();
+            }
+            return list;
+        } catch (Exception exception) {
+            Log.e("TAG", "Exception Loading GeoJSON: " + exception.toString());
         }
         return list;
     }

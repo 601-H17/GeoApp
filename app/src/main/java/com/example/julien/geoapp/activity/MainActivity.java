@@ -1,4 +1,5 @@
 package com.example.julien.geoapp.activity;
+
 import android.database.MatrixCursor;
 import android.graphics.PointF;
 import android.os.Bundle;
@@ -14,7 +15,6 @@ import android.widget.Toast;
 
 import com.example.julien.geoapp.R;
 import com.example.julien.geoapp.api.RequestMapsApi;
-import com.example.julien.geoapp.models.Point;
 import com.example.julien.geoapp.services.DrawGeoJsonDoorsService;
 import com.example.julien.geoapp.services.DrawGeoJsonMapsService;
 import com.example.julien.geoapp.services.DrawGeoJsonPathService;
@@ -25,8 +25,6 @@ import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Projection;
-
-import java.util.HashMap;
 
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -39,21 +37,27 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private DrawGeoJsonDoorsService doorsService;
     private DrawGeoJsonPathService pathService;
     private SimpleCursorAdapter searchAdapter;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setView();
         setMap(savedInstanceState);
+        setAdapter();
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu){
+    public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.search_menu, menu);
         MenuItem item = menu.findItem(R.id.searchMenu);
-        SearchView searchView = (SearchView)item.getActionView();
+        SearchView searchView = (SearchView) item.getActionView();
         searchView.setSuggestionsAdapter(searchAdapter);
+        initSearchView(searchView);
+        return super.onCreateOptionsMenu(menu);
+    }
 
+    private void initSearchView(SearchView searchView) {
         searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
             @Override
             public boolean onSuggestionSelect(int i) {
@@ -68,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -82,7 +86,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 return false;
             }
         });
-        return super.onCreateOptionsMenu(menu);
     }
 
     private void setTextSearch(int i) {
@@ -92,27 +95,30 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void searchQuery(String newText) {
-        final MatrixCursor mc = new MatrixCursor(new String[]{ BaseColumns._ID, "localName" });
+        final MatrixCursor mc = new MatrixCursor(new String[]{BaseColumns._ID, "localName"});
         String[] list = doorsService.getDoorsListTitle();
-        for (int i=0; i<list.length; i++) {
+        for (int i = 0; i < list.length; i++) {
             if (list[i].toLowerCase().startsWith(newText.toLowerCase()))
-                mc.addRow(new Object[] {i, list[i]});
+                mc.addRow(new Object[]{i, list[i]});
         }
         searchAdapter.changeCursor(mc);
     }
 
 
     private void initServices() {
-        mapsService = new DrawGeoJsonMapsService(mapboxMap,mapGeoJson);
-        doorsService = new DrawGeoJsonDoorsService(mapboxMap,this,mapGeoJson);
+        mapsService = new DrawGeoJsonMapsService(mapboxMap, mapGeoJson);
+        doorsService = new DrawGeoJsonDoorsService(mapboxMap, this, mapGeoJson);
         mapsService.drawMaps();
         doorsService.drawDoors();
     }
 
     private void setView() {
         setContentView(R.layout.activity_main);
-        final String[] from = new String[] {"localName"};
-        final int[] to = new int[] {android.R.id.text1};
+    }
+
+    private void setAdapter() {
+        final String[] from = new String[]{"localName"};
+        final int[] to = new int[]{android.R.id.text1};
         searchAdapter = new SimpleCursorAdapter(MainActivity.this, R.layout.spinner_item, null, from, to, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
     }
 
@@ -121,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mapView = (MapView) findViewById(R.id.mapview);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
-        new RequestMapsApi(this,getString(R.string.map)).execute();
+        new RequestMapsApi(this, getString(R.string.map)).execute();
     }
 
     @Override
@@ -146,7 +152,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         this.centerCoordinates = new LatLng(projection.fromScreenLocation(centerPoint));
     }
 
-    public void setMapGeoJson(String map){
+    public void setMapGeoJson(String map) {
         this.mapGeoJson = map;
         initServices();
     }

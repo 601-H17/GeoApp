@@ -23,7 +23,7 @@ import java.util.List;
  * Created by Julien on 2017-01-30.
  */
 
-public class DrawGeoJsonPathService extends AsyncTask<Void, Void, List<LatLng>>{
+public class DrawGeoJsonPathService extends AsyncTask<Void, Void, List<LatLng>> {
 
 
     private MapboxMap mapboxMap;
@@ -34,8 +34,9 @@ public class DrawGeoJsonPathService extends AsyncTask<Void, Void, List<LatLng>>{
     public DrawGeoJsonPathService(MapboxMap mapboxMap, Context context, String localA, String localB) {
         this.mapboxMap = mapboxMap;
         this.context = context;
-        this.routeMap = "localA="+localA+"&localB="+localB;
+        this.routeMap = "localA=" + localA + "&localB=" + localB;
     }
+
     @Override
     protected List<LatLng> doInBackground(Void... voids) {
 
@@ -58,7 +59,7 @@ public class DrawGeoJsonPathService extends AsyncTask<Void, Void, List<LatLng>>{
             }
             JSONObject json = new JSONObject(request);
             JSONArray path = json.getJSONArray("path");
-            for(int i=0;i<path.length();i++){
+            for (int i = 0; i < path.length(); i++) {
                 JSONArray coord = path.getJSONArray(i);
                 LatLng latLng = new LatLng(coord.getDouble(1), coord.getDouble(0));
                 pointDoors.add(latLng);

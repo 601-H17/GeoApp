@@ -45,38 +45,37 @@ public class DrawGeoJsonMapsService {
         ArrayList<LatLng> pointsLine = new ArrayList<>();
 
         try {
-                JSONObject json = new JSONObject(request);
-                JSONArray features = json.getJSONArray("features");
-            int numberFeatures = 0;
-                while (numberFeatures <= features.length()) {
-                    JSONObject feature = features.getJSONObject(numberFeatures);
-                    JSONObject geometry = feature.getJSONObject("geometry");
-                    if (geometry != null) {
-                        String type = geometry.getString("type");
-                        if (!TextUtils.isEmpty(type) && type.equalsIgnoreCase("LineString")) {
-                            JSONArray coords = geometry.getJSONArray("coordinates");
-                            for (int lc = 0; lc < coords.length(); lc++) {
-                                JSONArray coord = coords.getJSONArray(lc);
-                                LatLng latLng = new LatLng(coord.getDouble(1), coord.getDouble(0));
-                                pointsLine.add(latLng);
-                            }
+            JSONObject json = new JSONObject(request);
+            JSONArray features = json.getJSONArray("features");
+            //salut ben
+            for (int fn = 0; fn <= features.length(); fn++) {
+                JSONObject feature = features.getJSONObject(fn);
+                JSONObject geometry = feature.getJSONObject("geometry");
+                if (geometry != null) {
+                    String type = geometry.getString("type");
+                    if (!TextUtils.isEmpty(type) && type.equalsIgnoreCase("LineString")) {
+                        JSONArray coords = geometry.getJSONArray("coordinates");
+                        for (int lc = 0; lc < coords.length(); lc++) {
+                            JSONArray coord = coords.getJSONArray(lc);
+                            LatLng latLng = new LatLng(coord.getDouble(1), coord.getDouble(0));
+                            pointsLine.add(latLng);
                         }
                     }
-                    numberFeatures++;
-                    drawLines(pointsLine);
-                    pointsLine = new ArrayList<>();
                 }
+                drawLines(pointsLine);
+                pointsLine = new ArrayList<>();
+            }
         } catch (Exception exception) {
             Log.e("TAG", "Exception Loading GeoJSON: " + exception.toString());
         }
     }
 
     private void drawLines(List<LatLng> pointsLine) {
-                if (pointsLine.size() > 0) {
-                    mapboxMap.addPolyline(new PolylineOptions()
-                            .addAll(pointsLine)
-                            .color(Color.parseColor("#ffffff"))
-                            .width(2));
+        if (pointsLine.size() > 0) {
+            mapboxMap.addPolyline(new PolylineOptions()
+                    .addAll(pointsLine)
+                    .color(Color.parseColor("#ffffff"))
+                    .width(2));
         }
     }
 }

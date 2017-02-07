@@ -11,12 +11,13 @@ public class Point {
     private String title;
     private String description;
 
-    public Point(String Title, String Description){
+    public Point(String Title, String Description) {
 
         this.title = Title;
         this.description = Description;
     }
-    public Point(){
+
+    public Point() {
     }
 
 
