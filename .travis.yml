@@ -1,37 +1,49 @@
+# Travis CI - GeoApp
 notifications:
-  slack: 601-h17-eq2:pdSywKBC71uiHz8xYNbNXBEA
+ slack: 601-h17-eq2:pdSywKBC71uiHz8xYNbNXBEA
+
 language: android
 sudo: required
 jdk: oraclejdk8
+
+# Avoid uploading the cache after every build
 before_cache:
-- rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
-- rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+ - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+ - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
 cache:
-  directories:
-  - "$HOME/.gradle/caches/"
-  - "$HOME/.gradle/wrapper/"
-  - "$HOME/.android/build-cache"
+ directories:
+   - $HOME/.gradle/caches/
+   - $HOME/.gradle/wrapper/
+   - $HOME/.android/build-cache
+
 android:
-  components:
-  - tools
-  - platform-tools
-  - android-25
-  - build-tools-25.0.2
-  - extra-android-m2repository
+ components:
+   - tools
+   - platform-tools
+   - android-25
+   - build-tools-25.0.2
+   - extra-android-m2repository
 before_script:
-- chmod +x gradlew
+ - chmod +x gradlew
 script:
-- "./gradlew build"
-- "./gradlew assembleRelease"
+ - ./gradlew build
+ - ./gradlew assembleRelease
 after_success:
-- sh set_tags.sh
+ # - sh set_tags.sh
+before_deploy:
+  - git config --global user.email "irakotoseheno@gmail.com"
+  - git config --global user.name "eric3475"
+  - export GIT_TAG=$TRAVIS_BUILD_NUMBER
+  - git tag v$GIT_TAG -a -m "Generated tag from Travis CI for build $TRAVIS_BUILD_NUMBER"
+  - git push -q origin --tags
+  - cp ./app/build/outputs/apk/*.apk .
 deploy:
   provider: releases
   api_key:
-    secure: xxXRmZ5+yRavfK0e7RiKdUWxBOQKPNiFR1SaBDI19gnziA+6yevffHdAi32SWrEqwH8XXAJZpEvhgDXmi3SFPrwHKzeOWaWo8TnIKv12AFNSrZlpzUYg+Wi1fXk5gRsa9ctK76W+BLm3Y80i0zZUagGHO+HWE9cNSh0fs37/donyZJc48XmwBovtHaXVRHsLVnokZg3P03JVJzsG85jFYBnCHLzlrammKoQghp39I6cfXHN4tpTyln1dF6YqR7FUXLOqU3X15UjsAFd8CLA5Ou23fg1MEqzM8LQ53fHM5YWZ93Qp6H4tEZK/ynqprt0yhqsSKak7cBxzjYnNBEB21thw+vhwct2EqouUk+jBp4Q5S0JfsvvbclES+KLRSx2LzhOwY0UWCHmMQVdqutEkFgdc8z3tp/A4i4PAxBWc7OpBBHMjL5XjDN+9vhiL+DXguqEwoJJJ3/+3CTTMvN3LGTNDOhaID2QaNIf7xfXV4ZJID/WFIJRivtOFeauCD+hlg3YkTohTcT1Wk0qfHCRh0GvI1iRtaTsquchGNANpiGXb/ehd1crbLq7C4aGrHUz4gzNNbq1dUSN3h7sghiIG4UQZ5C9eNA2gDEqGbQtWggFzUeWZBtmg6KkotLzbzzI8T9rDzfAfmrWQLCTyZIX12e6aB62t/eNBkmZZiGKPvgc=
-  file: app/build/outputs/apk/app-release.apk
-  file_glob: true
+	secure: xxXRmZ5+yRavfK0e7RiKdUWxBOQKPNiFR1SaBDI19gnziA+6yevffHdAi32SWrEqwH8XXAJZpEvhgDXmi3SFPrwHKzeOWaWo8TnIKv12AFNSrZlpzUYg+Wi1fXk5gRsa9ctK76W+BLm3Y80i0zZUagGHO+HWE9cNSh0fs37/donyZJc48XmwBovtHaXVRHsLVnokZg3P03JVJzsG85jFYBnCHLzlrammKoQghp39I6cfXHN4tpTyln1dF6YqR7FUXLOqU3X15UjsAFd8CLA5Ou23fg1MEqzM8LQ53fHM5YWZ93Qp6H4tEZK/ynqprt0yhqsSKak7cBxzjYnNBEB21thw+vhwct2EqouUk+jBp4Q5S0JfsvvbclES+KLRSx2LzhOwY0UWCHmMQVdqutEkFgdc8z3tp/A4i4PAxBWc7OpBBHMjL5XjDN+9vhiL+DXguqEwoJJJ3/+3CTTMvN3LGTNDOhaID2QaNIf7xfXV4ZJID/WFIJRivtOFeauCD+hlg3YkTohTcT1Wk0qfHCRh0GvI1iRtaTsquchGNANpiGXb/ehd1crbLq7C4aGrHUz4gzNNbq1dUSN3h7sghiIG4UQZ5C9eNA2gDEqGbQtWggFzUeWZBtmg6KkotLzbzzI8T9rDzfAfmrWQLCTyZIX12e6aB62t/eNBkmZZiGKPvgc=
+    file: app-release.apk
+  file_glob: "true"
   skip_cleanup: true
   on:
     repo: 601-H17/GeoApp
-    tags: true
+    #tags: true
