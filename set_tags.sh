@@ -18,7 +18,7 @@ if [ "$TRAVIS_BRANCH" = "$BRANCH" ]; then
       git push origin --tags
       git fetch origin
 
-      echo -e "Done magic with tags.\n"
+      echo -e "Done magic with tag.\n"
   fi
   fi
 fi
