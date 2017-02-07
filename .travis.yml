@@ -34,6 +34,7 @@ after_success:
 before_deploy:
   - git config --global user.email "irakotoseheno@gmail.com"
   - git config --global user.name "eric3475"
+  - git config --list
   - export GIT_TAG=$TRAVIS_BUILD_NUMBER
   - git tag v$GIT_TAG -a -m "Generated tag from Travis CI for build $TRAVIS_BUILD_NUMBER"
   - git push -q origin --tags
