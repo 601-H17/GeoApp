@@ -40,4 +40,5 @@ deploy:
   on:
     branch: master
     repo: 601-H17/GeoApp
+    tags: true
 
