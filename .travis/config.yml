@@ -2,9 +2,9 @@
 checked_completion: true
 completion_version: 1.8.6
 last_check:
-  etag: '"304b26e149c44336423ec59dfbea2a43"'
+  etag: '"0c231f519521036b2a86fcabd53576da"'
   version: 1.8.6
-  at: 1486481799
+  at: 1486493119
 endpoints:
   https://api.travis-ci.org/:
     access_token: 
