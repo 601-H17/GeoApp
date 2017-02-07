@@ -33,7 +33,10 @@ after_success:
   - git tag -a v${TRAVIS_BUILD_NUMBER} -m "Travis build $TRAVIS_BUILD_NUMBER pushed a tag."
   - git push origin --tags
   - git fetch origin
-  - cd app/build/outputs/apk/
+  - cd app
+  - cd build
+  - cd outputs
+  - cd apk
   - ls
 deploy:
   provider: releases
