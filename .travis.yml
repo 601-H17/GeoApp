@@ -32,6 +32,5 @@ deploy:
   file: app/build/outputs/apk/app-release.apk
   file_glob: "true"
   skip_cleanup: true
-  file_glob: "true"
   on:
     repo: 601-H17/GeoApp
