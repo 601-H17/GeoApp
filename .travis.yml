@@ -34,3 +34,4 @@ deploy:
   skip_cleanup: true
   on:
     repo: 601-H17/GeoApp
+    tags: true
