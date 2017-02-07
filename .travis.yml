@@ -38,7 +38,6 @@ deploy:
   file_glob: "true"
   skip_cleanup: true
   on:
-    branch: master
     repo: 601-H17/GeoApp
     tags: true
 
