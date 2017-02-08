@@ -8,9 +8,9 @@ before_cache:
 - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
 cache:
   directories:
-  #- "$HOME/.gradle/caches/"
-  #- "$HOME/.gradle/wrapper/"
-  #- "$HOME/.android/build-cache"
+  - "$HOME/.gradle/caches/"
+  - "$HOME/.gradle/wrapper/"
+  - "$HOME/.android/build-cache"
 android:
   components:
   - tools
@@ -27,17 +27,12 @@ after_success:
 #- sh set_tags.sh
   - git config --global user.email "irakotoseheno@gmail.com"
   - git config --global user.name "eric3475"
-  - git remote add origin https://601-H17:${GH_TOKEN}@github.com/601-H17/GeoApp.git
+  - git remote add https://601-H17:${GH_TOKEN}@github.com/601-H17/GeoApp.git
 
   # Add tag and push to master.
   - git tag -a v${TRAVIS_BUILD_NUMBER} -m "[skip ci] Travis build $TRAVIS_BUILD_NUMBER pushed a tag."
   - git push origin --tags
   - git fetch origin
-  - cd app
-  - cd build
-  - cd outputs
-  - cd apk
-  - ls
 deploy:
   provider: releases
   api_key:
