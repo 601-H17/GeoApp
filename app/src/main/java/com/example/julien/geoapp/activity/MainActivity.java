@@ -2,19 +2,21 @@ package com.example.julien.geoapp.activity;
 
 import android.database.MatrixCursor;
 import android.graphics.PointF;
+import android.graphics.Rect;
+import android.location.Location;
 import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.CursorAdapter;
 import android.widget.SearchView;
 import android.widget.SimpleCursorAdapter;
-import android.widget.Toast;
 
 import com.example.julien.geoapp.R;
-import com.example.julien.geoapp.api.RequestMapsApi;
+import com.example.julien.geoapp.api.setGeoJsonMaps;
 import com.example.julien.geoapp.services.DrawGeoJsonDoorsService;
 import com.example.julien.geoapp.services.DrawGeoJsonMapsService;
 import com.example.julien.geoapp.services.DrawGeoJsonPathService;
@@ -89,9 +91,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void setTextSearch(int i) {
-//        MatrixCursor obj= (MatrixCursor)searchAdapter.getItem(i);
-//        String str=obj.toString();
-//        Toast.makeText(MainActivity.this, "Item is= "+str, Toast.LENGTH_LONG).show();
+
     }
 
     private void searchQuery(String newText) {
@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mapsService = new DrawGeoJsonMapsService(mapboxMap, mapGeoJson);
         doorsService = new DrawGeoJsonDoorsService(mapboxMap, this, mapGeoJson);
         mapsService.drawMaps();
-        doorsService.drawDoors();
+        //doorsService.drawDoors();
     }
 
     private void setView() {
@@ -127,7 +127,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mapView = (MapView) findViewById(R.id.mapview);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
-        new RequestMapsApi(this, getString(R.string.map)).execute();
+        Rect yo = new Rect();
+        new setGeoJsonMaps(MainActivity.this, getString(R.string.map)).execute();
     }
 
     @Override
@@ -142,6 +143,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onCameraChange(CameraPosition position) {
                 setCenterCoordinates(width, height, projection);
+                if (doorsService != null) {
+                    if (position.zoom >= 18) {
+                        doorsService.drawDoors();
+                    } else {
+                        doorsService.hideDoors();
+                    }
+                }
+                float[] results = new float[1];
+                Location.distanceBetween( Double.parseDouble("46.7867176564811"), Double.parseDouble( "-71.2869702165109"), centerCoordinates.getLatitude(), centerCoordinates.getLongitude(),results);
+                float distanceInMeters = results[0]; //130
+                Log.d("TAG",Float.toString(distanceInMeters));
             }
         });
 
@@ -155,6 +167,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void setMapGeoJson(String map) {
         this.mapGeoJson = map;
         initServices();
+    }
+
+    public String getMapGeoJson() {
+        return this.mapGeoJson;
     }
 
     @Override

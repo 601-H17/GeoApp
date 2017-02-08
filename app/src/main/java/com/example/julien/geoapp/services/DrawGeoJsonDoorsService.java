@@ -83,21 +83,31 @@ public class DrawGeoJsonDoorsService {
 
         if (pointDoors.size() > 0) {
             for (int i = 0; i < pointDoors.size(); i++) {
-                MarkerViewOptions mark = (new MarkerViewOptions()
+                //add if for special icon
+                MarkerViewOptions mark = new MarkerViewOptions()
                         .position(pointDoors.get(i))
                         .title(doorsInformation.get(i).getTitle())
                         .snippet(doorsInformation.get(i).getDescription())
-                        .icon(icon)
-                        .visible(false)
-                );
+                        .icon(icon);
+
                 markers.add(mark);
             }
         }
     }
 
     public void drawDoors() {
-        for (int i = 0; i < markers.size(); i++) {
-            mapboxMap.addMarker(markers.get(i).visible(true));
+        if (mapboxMap.getMarkers().isEmpty()) {
+            for (int i = 0; i < markers.size(); i++) {
+                mapboxMap.addMarker(markers.get(i));
+            }
+        }
+    }
+
+    public void hideDoors() {
+        if (!mapboxMap.getMarkers().isEmpty()) {
+            List<Marker> listDoors = mapboxMap.getMarkers();
+            for (int i = 0; i < listDoors.size(); i++)
+                mapboxMap.removeMarker(listDoors.get(i));
         }
     }
 

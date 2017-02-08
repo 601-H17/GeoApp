@@ -14,14 +14,14 @@ import java.net.URL;
  * Created by Julien on 2017-02-06.
  */
 
-public class RequestMapsApi extends AsyncTask<Void, Void, String> {
+public class setGeoJsonMaps extends AsyncTask<Void, Void, String> {
 
 
     private MainActivity context;
     private String routeMap;
     private String apiUrl = "https://csf-geo-app.herokuapp.com/api/";
 
-    public RequestMapsApi(MainActivity context, String route) {
+    public setGeoJsonMaps(MainActivity context, String route) {
         this.context = context;
         this.routeMap = route;
     }

@@ -47,7 +47,6 @@ public class DrawGeoJsonMapsService {
         try {
             JSONObject json = new JSONObject(request);
             JSONArray features = json.getJSONArray("features");
-            //salut ben
             for (int fn = 0; fn <= features.length(); fn++) {
                 JSONObject feature = features.getJSONObject(fn);
                 JSONObject geometry = feature.getJSONObject("geometry");
