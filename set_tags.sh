@@ -2,6 +2,14 @@ BRANCH="master"
 
 # Are we on the right branch?
 if [ "$TRAVIS_BRANCH" = "$BRANCH" ]; then
+  
+  # Is this not a Pull Request?
+  if [ "$TRAVIS_PULL_REQUEST" = false ]; then
+    
+    # Is this not a build which was triggered by setting a new tag?
+    if [ -z "$TRAVIS_TAG" ]; then
+      echo -e "Starting to tag commit.\n"
+
       git config --global user.email "irakotoseheno@gmail.com"
 	    git config --global user.name "eric3475"
 
@@ -10,15 +18,7 @@ if [ "$TRAVIS_BRANCH" = "$BRANCH" ]; then
       git push origin --tags
       git fetch origin
 
-      echo -e "Done magic with tag.\
-  # Is this not a Pull Request?
-  if [ "$TRAVIS_PULL_REQUEST" = false ]; then
-    
-    # Is this not a build which was triggered by setting a new tag?
-    if [ -z "$TRAVIS_TAG" ]; then
-      echo -e "Starting to tag commit.\n"
-
-      git config --n"
+      echo -e "Done magic with tag.\n"
     fi
   fi
 fi
