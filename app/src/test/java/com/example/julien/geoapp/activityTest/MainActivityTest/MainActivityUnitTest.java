@@ -33,9 +33,4 @@ public class MainActivityUnitTest {
     public void mainActivityiIinstanced() throws Exception {
         Assert.assertTrue(mainActivity != null);
     }
-    @Test
-    public void searchText() throws Exception {
-        mainActivity.setMapGeoJson(map);
-        assertEquals(true, mainActivity.getMapGeoJson().contentEquals(map));
-    }
 }

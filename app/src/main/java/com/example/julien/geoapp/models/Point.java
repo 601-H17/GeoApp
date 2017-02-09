@@ -1,23 +1,30 @@
 package com.example.julien.geoapp.models;
 
-import com.mapbox.mapboxsdk.geometry.LatLng;
-
 /**
- * Created by Julien on 2017-01-30.
+ * Created by Julien on 2017-02-09.
  */
 
-public class Point {
+public abstract class Point {
 
     private String title;
     private String description;
+    private double lati;
+    private double longi;
 
-    public Point(String Title, String Description) {
+    public Point(String Title, String Description,double lati,double longi) {
 
         this.title = Title;
         this.description = Description;
+        this.longi = longi;
+        this.lati = lati;
     }
 
-    public Point() {
+    public double getLati() {
+        return lati;
+    }
+
+    public double getlongi() {
+        return longi;
     }
 
 
@@ -25,9 +32,6 @@ public class Point {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
 
     public String getTitle() {
         return title;

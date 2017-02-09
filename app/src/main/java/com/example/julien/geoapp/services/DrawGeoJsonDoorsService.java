@@ -6,9 +6,8 @@ import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.example.julien.geoapp.models.Point;
 import com.example.julien.geoapp.R;
-import com.google.common.collect.MapMaker;
+import com.example.julien.geoapp.models.DoorsInformation;
 import com.mapbox.mapboxsdk.annotations.Icon;
 import com.mapbox.mapboxsdk.annotations.IconFactory;
 import com.mapbox.mapboxsdk.annotations.Marker;
@@ -32,46 +31,43 @@ public class DrawGeoJsonDoorsService {
     private MapboxMap mapboxMap;
     private Context context;
     private String request;
-    private ArrayList<LatLng> pointDoors;
-    private ArrayList<Point> doorsInformation;
+    private ArrayList<DoorsInformation> doorsInformation;
     private ArrayList<MarkerViewOptions> markers;
+    private String featuresJson[] = {"features", "geometry", "type", "Point", "coordinates", "properties", "ref", "entrance", "Disponible: "};
+    private String error[] = {"TAG", "Exception Loading GeoJSON "};
 
     public DrawGeoJsonDoorsService(MapboxMap mapboxMap, Context context, String geojson) {
         this.mapboxMap = mapboxMap;
         this.context = context;
         this.request = geojson;
-        pointDoors = new ArrayList<>();
         doorsInformation = new ArrayList<>();
         markers = new ArrayList<>();
         saveDoors();
     }
 
     private void saveDoors() {
-        Point descriptionTitle = new Point();
         try {
             JSONObject json = new JSONObject(request);
-            JSONArray features = json.getJSONArray("features");
+            JSONArray features = json.getJSONArray(featuresJson[0]);
             for (int fn = 0; fn <= features.length(); fn++) {
                 JSONObject feature = features.getJSONObject(fn);
-                JSONObject geometry = feature.getJSONObject("geometry");
+                JSONObject geometry = feature.getJSONObject(featuresJson[1]);
                 if (geometry != null) {
-                    String type = geometry.getString("type");
-                    if (!TextUtils.isEmpty(type) && type.equalsIgnoreCase("Point")) {
-                        JSONArray coords = geometry.getJSONArray("coordinates");
-                        LatLng latLng = new LatLng(coords.getDouble(1), coords.getDouble(0));
-                        pointDoors.add(latLng);
+                    String type = geometry.getString(featuresJson[2]);
+                    if (!TextUtils.isEmpty(type) && type.equalsIgnoreCase(featuresJson[3])) {
+                        JSONArray coords = geometry.getJSONArray(featuresJson[4]);
                         try {
-                            JSONObject description = feature.getJSONObject("properties");
-                            descriptionTitle = new Point(description.getString("ref"), "DISPONIBLE: " + description.getString("entrance"));
-                            doorsInformation.add(descriptionTitle);
+                            JSONObject description = feature.getJSONObject(featuresJson[5]);
+                            DoorsInformation door = new DoorsInformation(description.getString(featuresJson[6]),  featuresJson[8]+description.getString(featuresJson[7]),coords.getDouble(1), coords.getDouble(0));
+                            doorsInformation.add(door);
                         } catch (Exception exception) {
-                            Log.e("TAG", "Exception Loading GeoJSON");
+                            Log.e(error[0], error[1]);
                         }
                     }
                 }
             }
         } catch (Exception exception) {
-            Log.e("TAG", "Exception Loading GeoJSON: " + exception.toString());
+            Log.e(error[0], exception.toString());
         }
         createMarkers();
     }
@@ -81,15 +77,13 @@ public class DrawGeoJsonDoorsService {
         Drawable iconDrawable = ContextCompat.getDrawable(context, R.drawable.pin);
         Icon icon = iconFactory.fromDrawable(iconDrawable);
 
-        if (pointDoors.size() > 0) {
-            for (int i = 0; i < pointDoors.size(); i++) {
-                //add if for special icon
+        if (doorsInformation.size() > 0) {
+            for (int i = 0; i < doorsInformation.size(); i++) {
                 MarkerViewOptions mark = new MarkerViewOptions()
-                        .position(pointDoors.get(i))
+                        .position(new LatLng(doorsInformation.get(i).getLati(), doorsInformation.get(i).getlongi()))
                         .title(doorsInformation.get(i).getTitle())
                         .snippet(doorsInformation.get(i).getDescription())
                         .icon(icon);
-
                 markers.add(mark);
             }
         }
@@ -111,18 +105,8 @@ public class DrawGeoJsonDoorsService {
         }
     }
 
-    public LatLng getDoorsLocation(String name) {
-        LatLng error = new LatLng(0, 0);
-        for (int i = 0; i < doorsInformation.size(); i++) {
-            if (doorsInformation.get(i).getTitle().equals(name)) {
-                return pointDoors.get(i);
-            }
-        }
-        return error;
-    }
-
     public String[] getDoorsListTitle() {
-        String[] list = {"error API"};
+        String[] list = {error[1]};
         try {
             list = new String[doorsInformation.size()];
             for (int i = 0; i < doorsInformation.size(); i++) {
@@ -130,9 +114,8 @@ public class DrawGeoJsonDoorsService {
             }
             return list;
         } catch (Exception exception) {
-            Log.e("TAG", "Exception Loading GeoJSON: " + exception.toString());
+            Log.e(error[0], error[1] + exception.toString());
         }
         return list;
     }
-
 }
