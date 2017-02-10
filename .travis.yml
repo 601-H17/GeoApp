@@ -18,10 +18,9 @@ android:
   components:
     - tools
     - platform-tools
-    - android-21
-    - build-tools-21.0.2
+    - android-25
+    - build-tools-25.0.2
     - extra-android-m2repository
-    - sys-img-armeabi-v7a-android-21
 before_script:
   - chmod +x gradlew
 script:
