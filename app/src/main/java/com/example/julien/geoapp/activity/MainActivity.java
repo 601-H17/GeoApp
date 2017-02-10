@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private String menuId = "localName";
     private double[] centerLatLongCegep = {46.7867176564811, -71.2869702165109};
     private double[] boundsCegep = {46.78800596023283, -71.28548741340637, 46.784788302609186, -71.28870606422424};
+    private double positionZoom;
 
 
     @Override
@@ -83,14 +84,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onCameraChange(CameraPosition position) {
                 setCenterCoordinates(width, height, projection);
+                positionZoom = position.zoom;
                 calculateDistance();
-                if (doorsService != null) {
-                    if (position.zoom >= positionZoomBeforePins) {
-                        doorsService.drawDoors();
-                    } else {
-                        doorsService.hideDoors();
-                    }
-                }
+                showDoors();
                 if (calculateDistance() >= distanceBeforeRelocation) {
                     animateCamera();
                 }
@@ -99,11 +95,22 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
+    private void showDoors() {
+        if (doorsService != null) {
+            if (positionZoom >= positionZoomBeforePins) {
+                doorsService.drawDoors();
+            } else {
+                doorsService.hideDoors();
+            }
+        }
+    }
+
 
     private void initServices() {
         mapsService = new DrawGeoJsonMapsService(mapboxMap, mapGeoJson);
         doorsService = new DrawGeoJsonDoorsService(mapboxMap, this, mapGeoJson);
         mapsService.drawMaps();
+        showDoors();
     }
 
     private void setView() {
@@ -153,7 +160,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mapView = (MapView) findViewById(R.id.mapview);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
-        new setGeoJsonMaps(MainActivity.this, getString(R.string.map)).execute();
     }
 
     private void initSearchView(SearchView searchView) {
