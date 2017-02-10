@@ -3,4 +3,14 @@
     <string name="access_token">pk.eyJ1IjoianVsaWVudHVyY290dGUiLCJhIjoiY2l5aXdqMjg1MDR3djJ3cnd4bXY0bHdjYyJ9.5fm_zldCIWla9crEDKWmfw</string>
     <string name="route_map">/map</string>
     <string name="api_url">https://csf-geo-app.herokuapp.com/api</string>
+    <string name="map">map</string>
+    <string name="map2">map2</string>
+    <string name="map3">map3</string>
+    <string name="corridors">corridors</string>
+    <string name="latCegep">46.7867176564811</string>
+    <string name="longCegep">-71.2869702165109</string>
+    <string name="apiUrl">https://csf-geo-app.herokuapp.com/api/</string>
+    <string name="headerAuthorization">Authorization</string>
+    <string name="headerToken">Token token=7f4b544bccc5ed31b390865e82e7c9cb</string>
+
 </resources>
