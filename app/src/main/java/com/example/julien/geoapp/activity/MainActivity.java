@@ -17,9 +17,10 @@ import android.widget.SimpleCursorAdapter;
 
 import com.example.julien.geoapp.R;
 import com.example.julien.geoapp.api.setGeoJsonMaps;
-import com.example.julien.geoapp.services.DrawGeoJsonDoorsService;
-import com.example.julien.geoapp.services.DrawGeoJsonMapsService;
-import com.example.julien.geoapp.services.DrawGeoJsonPathService;
+import com.example.julien.geoapp.services.DrawServices.DrawGeoJsonDoorsService;
+import com.example.julien.geoapp.services.DrawServices.DrawGeoJsonMapsService;
+import com.example.julien.geoapp.services.DrawServices.DrawGeoJsonPathService;
+import com.example.julien.geoapp.services.RepositoryServices.DoorsRepositoryService;
 import com.mapbox.mapboxsdk.MapboxAccountManager;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
@@ -37,9 +38,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private MapboxMap mapboxMap;
     private LatLng centerCoordinates;
     private String mapGeoJson;
-    private DrawGeoJsonMapsService mapsService;
-    private DrawGeoJsonDoorsService doorsService;
-    private DrawGeoJsonPathService pathService;
+    private String doorsInformations;
+    private DrawGeoJsonMapsService mapsDrawService;
+    private DrawGeoJsonDoorsService doorsDrawService;
+    private DrawGeoJsonPathService pathDrawService;
+    private DoorsRepositoryService doorsRepositoryService;
     private SimpleCursorAdapter searchAdapter;
     private Button bouttonEtage;
     private Button bouttonEtage2;
@@ -96,21 +99,24 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void showDoors() {
-        if (doorsService != null) {
+        if (doorsDrawService != null) {
             if (positionZoom >= positionZoomBeforePins) {
-                doorsService.drawDoors();
+                doorsDrawService.drawDoors();
             } else {
-                doorsService.hideDoors();
+                doorsDrawService.hideDoors();
             }
         }
     }
 
 
-    private void initServices() {
-        mapsService = new DrawGeoJsonMapsService(mapboxMap, mapGeoJson);
-        doorsService = new DrawGeoJsonDoorsService(mapboxMap, this, mapGeoJson);
-        mapsService.drawMaps();
+    private void initDrawableMaps() {
+        mapsDrawService = new DrawGeoJsonMapsService(mapboxMap, mapGeoJson);
+        doorsDrawService = new DrawGeoJsonDoorsService(mapboxMap, this, mapGeoJson);
+        mapsDrawService.drawMaps();
         showDoors();
+    }
+    private void initDoorsList() {
+        doorsRepositoryService = new DoorsRepositoryService(mapboxMap, doorsInformations);
     }
 
     private void setView() {
@@ -194,12 +200,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void setTextSearch(int i) {
+        //TODO get selected doors.
 
     }
 
     private void searchQuery(String newText) {
+        //TODO faire la recherche avec le doorsRepositoryService.getDoorsList, ceci ne retourne que la liste des locaux de l etage selectionnee.
+
         final MatrixCursor mc = new MatrixCursor(new String[]{BaseColumns._ID, menuId});
-        String[] list = doorsService.getDoorsListTitle();
+        String[] list = doorsDrawService.getDoorsListTitle();
         for (int i = 0; i < list.length; i++) {
             if (list[i].toLowerCase().startsWith(newText.toLowerCase()))
                 mc.addRow(new Object[]{i, list[i]});
@@ -226,11 +235,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         PointF centerPoint = new PointF(width / 2, height / 2);
         this.centerCoordinates = new LatLng(projection.fromScreenLocation(centerPoint));
     }
-
+    //dessinne la carte (locaux,porte)
     public void setMapGeoJson(String map) {
         this.mapGeoJson = map;
-        initServices();
+        initDrawableMaps();
     }
+    //load toutes les portes pour une recherche
+    public void setDoorList(String doors) {
+        this.doorsInformations = doors;
+        initDoorsList();
+    }
+
 
     @Override
     public void onResume() {
