@@ -15,7 +15,7 @@ android {
     defaultConfig {
         applicationId "com.example.julien.geoapp"
         minSdkVersion 21
-        targetSdkVersion 25
+        targetSdkVersion 21
         versionCode 1
         versionName "01.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
