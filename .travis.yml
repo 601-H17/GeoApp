@@ -22,7 +22,7 @@ android:
     - android-19
     - build-tools-25.0.2
     - extra-android-m2repository
-    - sys-img-armeabi-v7a-android-22
+    - sys-img-armeabi-v7a-android-19
 before_script:
   - chmod +x gradlew
     # Create and start emulator
