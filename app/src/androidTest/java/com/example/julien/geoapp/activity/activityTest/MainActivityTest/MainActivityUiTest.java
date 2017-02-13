@@ -32,8 +32,14 @@ import org.junit.runner.RunWith;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
 
+
+/**
+ * Created by Julien on 2017-02-13.
+ */
+
+
 @RunWith(AndroidJUnit4.class)
-public class MainActivityTest {
+public class MainActivityUiTest {
 
     @Rule
     public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
@@ -42,14 +48,17 @@ public class MainActivityTest {
     public void seeAllFloorButtons1() {
         ViewInteraction button = onView(withId(R.id.button)).check(ViewAssertions.matches(isDisplayed()));
     }
+
     @Test
     public void seeAllFloorButtons2() {
         ViewInteraction button2 = onView(withId(R.id.button2)).check(ViewAssertions.matches(isDisplayed()));
     }
+
     @Test
     public void seeAllFloorButtons3() {
         ViewInteraction button3 = onView(withId(R.id.button3)).check(ViewAssertions.matches(isDisplayed()));
     }
+
     @Test
     public void seeMapsOnCreate() {
         ViewInteraction maps = onView(withId(R.id.mapview)).check(ViewAssertions.matches(isDisplayed()));

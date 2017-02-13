@@ -1,4 +1,4 @@
-package com.example.julien.geoapp.services.DrawServices;
+package com.example.julien.geoapp.services.DoorsService;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -25,7 +25,7 @@ import java.util.List;
  * Created by Julien on 2017-01-30.
  */
 
-public class DrawGeoJsonDoorsService {
+public class DrawGeoJsonDoorsService implements  IDrawGeoJsonDoorsService{
 
 
     private MapboxMap mapboxMap;
