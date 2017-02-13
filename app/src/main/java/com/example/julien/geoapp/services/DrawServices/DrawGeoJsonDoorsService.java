@@ -1,4 +1,4 @@
-package com.example.julien.geoapp.services;
+package com.example.julien.geoapp.services.DrawServices;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -7,7 +7,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.example.julien.geoapp.R;
-import com.example.julien.geoapp.models.DoorsInformation;
+import com.example.julien.geoapp.models.DoorsInformationForPins;
 import com.mapbox.mapboxsdk.annotations.Icon;
 import com.mapbox.mapboxsdk.annotations.IconFactory;
 import com.mapbox.mapboxsdk.annotations.Marker;
@@ -31,7 +31,7 @@ public class DrawGeoJsonDoorsService {
     private MapboxMap mapboxMap;
     private Context context;
     private String request;
-    private ArrayList<DoorsInformation> doorsInformation;
+    private ArrayList<DoorsInformationForPins> doorsInformationForPins;
     private ArrayList<MarkerViewOptions> markers;
     private String featuresJson[] = {"features", "geometry", "type", "Point", "coordinates", "properties", "ref", "entrance", "Disponible: "};
     private String error[] = {"TAG", "Exception Loading GeoJSON "};
@@ -40,7 +40,7 @@ public class DrawGeoJsonDoorsService {
         this.mapboxMap = mapboxMap;
         this.context = context;
         this.request = geojson;
-        doorsInformation = new ArrayList<>();
+        doorsInformationForPins = new ArrayList<>();
         markers = new ArrayList<>();
         saveDoors();
     }
@@ -58,8 +58,8 @@ public class DrawGeoJsonDoorsService {
                         JSONArray coords = geometry.getJSONArray(featuresJson[4]);
                         try {
                             JSONObject description = feature.getJSONObject(featuresJson[5]);
-                            DoorsInformation door = new DoorsInformation(description.getString(featuresJson[6]),  featuresJson[8]+description.getString(featuresJson[7]),coords.getDouble(1), coords.getDouble(0));
-                            doorsInformation.add(door);
+                            DoorsInformationForPins door = new DoorsInformationForPins(description.getString(featuresJson[6]),  featuresJson[8]+description.getString(featuresJson[7]),coords.getDouble(1), coords.getDouble(0));
+                            doorsInformationForPins.add(door);
                         } catch (Exception exception) {
                             Log.e(error[0], error[1]);
                         }
@@ -77,12 +77,12 @@ public class DrawGeoJsonDoorsService {
         Drawable iconDrawable = ContextCompat.getDrawable(context, R.drawable.pin);
         Icon icon = iconFactory.fromDrawable(iconDrawable);
 
-        if (doorsInformation.size() > 0) {
-            for (int i = 0; i < doorsInformation.size(); i++) {
+        if (doorsInformationForPins.size() > 0) {
+            for (int i = 0; i < doorsInformationForPins.size(); i++) {
                 MarkerViewOptions mark = new MarkerViewOptions()
-                        .position(new LatLng(doorsInformation.get(i).getLati(), doorsInformation.get(i).getlongi()))
-                        .title(doorsInformation.get(i).getTitle())
-                        .snippet(doorsInformation.get(i).getDescription())
+                        .position(new LatLng(doorsInformationForPins.get(i).getLati(), doorsInformationForPins.get(i).getlongi()))
+                        .title(doorsInformationForPins.get(i).getTitle())
+                        .snippet(doorsInformationForPins.get(i).getDescription())
                         .icon(icon);
                 markers.add(mark);
             }
@@ -104,13 +104,14 @@ public class DrawGeoJsonDoorsService {
                 mapboxMap.removeMarker(listDoors.get(i));
         }
     }
-
+    //changer cette methode pour une requete API qui demande les locaux. Avec
+    //methode, seuls les locaux de l etage choisi est presentes
     public String[] getDoorsListTitle() {
         String[] list = {error[1]};
         try {
-            list = new String[doorsInformation.size()];
-            for (int i = 0; i < doorsInformation.size(); i++) {
-                list[i] = doorsInformation.get(i).getTitle();
+            list = new String[doorsInformationForPins.size()];
+            for (int i = 0; i < doorsInformationForPins.size(); i++) {
+                list[i] = doorsInformationForPins.get(i).getTitle();
             }
             return list;
         } catch (Exception exception) {
