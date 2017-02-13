@@ -54,8 +54,4 @@ public class MainActivityTest {
     public void seeMapsOnCreate() {
         ViewInteraction maps = onView(withId(R.id.mapview)).check(ViewAssertions.matches(isDisplayed()));
     }
-    @Test
-    public void ChooseFloorAndMapsChange() {
-        ViewInteraction button1 = onView(withId(R.id.button)).perform(click());
-    }
 }
