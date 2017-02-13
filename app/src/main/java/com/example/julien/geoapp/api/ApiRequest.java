@@ -15,7 +15,7 @@ import java.net.URL;
  * Created by Julien on 2017-02-10.
  */
 
-public abstract class ApiRequest extends AsyncTask<Void, Void, String> {
+public abstract class ApiRequest extends AsyncTask<Void, Void, String>{
 
 
     protected MainActivity context;

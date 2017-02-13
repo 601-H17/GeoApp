@@ -23,14 +23,16 @@ public class MainActivityUnitTest {
 
     private MainActivity mainActivity;
     private String map;
+
     @Before
-    public void setUp() throws Exception{
+    public void setUp() throws Exception {
         mainActivity = new MainActivity();
-        map = "nice map";
+        map = "map";
     }
 
     @Test
-    public void mainActivityiIinstanced() throws Exception {
+    public void mainActivityiIsInstanced() throws Exception {
         Assert.assertTrue(mainActivity != null);
     }
+
 }

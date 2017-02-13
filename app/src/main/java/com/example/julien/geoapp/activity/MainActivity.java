@@ -17,9 +17,11 @@ import android.widget.SimpleCursorAdapter;
 
 import com.example.julien.geoapp.R;
 import com.example.julien.geoapp.api.setGeoJsonMaps;
-import com.example.julien.geoapp.services.DrawServices.DrawGeoJsonDoorsService;
-import com.example.julien.geoapp.services.DrawServices.DrawGeoJsonMapsService;
-import com.example.julien.geoapp.services.DrawServices.DrawGeoJsonPathService;
+import com.example.julien.geoapp.services.DoorsService.DrawGeoJsonDoorsService;
+import com.example.julien.geoapp.services.DoorsService.IDrawGeoJsonDoorsService;
+import com.example.julien.geoapp.services.MapsService.DrawGeoJsonMapsService;
+import com.example.julien.geoapp.services.MapsService.IDrawGeoJsonMapsService;
+import com.example.julien.geoapp.services.PathService.DrawGeoJsonPathService;
 import com.example.julien.geoapp.services.RepositoryServices.DoorsRepositoryService;
 import com.mapbox.mapboxsdk.MapboxAccountManager;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
@@ -39,8 +41,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private LatLng centerCoordinates;
     private String mapGeoJson;
     private String doorsInformations;
-    private DrawGeoJsonMapsService mapsDrawService;
-    private DrawGeoJsonDoorsService doorsDrawService;
+    private IDrawGeoJsonMapsService mapsDrawService;
+    private IDrawGeoJsonDoorsService doorsDrawService;
     private DrawGeoJsonPathService pathDrawService;
     private DoorsRepositoryService doorsRepositoryService;
     private SimpleCursorAdapter searchAdapter;
