@@ -1,13 +1,6 @@
 notifications:
   slack: 601-h17-eq2:pdSywKBC71uiHz8xYNbNXBEA
 language: android
-android:
-  components:
-    - build-tools-20.0.0
-    - android-L
-    - sys-img-armeabi-v7a-android-tv-l
-    - add-on
-    - extra
   licenses:
     - 'android-sdk-preview-license-52d11cd2'
     - 'android-sdk-license-.+'
@@ -33,11 +26,6 @@ android:
     - build-tools-25.0.2
     - extra-android-m2repository
 before_script:
-  - android list targets
-  - echo no | android create avd --force -n test -t android-22 --abi armeabi-v7a
-  - emulator -avd test -no-audio -no-window &
-  - android-wait-for-emulator
-  - adb shell input keyevent 82 &
   - chmod +x gradlew
 script:
   - "./gradlew build"
