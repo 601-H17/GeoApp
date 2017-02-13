@@ -44,23 +44,41 @@ public class MainActivityUiTest {
     @Rule
     public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
 
-    @Test
-    public void seeAllFloorButtons1() {
-        ViewInteraction button = onView(withId(R.id.button)).check(ViewAssertions.matches(isDisplayed()));
-    }
+//    @Test
+//    public void seeAllFloorButtons1() {
+//        onView(withId(R.id.button))
+//                .check(ViewAssertions.matches(isDisplayed()));
+//    }
+//
+//    @Test
+//    public void seeAllFloorButtons2() {
+//        onView(withId(R.id.button2))
+//                .check(ViewAssertions.matches(isDisplayed()));
+//    }
+//
+//    @Test
+//    public void seeAllFloorButtons3() {
+//        onView(withId(R.id.button3))
+//                .check(ViewAssertions.matches(isDisplayed()));
+//    }
+//
+//    @Test
+//    public void seeMapsOnClickButton1() {
+//        onView(withId(R.id.button))
+//                .perform(click())
+//                .check(ViewAssertions.matches(isDisplayed()));
+//    }
+//    @Test
+//    public void seeMapsOnClickButton2() {
+//        onView(withId(R.id.button2))
+//                .perform(click())
+//                .check(ViewAssertions.matches(isDisplayed()));
+//    }
+//    @Test
+//    public void seeMapsOnClickButton3() {
+//        onView(withId(R.id.button3))
+//                .perform(click())
+//                .check(ViewAssertions.matches(isDisplayed()));
+//    }
 
-    @Test
-    public void seeAllFloorButtons2() {
-        ViewInteraction button2 = onView(withId(R.id.button2)).check(ViewAssertions.matches(isDisplayed()));
-    }
-
-    @Test
-    public void seeAllFloorButtons3() {
-        ViewInteraction button3 = onView(withId(R.id.button3)).check(ViewAssertions.matches(isDisplayed()));
-    }
-
-    @Test
-    public void seeMapsOnCreate() {
-        ViewInteraction maps = onView(withId(R.id.mapview)).check(ViewAssertions.matches(isDisplayed()));
-    }
 }
