@@ -26,6 +26,7 @@ before_script:
 script:
   - "./gradlew build"
   - "./gradlew assembleRelease"
+  - "./gradlew testobjectUpload"
 after_success:
   - sh set_tags.sh
 deploy:
