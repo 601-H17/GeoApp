@@ -13,7 +13,7 @@ testobject {
     //team "foobar" //the name of the team the user belongs to, see nr. 1 in screenshot above,  (optional, if the user is not part of a team)
     team "eric3475"
     app "geoapp" // name of your app, see nr. 2 in screenshot above
-    testSuite 17 // id of your test suite, see nr. 3 in screenshot above
+    testSuite 14 // id of your test suite, see nr. 3 in screenshot above
     runAsPackage false//
     annotations = ["com.example.julien.geoapp.activity"]
 }
