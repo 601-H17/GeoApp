@@ -9,7 +9,7 @@ keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
 testobject {
     username "eric3475" // the username you use for login into testobject, not your email
-    password keystoreProperties['relUserPassword']// your password you use for login into testobject
+    password "$System.env.PASSWORD" // your password you use for login into testobject
     //team "foobar" //the name of the team the user belongs to, see nr. 1 in screenshot above,  (optional, if the user is not part of a team)
     team "eric3475"
     app "geoapp" // name of your app, see nr. 2 in screenshot above
@@ -104,14 +104,14 @@ dependencies {
     androidTestCompile 'com.android.support.test.espresso:espresso-web:2.2.2'
     // https://mvnrepository.com/artifact/io.appium/java-client
     compile 'com.android.support:design:25.1.1'
-    androidTestCompile("com.android.support.test.espresso:espresso-contrib:2.2.2") {
+    /*androidTestCompile("com.android.support.test.espresso:espresso-contrib:2.2.2") {
         exclude group: 'com.android.support', module: 'appcompat'
         exclude group: 'com.android.support', module: 'support-v4'
         exclude group: 'com.android.support', module: 'support-v7'
         exclude group: 'com.android.support', module: 'design'
         exclude module: 'support-annotations'
         exclude module: 'recyclerview-v7'
-    }
+    }*/
 
     compile 'com.android.support:recyclerview-v7:25.1.1'
     androidTestCompile 'com.android.support:recyclerview-v7:25.1.1'

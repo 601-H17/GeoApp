@@ -36,26 +36,34 @@ import com.mapbox.mapboxsdk.maps.Projection;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
+    //region Private Fields (open to view)
+
     private MapView mapView;
+    private Button bouttonEtage;
+    private Button bouttonEtage2;
+    private Button bouttonEtage3;
     private MapboxMap mapboxMap;
+
     private LatLng centerCoordinates;
+    private double[] centerLatLongCegep = {46.7867176564811, -71.2869702165109};
+    private double[] boundsCegep = {46.78800596023283, -71.28548741340637, 46.784788302609186, -71.28870606422424};
+
     private String mapGeoJson;
     private String doorsInformations;
+
     private IDrawGeoJsonMapsService mapsDrawService;
     private IDrawGeoJsonDoorsService doorsDrawService;
     private DrawGeoJsonPathService pathDrawService;
     private DoorsRepositoryService doorsRepositoryService;
+
     private SimpleCursorAdapter searchAdapter;
-    private Button bouttonEtage;
-    private Button bouttonEtage2;
-    private Button bouttonEtage3;
+
+    private double positionZoom;
     private int positionZoomBeforePins = 18;
     private int distanceBeforeRelocation = 200;
     private String menuId = "localName";
-    private double[] centerLatLongCegep = {46.7867176564811, -71.2869702165109};
-    private double[] boundsCegep = {46.78800596023283, -71.28548741340637, 46.784788302609186, -71.28870606422424};
-    private double positionZoom;
 
+    //endregion
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -66,60 +74,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         setAdapter();
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.search_menu, menu);
-        MenuItem item = menu.findItem(R.id.searchMenu);
-        SearchView searchView = (SearchView) item.getActionView();
-        searchView.setSuggestionsAdapter(searchAdapter);
-        initSearchView(searchView);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public void onMapReady(final MapboxMap mapboxMap) {
-        this.mapboxMap = mapboxMap;
-        final Projection projection = mapboxMap.getProjection();
-        final int width = mapView.getMeasuredWidth();
-        final int height = mapView.getMeasuredHeight();
-        this.setCenterCoordinates(width, height, projection);
-        this.mapboxMap.setOnCameraChangeListener(new MapboxMap.OnCameraChangeListener() {
-            @Override
-            public void onCameraChange(CameraPosition position) {
-                setCenterCoordinates(width, height, projection);
-                positionZoom = position.zoom;
-                calculateDistance();
-                showDoors();
-                if (calculateDistance() >= distanceBeforeRelocation) {
-                    animateCamera();
-                }
-            }
-        });
-
-    }
-
-    private void showDoors() {
-        if (doorsDrawService != null) {
-            if (positionZoom >= positionZoomBeforePins) {
-                doorsDrawService.drawDoors();
-            } else {
-                doorsDrawService.hideDoors();
-            }
-        }
-    }
-
-
-    private void initDrawableMaps() {
-        mapsDrawService = new DrawGeoJsonMapsService(mapboxMap, mapGeoJson);
-        doorsDrawService = new DrawGeoJsonDoorsService(mapboxMap, this, mapGeoJson);
-        mapsDrawService.drawMaps();
-        showDoors();
-    }
-    private void initDoorsList() {
-        doorsRepositoryService = new DoorsRepositoryService(mapboxMap, doorsInformations);
-    }
+    //region onCreate methods (open to view)
 
     private void setView() {
 
@@ -157,18 +112,33 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
     }
 
-    private void setAdapter() {
-        final String[] from = new String[]{menuId};
-        final int[] to = new int[]{android.R.id.text1};
-        searchAdapter = new SimpleCursorAdapter(MainActivity.this, R.layout.spinner_item, null, from, to, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
-    }
-
     private void setMap(Bundle savedInstanceState) {
         MapboxAccountManager.start(this, getString(R.string.access_token));
         mapView = (MapView) findViewById(R.id.mapview);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
     }
+
+    private void setAdapter() {
+        final String[] from = new String[]{menuId};
+        final int[] to = new int[]{android.R.id.text1};
+        searchAdapter = new SimpleCursorAdapter(MainActivity.this, R.layout.spinner_item, null, from, to, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+    }
+
+    //endregion
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.search_menu, menu);
+        MenuItem item = menu.findItem(R.id.searchMenu);
+        SearchView searchView = (SearchView) item.getActionView();
+        searchView.setSuggestionsAdapter(searchAdapter);
+        initSearchView(searchView);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    //region onCreateOptionsMenu methods (open to view)
 
     private void initSearchView(SearchView searchView) {
         searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
@@ -218,10 +188,51 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         searchAdapter.changeCursor(mc);
     }
 
+    //endregion
+
+    @Override
+    public void onMapReady(final MapboxMap mapboxMap) {
+        this.mapboxMap = mapboxMap;
+        final Projection projection = mapboxMap.getProjection();
+        final int width = mapView.getMeasuredWidth();
+        final int height = mapView.getMeasuredHeight();
+        this.setCenterCoordinates(width, height, projection);
+        this.mapboxMap.setOnCameraChangeListener(new MapboxMap.OnCameraChangeListener() {
+            @Override
+            public void onCameraChange(CameraPosition position) {
+                setCenterCoordinates(width, height, projection);
+                positionZoom = position.zoom;
+                calculateDistance();
+                showDoors();
+                if (calculateDistance() >= distanceBeforeRelocation) {
+                    animateCamera();
+                }
+            }
+        });
+
+    }
+
+    //region onMapReady methods (open to view)
+
+    private void setCenterCoordinates(int width, int height, Projection projection) {
+        PointF centerPoint = new PointF(width / 2, height / 2);
+        this.centerCoordinates = new LatLng(projection.fromScreenLocation(centerPoint));
+    }
+
     private double calculateDistance() {
         float[] results = new float[1];
         Location.distanceBetween(centerLatLongCegep[0], centerLatLongCegep[1], centerCoordinates.getLatitude(), centerCoordinates.getLongitude(), results);
         return results[0];
+    }
+
+    private void showDoors() {
+        if (doorsDrawService != null) {
+            if (positionZoom >= positionZoomBeforePins) {
+                doorsDrawService.drawDoors();
+            } else {
+                doorsDrawService.hideDoors();
+            }
+        }
     }
 
     private void animateCamera() {
@@ -233,21 +244,34 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
-    private void setCenterCoordinates(int width, int height, Projection projection) {
-        PointF centerPoint = new PointF(width / 2, height / 2);
-        this.centerCoordinates = new LatLng(projection.fromScreenLocation(centerPoint));
-    }
-    //dessinne la carte (locaux,porte)
+    //endregion
+
+
+    //dessine la carte (locaux,porte)
     public void setMapGeoJson(String map) {
         this.mapGeoJson = map;
         initDrawableMaps();
     }
+
+    private void initDrawableMaps() {
+        mapsDrawService = new DrawGeoJsonMapsService(mapboxMap, mapGeoJson);
+        doorsDrawService = new DrawGeoJsonDoorsService(mapboxMap, this, mapGeoJson);
+        mapsDrawService.drawMaps();
+        showDoors();
+    }
+
+
     //load toutes les portes pour une recherche
     public void setDoorList(String doors) {
         this.doorsInformations = doors;
         initDoorsList();
     }
 
+    private void initDoorsList() {
+        doorsRepositoryService = new DoorsRepositoryService(mapboxMap, doorsInformations);
+    }
+
+    //region Activity methods (open to view)
 
     @Override
     public void onResume() {
@@ -278,5 +302,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onDestroy();
         mapView.onDestroy();
     }
+
+    //endregion
 }
 
