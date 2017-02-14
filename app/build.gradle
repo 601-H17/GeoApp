@@ -9,7 +9,7 @@ keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
 testobject {
     username "eric3475" // the username you use for login into testobject, not your email
-    password keystoreProperties['relUserPassword']// your password you use for login into testobject
+    password "$System.env.PASSWORD" // your password you use for login into testobject
     //team "foobar" //the name of the team the user belongs to, see nr. 1 in screenshot above,  (optional, if the user is not part of a team)
     team "eric3475"
     app "geoapp" // name of your app, see nr. 2 in screenshot above
