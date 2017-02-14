@@ -23,41 +23,22 @@ import java.util.List;
  * Created by Julien on 2017-01-30.
  */
 
-public class DrawGeoJsonPathService extends AsyncTask<Void, Void, List<LatLng>> {
+public class DrawGeoJsonPathService implements  IDrawGeoJsonPathService {
 
 
     private MapboxMap mapboxMap;
-    private Context context;
     private String routeMap;
     private String apiUrl = " http://csf-geo-app.herokuapp.com/api/path?";
 
-    public DrawGeoJsonPathService(MapboxMap mapboxMap, Context context, String localA, String localB) {
+    public DrawGeoJsonPathService(MapboxMap mapboxMap) {
         this.mapboxMap = mapboxMap;
-        this.context = context;
-        this.routeMap = "localA=" + localA + "&localB=" + localB;
     }
 
-    @Override
-    protected List<LatLng> doInBackground(Void... voids) {
+    public void drawPath(String pathString) {
 
         ArrayList<LatLng> pointDoors = new ArrayList<>();
-        String request;
         try {
-            URL url = new URL(apiUrl + routeMap);
-            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-            try {
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-                StringBuilder stringBuilder = new StringBuilder();
-                String line;
-                while ((line = bufferedReader.readLine()) != null) {
-                    stringBuilder.append(line).append("\n");
-                }
-                bufferedReader.close();
-                request = stringBuilder.toString();
-            } finally {
-                urlConnection.disconnect();
-            }
-            JSONObject json = new JSONObject(request);
+            JSONObject json = new JSONObject(pathString);
             JSONArray path = json.getJSONArray("path");
             for (int i = 0; i < path.length(); i++) {
                 JSONArray coord = path.getJSONArray(i);
@@ -68,11 +49,8 @@ public class DrawGeoJsonPathService extends AsyncTask<Void, Void, List<LatLng>> 
             Log.e("TAG", "Exception Loading GeoJSON: " + exception.toString());
         }
         drawLinesCorridors(pointDoors);
-        return pointDoors;
     }
-
     private void drawLinesCorridors(List<LatLng> pointDoors) {
-        super.onPostExecute(pointDoors);
         if (pointDoors.size() > 0) {
             mapboxMap.addPolyline(new PolylineOptions()
                     .addAll(pointDoors)
