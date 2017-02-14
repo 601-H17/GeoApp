@@ -1,10 +1,22 @@
 apply plugin: 'com.android.application'
+apply plugin: 'testobject'
 
 def keystorePropertiesFile = rootProject.file("keystore.properties")
 
 def keystoreProperties = new Properties()
 
 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
+testobject {
+    username "eric3475" // the username you use for login into testobject, not your email
+    password "$System.env.PASSWORD" // your password you use for login into testobject
+    //team "foobar" //the name of the team the user belongs to, see nr. 1 in screenshot above,  (optional, if the user is not part of a team)
+    team "eric3475"
+    app "geoapp" // name of your app, see nr. 2 in screenshot above
+    testSuite 12 // id of your test suite, see nr. 3 in screenshot above
+    runAsPackage false//
+    annotations = ["com.example.julien.geoapp.activity"]
+}
 
 android {
     lintOptions {
@@ -15,7 +27,7 @@ android {
     defaultConfig {
         applicationId "com.example.julien.geoapp"
         minSdkVersion 21
-        targetSdkVersion 23
+        targetSdkVersion 25
         versionCode 1
         versionName "01.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -69,23 +81,43 @@ tasks.withType(Test) {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    compile 'com.android.support:appcompat-v7:25.1.0'
+    compile 'com.android.support:appcompat-v7:25.1.1'
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:1.10.19'
     compile('com.mapbox.mapboxsdk:mapbox-android-sdk:4.2.2@aar') {
         transitive = true
     }
+    compile 'com.android.support:multidex:1.0.1'
     compile 'com.github.arimorty:floatingsearchview:2.0.3'
-    androidTestCompile 'com.android.support:support-annotations:25.1.0'
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+       //exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    androidTestCompile 'com.android.support:support-annotations:25.1.1'
     androidTestCompile 'com.android.support.test:runner:0.5'
-    androidTestCompile 'com.android.support.test:rules:0.5'
+    androidTestCompile 'com.android.support.test.espresso:espresso-intents:2.2.2'
     androidTestCompile 'org.hamcrest:hamcrest-library:1.3'
-    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
     androidTestCompile 'com.android.support.test.uiautomator:uiautomator-v18:2.1.2'
-    compile 'com.android.support:design:25.1.0'
+    compile 'com.android.support:design:25.1.1'
+    // add this for intent mocking support
+
+    // add this for webview testing support
+    androidTestCompile 'com.android.support.test.espresso:espresso-web:2.2.2'
+    // https://mvnrepository.com/artifact/io.appium/java-client
+    compile 'com.android.support:design:25.1.1'
+    androidTestCompile("com.android.support.test.espresso:espresso-contrib:2.2.2") {
+        exclude group: 'com.android.support', module: 'appcompat'
+        exclude group: 'com.android.support', module: 'support-v4'
+        exclude group: 'com.android.support', module: 'support-v7'
+        exclude group: 'com.android.support', module: 'design'
+        exclude module: 'support-annotations'
+        exclude module: 'recyclerview-v7'
+    }
+
+    compile 'com.android.support:recyclerview-v7:25.1.1'
+    androidTestCompile 'com.android.support:recyclerview-v7:25.1.1'
+
+    compile 'com.google.guava:guava:18.0'
+    androidTestCompile 'com.google.guava:guava:18.0'
 }
 repositories {
     jcenter()
