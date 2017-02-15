@@ -6,16 +6,21 @@ import android.location.Location;
 import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CursorAdapter;
+import android.widget.MultiAutoCompleteTextView;
 import android.widget.SearchView;
 import android.widget.SimpleCursorAdapter;
 
 import com.example.julien.geoapp.R;
+import com.example.julien.geoapp.api.setDoorsList;
 import com.example.julien.geoapp.api.setGeoJsonMaps;
 import com.example.julien.geoapp.api.setPathGeoJson;
 import com.example.julien.geoapp.services.DoorsService.DrawGeoJsonDoorsService;
@@ -44,13 +49,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private Button bouttonEtage2;
     private Button bouttonEtage3;
     private MapboxMap mapboxMap;
+    private AutoCompleteTextView toLocal;
+    private ArrayAdapter toAdapter;
 
     private LatLng centerCoordinates;
     private double[] centerLatLongCegep = {46.7867176564811, -71.2869702165109};
     private double[] boundsCegep = {46.78800596023283, -71.28548741340637, 46.784788302609186, -71.28870606422424};
 
     private String mapGeoJson;
-    private String doorsInformations;
+    private String doorsInformaftions;
     private String pathGeoJson;
 
     private IDrawGeoJsonMapsService mapsDrawService;
@@ -74,6 +81,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         setButtonListener();
         setMap(savedInstanceState);
         setAdapter();
+
+        //a retirer quand api va avoir les locaux lancer la requete
+        initDoorsList();
     }
 
     //region onCreate methods (open to view)
@@ -136,6 +146,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         MenuItem item = menu.findItem(R.id.searchMenu);
         SearchView searchView = (SearchView) item.getActionView();
         searchView.setSuggestionsAdapter(searchAdapter);
+        toLocal = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView2);
         initSearchView(searchView);
         return super.onCreateOptionsMenu(menu);
     }
@@ -211,7 +222,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
             }
         });
-
     }
 
     //region onMapReady methods (open to view)
@@ -273,15 +283,19 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     //load toutes les portes pour une recherche
     public void setDoorList(String doors) {
-        this.doorsInformations = doors;
+        this.doorsInformaftions = doors;
         initDoorsList();
     }
 
     private void initDoorsList() {
-        doorsRepositoryService = new DoorsRepositoryService(mapboxMap, doorsInformations);
+        doorsRepositoryService = new DoorsRepositoryService(mapboxMap, doorsInformaftions);
+        toLocal = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView2);
+        toAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, doorsRepositoryService.getDoorsList());
+        toLocal.setAdapter(toAdapter);
     }
-    public void setPathGeoJson(String path){
-        this.pathGeoJson=path;
+
+    public void setPathGeoJson(String path) {
+        this.pathGeoJson = path;
     }
 
     //region Activity methods (open to view)
