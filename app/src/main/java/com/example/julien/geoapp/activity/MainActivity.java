@@ -17,6 +17,7 @@ import android.widget.SimpleCursorAdapter;
 
 import com.example.julien.geoapp.R;
 import com.example.julien.geoapp.api.setGeoJsonMaps;
+import com.example.julien.geoapp.api.setPathGeoJson;
 import com.example.julien.geoapp.services.DoorsService.DrawGeoJsonDoorsService;
 import com.example.julien.geoapp.services.DoorsService.IDrawGeoJsonDoorsService;
 import com.example.julien.geoapp.services.MapsService.DrawGeoJsonMapsService;
@@ -52,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private String mapGeoJson;
     private String doorsInformations;
+    private String pathGeoJson;
 
     private IDrawGeoJsonMapsService mapsDrawService;
     private IDrawGeoJsonDoorsService doorsDrawService;
@@ -261,6 +263,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void initDrawableMaps() {
         mapsDrawService = new DrawGeoJsonMapsService(mapboxMap, mapGeoJson);
         doorsDrawService = new DrawGeoJsonDoorsService(mapboxMap, this, mapGeoJson);
+//
+        //instancier le service quand une recherc her est lanc/e (pour linbstant le plan s<affiche suelement quand on init un etage (initmaps).
+        pathDrawService = new DrawGeoJsonPathService(mapboxMap);
+        //quand lutilisateur entre les locaux lancer la requete api
+        new setPathGeoJson(MainActivity.this, "path?localA=G-116&localB=G-160").execute();
+        //dessiner le chemin:):)
+        pathDrawService.drawPath(pathGeoJson);
+
         mapsDrawService.drawMaps();
         showDoors();
     }
@@ -274,6 +284,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void initDoorsList() {
         doorsRepositoryService = new DoorsRepositoryService(mapboxMap, doorsInformations);
+    }
+    public void setPathGeoJson(String path){
+        this.pathGeoJson=path;
     }
 
     //region Activity methods (open to view)
