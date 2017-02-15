@@ -27,8 +27,8 @@ script:
   - "./gradlew build"
   - "./gradlew assembleRelease"
   - "./gradlew testobjectUpload --info"
-after_success:
-  - sh set_tags.sh
+#after_success:
+#  - sh set_tags.sh
 deploy:
   provider: releases
   api_key:
@@ -38,7 +38,8 @@ deploy:
   skip_cleanup: true
   on:
     repo: 601-H17/GeoApp
-    branch: master
+    tags: true
+#    branch: master
 env:
   global:
     secure: wvo0+jNM9GtmqZZ4cbiIETiHFp8VBwm2MU9cfQSMC438aM105/VPzik7ey1AMHF8tA5VFor5zQIFXAm9/kGkWm0W7kp5qiEAXLBPBdfM+QnRbyRW3FBqtwZYHENm2f9TibBU2X6H+SWg7rN0n6yiWyeZ7UMjfeoKvWumztIhpWPhKn5wqaPoJzWKbrGQPDo24A27Oo8H9f75jD8A+IGEQN+kkm9KMOcVia9zrvht8EGMZDjkLOTpRBgnIdygVj9i6g9e+tUeBJiw6VxE1b8KG5qC1cCDfGdRuXl0I4fzmJMwijRRzPH16A7JjB2rd+Egdt8z1bBaeirOxhC/KDVQm5PZLEae1yrP5+vraslBTI55SwFJ9FK6svjULOVOXTR8s5MFw/Y4arP/kE+7H5Bd83DM8NzngC3LxJj4qvge+VugPwrvbBCOSKrr4UTB5LbzSfsKIuxZN6Z06fK7H3X/H5yUfPyH4ejd7kDAGHaataG8ruq0ALDfeC3QF+lJLnumD9DS/9VynyLd5IL+/O68JBtgTK+v68Ng0v/fa10i3NThBnDFrZY5CehF6yjsTor4kSEkb9QoE0xm108Ls8/m6RafLhgtjQgsFHIUnWZmMbDx9Em4DQabdyeZWF6TZ6gDEpXMLC7iyOab0PNEyc4fzcBIqRrmMjEHPY3uOyHaZgo=
