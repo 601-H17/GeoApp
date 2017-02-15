@@ -257,7 +257,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void initDrawableMaps() {
         mapsDrawService = new DrawGeoJsonMapsService(mapboxMap, mapGeoJson);
         doorsDrawService = new DrawGeoJsonDoorsService(mapboxMap, this, mapGeoJson);
-
+//
         //instancier le service quand une recherc her est lanc/e (pour linbstant le plan s<affiche suelement quand on init un etage (initmaps).
         pathDrawService = new DrawGeoJsonPathService(mapboxMap);
         //quand lutilisateur entre les locaux lancer la requete api
