@@ -33,6 +33,8 @@ import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Projection;
 
+;
+
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -172,7 +174,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void setTextSearch(int i) {
-        //TODO get selected doors.
+        int b = i;
+        String[] list = doorsDrawService.getDoorsListTitle();
+
 
     }
 
@@ -186,6 +190,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 mc.addRow(new Object[]{i, list[i]});
         }
         searchAdapter.changeCursor(mc);
+
     }
 
     //endregion
