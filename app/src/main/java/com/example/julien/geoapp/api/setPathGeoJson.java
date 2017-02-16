@@ -14,6 +14,6 @@ public class setPathGeoJson extends ApiRequest {
     @Override
     protected void onPostExecute(String request) {
         super.onPostExecute(request);
-        super.context.setPathGeoJson(request);
+       // super.context.setPathGeoJson(request);
     }
 }
