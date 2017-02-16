@@ -3,13 +3,11 @@ package com.example.julien.geoapp.services.repositoryServices;
 import com.example.julien.geoapp.models.DoorsInformationsForSearching;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 
-<<<<<<< HEAD:app/src/main/java/com/example/julien/geoapp/services/RepositoryServices/DoorsRepositoryService.java
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.lang.reflect.Array;
-=======
->>>>>>> refs/remotes/origin/master:app/src/main/java/com/example/julien/geoapp/services/repositoryServices/DoorsRepositoryService.java
+
 import java.util.ArrayList;
 
 /**
