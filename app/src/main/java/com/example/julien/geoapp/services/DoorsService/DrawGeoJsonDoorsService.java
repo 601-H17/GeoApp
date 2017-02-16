@@ -1,4 +1,4 @@
-package com.example.julien.geoapp.services.DoorsService;
+package com.example.julien.geoapp.services.doorsService;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;

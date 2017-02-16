@@ -1,20 +1,12 @@
-package com.example.julien.geoapp.services.DoorsService;
+package com.example.julien.geoapp.services.doorsService;
 
-import android.content.Context;
-
-import com.example.julien.geoapp.services.MapsService.DrawGeoJsonMapsService;
-
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.atMost;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;

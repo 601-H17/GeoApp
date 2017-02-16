@@ -1,4 +1,4 @@
-package com.example.julien.geoapp.services.MapsService;
+package com.example.julien.geoapp.services.mapsService;
 
 import android.graphics.Color;
 import android.text.TextUtils;
