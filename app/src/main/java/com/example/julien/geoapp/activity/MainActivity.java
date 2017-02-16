@@ -23,12 +23,12 @@ import com.example.julien.geoapp.R;
 import com.example.julien.geoapp.api.setDoorsList;
 import com.example.julien.geoapp.api.setGeoJsonMaps;
 import com.example.julien.geoapp.api.setPathGeoJson;
-import com.example.julien.geoapp.services.DoorsService.DrawGeoJsonDoorsService;
-import com.example.julien.geoapp.services.DoorsService.IDrawGeoJsonDoorsService;
-import com.example.julien.geoapp.services.MapsService.DrawGeoJsonMapsService;
-import com.example.julien.geoapp.services.MapsService.IDrawGeoJsonMapsService;
-import com.example.julien.geoapp.services.PathService.DrawGeoJsonPathService;
-import com.example.julien.geoapp.services.RepositoryServices.DoorsRepositoryService;
+import com.example.julien.geoapp.services.doorsService.DrawGeoJsonDoorsService;
+import com.example.julien.geoapp.services.doorsService.IDrawGeoJsonDoorsService;
+import com.example.julien.geoapp.services.mapsService.DrawGeoJsonMapsService;
+import com.example.julien.geoapp.services.mapsService.IDrawGeoJsonMapsService;
+import com.example.julien.geoapp.services.pathService.DrawGeoJsonPathService;
+import com.example.julien.geoapp.services.repositoryServices.DoorsRepositoryService;
 import com.mapbox.mapboxsdk.MapboxAccountManager;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
@@ -48,10 +48,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     //region Private Fields (open to view)
 
     private MapView mapView;
+<<<<<<< HEAD
     private Button bouttonEtage;
     private Button bouttonEtage2;
     private Button bouttonEtage3;
     private Button go;
+=======
+    private Button firstFloorButton;
+    private Button secondFloorButton2;
+    private Button thirdFloorButton3;
+    private MapboxMap mapboxMap;
+>>>>>>> refs/remotes/origin/master
 
     private MapboxMap mapboxMap;
     private AutoCompleteTextView toLocal;
@@ -97,14 +104,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void setView() {
 
         setContentView(R.layout.activity_main);
-        bouttonEtage = (Button) findViewById(R.id.button);
-        bouttonEtage2 = (Button) findViewById(R.id.button2);
-        bouttonEtage3 = (Button) findViewById(R.id.button3);
+        firstFloorButton = (Button) findViewById(R.id.button);
+        secondFloorButton2 = (Button) findViewById(R.id.button2);
+        thirdFloorButton3 = (Button) findViewById(R.id.button3);
     }
 
     private void setButtonListener() {
 
-        bouttonEtage.setOnClickListener(new View.OnClickListener() {
+        firstFloorButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -112,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 mapboxMap.clear();
             }
         });
-        bouttonEtage2.setOnClickListener(new View.OnClickListener() {
+        secondFloorButton2.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -120,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 mapboxMap.clear();
             }
         });
-        bouttonEtage3.setOnClickListener(new View.OnClickListener() {
+        thirdFloorButton3.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {

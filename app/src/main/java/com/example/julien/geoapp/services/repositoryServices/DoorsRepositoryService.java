@@ -1,20 +1,16 @@
-package com.example.julien.geoapp.services.RepositoryServices;
-
-import android.graphics.Color;
-import android.text.TextUtils;
-import android.util.Log;
+package com.example.julien.geoapp.services.repositoryServices;
 
 import com.example.julien.geoapp.models.DoorsInformationsForSearching;
-import com.mapbox.mapboxsdk.annotations.PolylineOptions;
-import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 
+<<<<<<< HEAD:app/src/main/java/com/example/julien/geoapp/services/RepositoryServices/DoorsRepositoryService.java
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.lang.reflect.Array;
+=======
+>>>>>>> refs/remotes/origin/master:app/src/main/java/com/example/julien/geoapp/services/repositoryServices/DoorsRepositoryService.java
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Julien on 2017-02-10.

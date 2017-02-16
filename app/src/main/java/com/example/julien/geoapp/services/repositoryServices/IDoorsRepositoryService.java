@@ -1,4 +1,4 @@
-package com.example.julien.geoapp.services.RepositoryServices;
+package com.example.julien.geoapp.services.repositoryServices;
 
 /**
  * Created by Julien on 2017-02-13.

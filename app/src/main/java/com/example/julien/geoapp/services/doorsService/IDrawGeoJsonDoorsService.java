@@ -1,8 +1,4 @@
-package com.example.julien.geoapp.services.DoorsService;
-
-import android.content.Context;
-
-import com.mapbox.mapboxsdk.maps.MapboxMap;
+package com.example.julien.geoapp.services.doorsService;
 
 /**
  * Created by Julien on 2017-02-13.
