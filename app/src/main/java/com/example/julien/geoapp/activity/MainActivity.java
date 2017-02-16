@@ -39,6 +39,9 @@ import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Projection;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -48,10 +51,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private Button bouttonEtage;
     private Button bouttonEtage2;
     private Button bouttonEtage3;
+    private Button go;
+
     private MapboxMap mapboxMap;
     private AutoCompleteTextView toLocal;
     private ArrayAdapter toAdapter;
-
+    private ArrayList<String> listSearch;
+    private SearchView searchView;
     private LatLng centerCoordinates;
     private double[] centerLatLongCegep = {46.7867176564811, -71.2869702165109};
     private double[] boundsCegep = {46.78800596023283, -71.28548741340637, 46.784788302609186, -71.28870606422424};
@@ -144,7 +150,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.search_menu, menu);
         MenuItem item = menu.findItem(R.id.searchMenu);
-        SearchView searchView = (SearchView) item.getActionView();
+        searchView = (SearchView) item.getActionView();
         searchView.setSuggestionsAdapter(searchAdapter);
         toLocal = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView2);
         initSearchView(searchView);
@@ -186,17 +192,26 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void setTextSearch(int i) {
         //TODO get selected doors.
-
+        searchView.setQuery(listSearch.get(i), false);
     }
 
     private void searchQuery(String newText) {
         //TODO faire la recherche avec le doorsRepositoryService.getDoorsList, ceci ne retourne que la liste des locaux de l etage selectionnee.
-
+        listSearch = new ArrayList<>();
         final MatrixCursor mc = new MatrixCursor(new String[]{BaseColumns._ID, menuId});
         String[] list = doorsDrawService.getDoorsListTitle();
         for (int i = 0; i < list.length; i++) {
-            if (list[i].toLowerCase().startsWith(newText.toLowerCase()))
+            if (list[i].toLowerCase().startsWith(newText.toLowerCase())) {
                 mc.addRow(new Object[]{i, list[i]});
+                listSearch.add(list[i]);
+            }
+        }
+        if (newText.length() >= 3) {
+            toLocal.setVisibility(View.VISIBLE);
+            go.setVisibility(View.VISIBLE);
+        } else {
+            toLocal.setVisibility(View.GONE);
+            go.setVisibility(View.GONE);
         }
         searchAdapter.changeCursor(mc);
     }
@@ -290,8 +305,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void initDoorsList() {
         doorsRepositoryService = new DoorsRepositoryService(mapboxMap, doorsInformaftions);
         toLocal = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView2);
+        go = (Button) findViewById(R.id.button4);
         toAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, doorsRepositoryService.getDoorsList());
         toLocal.setAdapter(toAdapter);
+        go.setVisibility(View.GONE);
+        toLocal.setVisibility(View.GONE);
     }
 
     public void setPathGeoJson(String path) {

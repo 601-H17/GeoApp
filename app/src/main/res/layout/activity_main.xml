@@ -12,7 +12,6 @@
     android:paddingTop="0dp"
     tools:context="com.example.julien.geoapp.activity.MainActivity">
 
-
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="wrap_content"
