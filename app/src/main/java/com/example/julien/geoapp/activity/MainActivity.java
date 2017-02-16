@@ -48,17 +48,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     //region Private Fields (open to view)
 
     private MapView mapView;
-<<<<<<< HEAD
     private Button bouttonEtage;
     private Button bouttonEtage2;
     private Button bouttonEtage3;
     private Button go;
-=======
-    private Button firstFloorButton;
-    private Button secondFloorButton2;
-    private Button thirdFloorButton3;
-    private MapboxMap mapboxMap;
->>>>>>> refs/remotes/origin/master
 
     private MapboxMap mapboxMap;
     private AutoCompleteTextView toLocal;
@@ -104,14 +97,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void setView() {
 
         setContentView(R.layout.activity_main);
-        firstFloorButton = (Button) findViewById(R.id.button);
-        secondFloorButton2 = (Button) findViewById(R.id.button2);
-        thirdFloorButton3 = (Button) findViewById(R.id.button3);
+        bouttonEtage = (Button) findViewById(R.id.button);
+        bouttonEtage2 = (Button) findViewById(R.id.button2);
+        bouttonEtage3 = (Button) findViewById(R.id.button3);
     }
 
     private void setButtonListener() {
 
-        firstFloorButton.setOnClickListener(new View.OnClickListener() {
+        bouttonEtage.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -119,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 mapboxMap.clear();
             }
         });
-        secondFloorButton2.setOnClickListener(new View.OnClickListener() {
+        bouttonEtage2.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -127,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 mapboxMap.clear();
             }
         });
-        thirdFloorButton3.setOnClickListener(new View.OnClickListener() {
+        bouttonEtage3.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -357,4 +350,3 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     //endregion
 }
-
