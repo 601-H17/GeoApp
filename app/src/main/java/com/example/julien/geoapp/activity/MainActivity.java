@@ -40,9 +40,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     //region Private Fields (open to view)
 
     private MapView mapView;
-    private Button bouttonEtage;
-    private Button bouttonEtage2;
-    private Button bouttonEtage3;
+    private Button firstFloorButton;
+    private Button secondFloorButton2;
+    private Button thirdFloorButton3;
     private MapboxMap mapboxMap;
 
     private LatLng centerCoordinates;
@@ -81,14 +81,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void setView() {
 
         setContentView(R.layout.activity_main);
-        bouttonEtage = (Button) findViewById(R.id.button);
-        bouttonEtage2 = (Button) findViewById(R.id.button2);
-        bouttonEtage3 = (Button) findViewById(R.id.button3);
+        firstFloorButton = (Button) findViewById(R.id.button);
+        secondFloorButton2 = (Button) findViewById(R.id.button2);
+        thirdFloorButton3 = (Button) findViewById(R.id.button3);
     }
 
     private void setButtonListener() {
 
-        bouttonEtage.setOnClickListener(new View.OnClickListener() {
+        firstFloorButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 mapboxMap.clear();
             }
         });
-        bouttonEtage2.setOnClickListener(new View.OnClickListener() {
+        secondFloorButton2.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 mapboxMap.clear();
             }
         });
-        bouttonEtage3.setOnClickListener(new View.OnClickListener() {
+        thirdFloorButton3.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
