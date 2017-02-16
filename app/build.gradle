@@ -121,6 +121,8 @@ dependencies {
 
     compile 'com.google.guava:guava:18.0'
     androidTestCompile 'com.google.guava:guava:18.0'
+    compile 'com.android.support.constraint:constraint-layout:1.0.0-beta5'
+    compile 'com.google.android.gms:play-services-appindexing:8.4.0'
 }
 repositories {
     jcenter()

@@ -1,0 +1,30 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:gravity="center">
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="33dp"
+        app:srcCompat="@android:drawable/ic_menu_search"
+        android:id="@+id/imageButton" />
+
+    <AutoCompleteTextView
+        android:layout_width="229dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="AutoComplete TextView"
+        android:backgroundTint="@color/colorPrimary"
+        android:elevation="1dp"
+        android:id="@+id/autoCompleteTextView"
+        android:theme="@style/AppTheme"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        tools:background="@color/colorPrimary"
+        android:background="@color/colorPrimary"
+        android:textAlignment="viewEnd">
+    </AutoCompleteTextView>
+
+</LinearLayout>

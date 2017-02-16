@@ -1,19 +1,20 @@
 package com.example.julien.geoapp.activity;
 
+import android.content.Context;
 import android.database.MatrixCursor;
 import android.graphics.PointF;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.CursorAdapter;
-import android.widget.SearchView;
-import android.widget.SimpleCursorAdapter;
+import android.widget.CheckedTextView;
 
 import com.example.julien.geoapp.R;
 import com.example.julien.geoapp.api.setGeoJsonMaps;
@@ -24,6 +25,10 @@ import com.example.julien.geoapp.services.MapsService.DrawGeoJsonMapsService;
 import com.example.julien.geoapp.services.MapsService.IDrawGeoJsonMapsService;
 import com.example.julien.geoapp.services.PathService.DrawGeoJsonPathService;
 import com.example.julien.geoapp.services.RepositoryServices.DoorsRepositoryService;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.appindexing.Thing;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.mapbox.mapboxsdk.MapboxAccountManager;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
@@ -46,6 +51,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private Button bouttonEtage2;
     private Button bouttonEtage3;
     private MapboxMap mapboxMap;
+    private AutoCompleteTextView autoCompleteTextView;
 
     private LatLng centerCoordinates;
     private double[] centerLatLongCegep = {46.7867176564811, -71.2869702165109};
@@ -54,18 +60,24 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private String mapGeoJson;
     private String doorsInformations;
     private String pathGeoJson;
+    private String selectedDoor;
 
     private IDrawGeoJsonMapsService mapsDrawService;
     private IDrawGeoJsonDoorsService doorsDrawService;
     private DrawGeoJsonPathService pathDrawService;
     private DoorsRepositoryService doorsRepositoryService;
 
-    private SimpleCursorAdapter searchAdapter;
+    private ArrayAdapter searchAdapter;
 
     private double positionZoom;
     private int positionZoomBeforePins = 18;
     private int distanceBeforeRelocation = 200;
     private String menuId = "localName";
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
     //endregion
 
@@ -75,7 +87,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         setView();
         setButtonListener();
         setMap(savedInstanceState);
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+    }
+
+    private void setSearchBar() {
         setAdapter();
+        autoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView);
+        autoCompleteTextView.setAdapter(searchAdapter);
+        initAutoCompleteTextView();
     }
 
     //region onCreate methods (open to view)
@@ -83,6 +105,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void setView() {
 
         setContentView(R.layout.activity_main);
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        //actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayShowCustomEnabled(true);
+        LayoutInflater inflator = (LayoutInflater) this
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View v = inflator.inflate(R.layout.search, null);
+        actionBar.setCustomView(v);
+
+        setSearchBar();
+
         bouttonEtage = (Button) findViewById(R.id.button);
         bouttonEtage2 = (Button) findViewById(R.id.button2);
         bouttonEtage3 = (Button) findViewById(R.id.button3);
@@ -126,61 +158,31 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void setAdapter() {
         final String[] from = new String[]{menuId};
         final int[] to = new int[]{android.R.id.text1};
-        searchAdapter = new SimpleCursorAdapter(MainActivity.this, R.layout.spinner_item, null, from, to, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+
+        //Il faut obtenir la vrai liste avec le service DoorsRepositoryService
+
+        String[] listDoor = {"G-165", "G-164", "G-154", "G-163", "G-162"};
+        searchAdapter = new ArrayAdapter(this, R.layout.spinner_item, listDoor);
     }
 
-    //endregion
+    private void initAutoCompleteTextView() {
+        autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                CheckedTextView checkedtextView = (CheckedTextView) view;
+                String text = checkedtextView.getText().toString();
+                changePosition(text);
+            }
+        });
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.search_menu, menu);
-        MenuItem item = menu.findItem(R.id.searchMenu);
-        SearchView searchView = (SearchView) item.getActionView();
-        searchView.setSuggestionsAdapter(searchAdapter);
-        initSearchView(searchView);
-        return super.onCreateOptionsMenu(menu);
+    }
+
+    private void changePosition(String text) {
+        selectedDoor = text;
+        //mapView.;
     }
 
     //region onCreateOptionsMenu methods (open to view)
-
-    private void initSearchView(SearchView searchView) {
-        searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
-            @Override
-            public boolean onSuggestionSelect(int i) {
-                setTextSearch(i);
-                return false;
-            }
-
-            @Override
-            public boolean onSuggestionClick(int i) {
-                setTextSearch(i);
-                return false;
-            }
-        });
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                searchQuery(query);
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                searchQuery(newText);
-                return false;
-            }
-        });
-    }
-
-    private void setTextSearch(int i) {
-        int b = i;
-        String[] list = doorsDrawService.getDoorsListTitle();
-
-
-    }
 
     private void searchQuery(String newText) {
         //TODO faire la recherche avec le doorsRepositoryService.getDoorsList, ceci ne retourne que la liste des locaux de l etage selectionnee.
@@ -191,7 +193,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             if (list[i].toLowerCase().startsWith(newText.toLowerCase()))
                 mc.addRow(new Object[]{i, list[i]});
         }
-        searchAdapter.changeCursor(mc);
+        //searchAdapter.changeCursor(mc);
 
     }
 
@@ -285,8 +287,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void initDoorsList() {
         doorsRepositoryService = new DoorsRepositoryService(mapboxMap, doorsInformations);
     }
-    public void setPathGeoJson(String path){
-        this.pathGeoJson=path;
+
+    public void setPathGeoJson(String path) {
+        this.pathGeoJson = path;
     }
 
     //region Activity methods (open to view)
@@ -319,6 +322,42 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onDestroy() {
         super.onDestroy();
         mapView.onDestroy();
+    }
+
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    public Action getIndexApiAction() {
+        Thing object = new Thing.Builder()
+                .setName("Main Page") // TODO: Define a title for the content shown.
+                // TODO: Make sure this auto-generated URL is correct.
+                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
+                .build();
+        return new Action.Builder(Action.TYPE_VIEW)
+                .setObject(object)
+                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
+                .build();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        AppIndex.AppIndexApi.start(client, getIndexApiAction());
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        AppIndex.AppIndexApi.end(client, getIndexApiAction());
+        client.disconnect();
     }
 
     //endregion
