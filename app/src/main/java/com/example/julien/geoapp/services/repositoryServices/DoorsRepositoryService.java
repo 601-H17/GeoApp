@@ -3,6 +3,11 @@ package com.example.julien.geoapp.services.repositoryServices;
 import com.example.julien.geoapp.models.DoorsInformationsForSearching;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.lang.reflect.Array;
+
 import java.util.ArrayList;
 
 /**
@@ -20,10 +25,19 @@ public class DoorsRepositoryService {
         this.mapboxMap = mapboxMap;
         this.request = request;
         this.doorsInformationsForSearching = new ArrayList<DoorsInformationsForSearching>();
+        //initlist();
     }
 
-    private void getDoorsList() {
-        //return list with entered research
+    public ArrayList<DoorsInformationsForSearching> getDoorsArrayList() {
+        DoorsInformationsForSearching doors = new DoorsInformationsForSearching("allo", "salut", 2, 12.33312321, 23.43545340);
+        DoorsInformationsForSearching doors2 = new DoorsInformationsForSearching("allo2", "salut", 2, 12.33312321, 23.43545340);
+        doorsInformationsForSearching.add(doors);
+        doorsInformationsForSearching.add(doors2);
+        return doorsInformationsForSearching;
+    }
+    public String[] getDoorsList() {
+       String[] list = {"Dsfdadfsafds","fsfsadsdfsfda","fsdfasdfsadfsad","sdfsdfsadf"};
+        return list;
     }
 
 }
