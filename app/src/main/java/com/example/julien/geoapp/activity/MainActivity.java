@@ -28,6 +28,9 @@ import com.example.julien.geoapp.services.doorsService.IDrawGeoJsonDoorsService;
 import com.example.julien.geoapp.services.mapsService.DrawGeoJsonMapsService;
 import com.example.julien.geoapp.services.mapsService.IDrawGeoJsonMapsService;
 import com.example.julien.geoapp.services.pathService.DrawGeoJsonPathService;
+import com.example.julien.geoapp.services.pathService.IDrawGeoJsonPathService;
+import com.example.julien.geoapp.services.pathfinderService.IPathfinderService;
+import com.example.julien.geoapp.services.pathfinderService.PathfinderService;
 import com.example.julien.geoapp.services.repositoryServices.DoorsRepositoryService;
 import com.mapbox.mapboxsdk.MapboxAccountManager;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
@@ -68,7 +71,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private IDrawGeoJsonMapsService mapsDrawService;
     private IDrawGeoJsonDoorsService doorsDrawService;
-    private DrawGeoJsonPathService pathDrawService;
+    private IDrawGeoJsonPathService pathDrawService;
+    private IPathfinderService pathfinderService;
     private DoorsRepositoryService doorsRepositoryService;
 
     private SimpleCursorAdapter searchAdapter;
@@ -77,6 +81,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private int positionZoomBeforePins = 18;
     private int distanceBeforeRelocation = 200;
     private String menuId = "localName";
+
+    private ArrayList<String> shortestPath = new ArrayList<String>();
+    private int currentStep;
 
     //endregion
 
@@ -128,6 +135,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 mapboxMap.clear();
             }
         });
+
     }
 
     private void setMap(Bundle savedInstanceState) {
@@ -283,13 +291,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void initDrawableMaps() {
         mapsDrawService = new DrawGeoJsonMapsService(mapboxMap, mapGeoJson);
         doorsDrawService = new DrawGeoJsonDoorsService(mapboxMap, this, mapGeoJson);
-//
-        //instancier le service quand une recherc her est lanc/e (pour linbstant le plan s<affiche suelement quand on init un etage (initmaps).
-        pathDrawService = new DrawGeoJsonPathService(mapboxMap);
-        //quand lutilisateur entre les locaux lancer la requete api
-        new setPathGeoJson(MainActivity.this, "path?localA=G-116&localB=G-160").execute();
-        //dessiner le chemin:):)
-        pathDrawService.drawPath(pathGeoJson);
 
         mapsDrawService.drawMaps();
         showDoors();
@@ -306,15 +307,23 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         doorsRepositoryService = new DoorsRepositoryService(mapboxMap, doorsInformaftions);
         toLocal = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView2);
         go = (Button) findViewById(R.id.button4);
+        go.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                initPath(searchView.getQuery().toString(),toLocal.getText().toString());
+            }
+        });
         toAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, doorsRepositoryService.getDoorsList());
         toLocal.setAdapter(toAdapter);
         go.setVisibility(View.GONE);
         toLocal.setVisibility(View.GONE);
     }
 
-    public void setPathGeoJson(String path) {
-        this.pathGeoJson = path;
+    private void initPath(String a, String b) {
+        pathfinderService = new PathfinderService(this,mapboxMap,a,b);
     }
+
+
 
     //region Activity methods (open to view)
 
