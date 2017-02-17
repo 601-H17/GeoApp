@@ -19,7 +19,7 @@ import android.widget.SimpleCursorAdapter;
 
 import com.example.julien.geoapp.R;
 import com.example.julien.geoapp.api.setGeoJsonMaps;
-import com.example.julien.geoapp.api.setPathGeoJson;
+import com.example.julien.geoapp.models.DoorsInformationsForSearching;
 import com.example.julien.geoapp.services.doorsService.DrawGeoJsonDoorsService;
 import com.example.julien.geoapp.services.doorsService.IDrawGeoJsonDoorsService;
 import com.example.julien.geoapp.services.mapsService.DrawGeoJsonMapsService;
@@ -192,13 +192,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         searchView.setQuery(listSearch.get(i), false);
         ArrayList<Marker> markers = (ArrayList<Marker>) this.mapboxMap.getMarkers();
         Marker mark = null;
-//        LatLng aPosition = doorsRepositoryService.getDoorsArrayList(listSearch.get(i)).position;
-//        CameraPosition position = new CameraPosition.Builder()
-//                .target(aPosition) // St the camera tilt
-//                .build(); // Creates a CameraPosition from the builder
-//
-//        mapboxMap.animateCamera(CameraUpdateFactory
-//                .newCameraPosition(position), 5000);
+        DoorsInformationsForSearching doorsInformation = doorsRepositoryService.getSpecificDoors(listSearch.get(0));
+        LatLng aPosition = new LatLng(doorsInformation.getLati(),doorsInformation.getlongi());
+        CameraPosition position = new CameraPosition.Builder()
+                .target(aPosition) // St the camera tilt
+                .build(); // Creates a CameraPosition from the builder
+
+        mapboxMap.animateCamera(CameraUpdateFactory
+                .newCameraPosition(position), 5000);
     }
 
     private void searchQuery(String newText) {
