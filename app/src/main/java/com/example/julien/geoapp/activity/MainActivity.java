@@ -6,7 +6,6 @@ import android.location.Location;
 import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -15,12 +14,10 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CursorAdapter;
-import android.widget.MultiAutoCompleteTextView;
 import android.widget.SearchView;
 import android.widget.SimpleCursorAdapter;
 
 import com.example.julien.geoapp.R;
-import com.example.julien.geoapp.api.setDoorsList;
 import com.example.julien.geoapp.api.setGeoJsonMaps;
 import com.example.julien.geoapp.api.setPathGeoJson;
 import com.example.julien.geoapp.services.doorsService.DrawGeoJsonDoorsService;
@@ -30,6 +27,7 @@ import com.example.julien.geoapp.services.mapsService.IDrawGeoJsonMapsService;
 import com.example.julien.geoapp.services.pathService.DrawGeoJsonPathService;
 import com.example.julien.geoapp.services.repositoryServices.DoorsRepositoryService;
 import com.mapbox.mapboxsdk.MapboxAccountManager;
+import com.mapbox.mapboxsdk.annotations.Marker;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -40,7 +38,6 @@ import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Projection;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -193,6 +190,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void setTextSearch(int i) {
         //TODO get selected doors.
         searchView.setQuery(listSearch.get(i), false);
+        ArrayList<Marker> markers = (ArrayList<Marker>) this.mapboxMap.getMarkers();
+        Marker mark = null;
+//        LatLng aPosition = doorsRepositoryService.getDoorsArrayList(listSearch.get(i)).position;
+//        CameraPosition position = new CameraPosition.Builder()
+//                .target(aPosition) // St the camera tilt
+//                .build(); // Creates a CameraPosition from the builder
+//
+//        mapboxMap.animateCamera(CameraUpdateFactory
+//                .newCameraPosition(position), 5000);
     }
 
     private void searchQuery(String newText) {
