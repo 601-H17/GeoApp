@@ -1,6 +1,11 @@
 package com.example.julien.geoapp.activity;
 
 import android.database.MatrixCursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.PointF;
 import android.location.Location;
 import android.os.Bundle;
@@ -28,6 +33,7 @@ import com.example.julien.geoapp.services.doorsService.IDrawGeoJsonDoorsService;
 import com.example.julien.geoapp.services.mapsService.DrawGeoJsonMapsService;
 import com.example.julien.geoapp.services.mapsService.IDrawGeoJsonMapsService;
 import com.example.julien.geoapp.services.pathService.DrawGeoJsonPathService;
+import com.example.julien.geoapp.services.pathService.IDrawGeoJsonPathService;
 import com.example.julien.geoapp.services.repositoryServices.DoorsRepositoryService;
 import com.mapbox.mapboxsdk.MapboxAccountManager;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
@@ -39,6 +45,9 @@ import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Projection;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -68,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private IDrawGeoJsonMapsService mapsDrawService;
     private IDrawGeoJsonDoorsService doorsDrawService;
-    private DrawGeoJsonPathService pathDrawService;
+    private IDrawGeoJsonPathService pathDrawService;
     private DoorsRepositoryService doorsRepositoryService;
 
     private SimpleCursorAdapter searchAdapter;
@@ -87,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         setButtonListener();
         setMap(savedInstanceState);
         setAdapter();
-
+        createIcon();
         //a retirer quand api va avoir les locaux lancer la requete
         initDoorsList();
     }
@@ -283,6 +292,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void initDrawableMaps() {
         mapsDrawService = new DrawGeoJsonMapsService(mapboxMap, mapGeoJson);
         doorsDrawService = new DrawGeoJsonDoorsService(mapboxMap, this, mapGeoJson);
+        pathDrawService = new DrawGeoJsonPathService(mapboxMap);
         mapsDrawService.drawMaps();
         showDoors();
     }
@@ -298,6 +308,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         doorsRepositoryService = new DoorsRepositoryService(mapboxMap, doorsInformaftions);
         toLocal = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView2);
         go = (Button) findViewById(R.id.button4);
+        go.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                new setPathGeoJson(MainActivity.this,"path?localA="+searchView.getQuery().toString()+"&localB="+toLocal.getText().toString()).execute();
+            }
+        });
         toAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, doorsRepositoryService.getDoorsList());
         toLocal.setAdapter(toAdapter);
         go.setVisibility(View.GONE);
@@ -306,6 +323,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     public void setPathGeoJson(String path) {
         this.pathGeoJson = path;
+        mapboxMap.clear();
+        mapsDrawService.drawMaps();
+        showDoors();
+        pathDrawService.drawPath(pathGeoJson);
     }
 
     //region Activity methods (open to view)
@@ -338,6 +359,34 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onDestroy() {
         super.onDestroy();
         mapView.onDestroy();
+    }
+
+
+    private  void createIcon(){
+        Bitmap src = BitmapFactory.decodeResource(getResources(), R.drawable.test); // the original file yourimage.jpg i added in resources
+        Bitmap dest = Bitmap.createBitmap(src.getWidth(), src.getHeight(), Bitmap.Config.ARGB_8888);
+
+        String yourText = "G-165";
+
+        Canvas cs = new Canvas(dest);
+        Paint tPaint = new Paint();
+        tPaint.setTextSize(35);
+        tPaint.setColor(Color.BLACK);
+        tPaint.setStyle(Paint.Style.FILL);
+        cs.drawBitmap(src, 0f, 0f, null);
+        float height = tPaint.measureText("yY");
+        float width = tPaint.measureText(yourText);
+        float x_coord = (src.getWidth() - width)/2;
+        float y_coord = (src.getHeight() - height)/2;
+        cs.drawText(yourText, x_coord,y_coord, tPaint); // 15f is to put space between top edge and the text, if you want to change it, you can
+        try {
+            dest.compress(Bitmap.CompressFormat.JPEG, 100, new FileOutputStream(new File(getFilesDir(),"ImageAfterAddingText.jpg")));
+            // dest is Bitmap, if you want to preview the final image, you can display it on screen also before saving
+            int ad = 3;
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     //endregion
