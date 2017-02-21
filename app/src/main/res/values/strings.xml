@@ -11,5 +11,6 @@
     <string name="longCegep">-71.2869702165109</string>
     <string name="apiUrl">https://csf-geo-app.herokuapp.com/api/</string>
     <string name="headerAuthorization">Authorization</string>
+    <string name="getDoorsQuery">classroom_search/</string>
     <string name="headerToken">Token token=7f4b544bccc5ed31b390865e82e7c9cb</string>
 </resources>

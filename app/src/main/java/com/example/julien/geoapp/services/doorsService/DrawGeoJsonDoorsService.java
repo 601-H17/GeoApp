@@ -84,6 +84,7 @@ public class DrawGeoJsonDoorsService implements  IDrawGeoJsonDoorsService{
                         .title(doorsInformationForPins.get(i).getTitle())
                         .snippet(doorsInformationForPins.get(i).getDescription())
                         .icon(icon);
+
                 markers.add(mark);
             }
         }
