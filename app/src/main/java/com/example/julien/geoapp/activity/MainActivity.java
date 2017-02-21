@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         setButtonListener();
         setMap(savedInstanceState);
         setAdapter();
-       // initDoorsList();
+        // initDoorsList();
         //a retirer quand api va avoir les locaux lancer la requete
     }
 
@@ -119,19 +119,19 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         toLocal.addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                new setDoorsList(MainActivity.this, getString(R.string.getDoorsQuery)+s).execute();
+                new setDoorsList(MainActivity.this, getString(R.string.getDoorsQuery) + s).execute();
 
             }
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                new setDoorsList(MainActivity.this, getString(R.string.getDoorsQuery)+s).execute();
+                new setDoorsList(MainActivity.this, getString(R.string.getDoorsQuery) + s).execute();
 
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                new setDoorsList(MainActivity.this, getString(R.string.getDoorsQuery)+s).execute();
+                new setDoorsList(MainActivity.this, getString(R.string.getDoorsQuery) + s).execute();
 
             }
         });
@@ -140,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             @Override
             public void onClick(View v) {
-                new setPathGeoJson(MainActivity.this,"path?localA="+searchView.getQuery().toString()+"&localB="+toLocal.getText().toString()).execute();
+                new setPathGeoJson(MainActivity.this, "path?localA=" + searchView.getQuery().toString() + "&localB=" + toLocal.getText().toString()).execute();
             }
         });
         firstFloorButton.setOnClickListener(new View.OnClickListener() {
@@ -238,19 +238,19 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void searchQuery(String newText) {
         listSearch = new ArrayList<>();
-        new setDoorsList(MainActivity.this, getString(R.string.getDoorsQuery)+newText).execute();
+        new setDoorsList(MainActivity.this, getString(R.string.getDoorsQuery) + newText).execute();
         final MatrixCursor mc = new MatrixCursor(new String[]{BaseColumns._ID, menuId});
-       if(doorsRepositoryService != null) {
-           String[] list = doorsRepositoryService.getDoorsList();
-           for (int i = 0; i < list.length; i++) {
-               if (list[i].toLowerCase().startsWith(newText.toLowerCase())) {
-                   mc.addRow(new Object[]{i, list[i]});
-                   listSearch.add(list[i]);
-               }
-           }
-           searchAdapter.changeCursor(mc);
-       }
-        if (newText.length() >= 3){
+        if (doorsRepositoryService != null) {
+            String[] list = doorsRepositoryService.getDoorsList();
+            for (int i = 0; i < list.length; i++) {
+                if (list[i].toLowerCase().startsWith(newText.toLowerCase())) {
+                    mc.addRow(new Object[]{i, list[i]});
+                    listSearch.add(list[i]);
+                }
+            }
+            searchAdapter.changeCursor(mc);
+        }
+        if (newText.length() >= 3) {
             toLocal.setVisibility(View.VISIBLE);
             go.setVisibility(View.VISIBLE);
         } else {
@@ -342,7 +342,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         doorsRepositoryService = new DoorsRepositoryService(doorsInformaftions);
         setAdapterString();
     }
-    private void setAdapterString(){
+
+    private void setAdapterString() {
         toAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, doorsRepositoryService.getDoorsList());
         toLocal.setAdapter(toAdapter);
     }
@@ -388,7 +389,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
 
-    private  void createIcon(){
+    private void createIcon() {
         Bitmap src = BitmapFactory.decodeResource(getResources(), R.drawable.test); // the original file yourimage.jpg i added in resources
         Bitmap dest = Bitmap.createBitmap(src.getWidth(), src.getHeight(), Bitmap.Config.ARGB_8888);
 
@@ -402,11 +403,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         cs.drawBitmap(src, 0f, 0f, null);
         float height = tPaint.measureText("yY");
         float width = tPaint.measureText(yourText);
-        float x_coord = (src.getWidth() - width)/2;
-        float y_coord = (src.getHeight() - height)/2;
-        cs.drawText(yourText, x_coord,y_coord, tPaint); // 15f is to put space between top edge and the text, if you want to change it, you can
+        float x_coord = (src.getWidth() - width) / 2;
+        float y_coord = (src.getHeight() - height) / 2;
+        cs.drawText(yourText, x_coord, y_coord, tPaint); // 15f is to put space between top edge and the text, if you want to change it, you can
         try {
-            dest.compress(Bitmap.CompressFormat.JPEG, 100, new FileOutputStream(new File(getFilesDir(),"ImageAfterAddingText.jpg")));
+            dest.compress(Bitmap.CompressFormat.JPEG, 100, new FileOutputStream(new File(getFilesDir(), "ImageAfterAddingText.jpg")));
             // dest is Bitmap, if you want to preview the final image, you can display it on screen also before saving
             int ad = 3;
         } catch (FileNotFoundException e) {
