@@ -6,6 +6,8 @@ import android.location.Location;
 import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -18,16 +20,17 @@ import android.widget.SearchView;
 import android.widget.SimpleCursorAdapter;
 
 import com.example.julien.geoapp.R;
+import com.example.julien.geoapp.api.setDoorsList;
 import com.example.julien.geoapp.api.setGeoJsonMaps;
-import com.example.julien.geoapp.models.DoorsInformationsForSearching;
+import com.example.julien.geoapp.api.setPathGeoJson;
 import com.example.julien.geoapp.services.doorsService.DrawGeoJsonDoorsService;
 import com.example.julien.geoapp.services.doorsService.IDrawGeoJsonDoorsService;
 import com.example.julien.geoapp.services.mapsService.DrawGeoJsonMapsService;
 import com.example.julien.geoapp.services.mapsService.IDrawGeoJsonMapsService;
 import com.example.julien.geoapp.services.pathService.DrawGeoJsonPathService;
+import com.example.julien.geoapp.services.pathService.IDrawGeoJsonPathService;
 import com.example.julien.geoapp.services.repositoryServices.DoorsRepositoryService;
 import com.mapbox.mapboxsdk.MapboxAccountManager;
-import com.mapbox.mapboxsdk.annotations.Marker;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -42,8 +45,6 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    //region Private Fields (open to view)
-
     private MapView mapView;
     private Button firstFloorButton;
     private Button secondFloorButton2;
@@ -52,7 +53,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private MapboxMap mapboxMap;
     private AutoCompleteTextView toLocal;
-    private ArrayAdapter toAdapter;
     private ArrayList<String> listSearch;
     private SearchView searchView;
     private LatLng centerCoordinates;
@@ -60,22 +60,19 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private double[] boundsCegep = {46.78800596023283, -71.28548741340637, 46.784788302609186, -71.28870606422424};
 
     private String mapGeoJson;
-    private String doorsInformaftions;
+    private String doorsInformation;
     private String pathGeoJson;
 
     private IDrawGeoJsonMapsService mapsDrawService;
     private IDrawGeoJsonDoorsService doorsDrawService;
-    private DrawGeoJsonPathService pathDrawService;
+    private IDrawGeoJsonPathService pathDrawService;
     private DoorsRepositoryService doorsRepositoryService;
 
     private SimpleCursorAdapter searchAdapter;
 
     private double positionZoom;
-    private int positionZoomBeforePins = 18;
     private int distanceBeforeRelocation = 200;
     private String menuId = "localName";
-
-    //endregion
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -84,12 +81,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         setButtonListener();
         setMap(savedInstanceState);
         setAdapter();
-
-        //a retirer quand api va avoir les locaux lancer la requete
-        initDoorsList();
     }
-
-    //region onCreate methods (open to view)
 
     private void setView() {
 
@@ -97,10 +89,39 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         firstFloorButton = (Button) findViewById(R.id.button);
         secondFloorButton2 = (Button) findViewById(R.id.button2);
         thirdFloorButton3 = (Button) findViewById(R.id.button3);
+        go = (Button) findViewById(R.id.button4);
+        toLocal = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView2);
+
     }
 
     private void setButtonListener() {
+        toLocal.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                new setDoorsList(MainActivity.this, getString(R.string.getDoorsQuery) + s).execute();
 
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                new setDoorsList(MainActivity.this, getString(R.string.getDoorsQuery) + s).execute();
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                new setDoorsList(MainActivity.this, getString(R.string.getDoorsQuery) + s).execute();
+
+            }
+        });
+
+        go.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                new setPathGeoJson(MainActivity.this, "path?localA=" + searchView.getQuery().toString().toUpperCase() + "&localB=" + toLocal.getText().toString().toUpperCase()).execute();
+            }
+        });
         firstFloorButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -125,6 +146,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 mapboxMap.clear();
             }
         });
+        go.setVisibility(View.GONE);
+        toLocal.setVisibility(View.GONE);
     }
 
     private void setMap(Bundle savedInstanceState) {
@@ -132,6 +155,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mapView = (MapView) findViewById(R.id.mapview);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
+        new setGeoJsonMaps(MainActivity.this, getString(R.string.map)).execute();
     }
 
     private void setAdapter() {
@@ -139,8 +163,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         final int[] to = new int[]{android.R.id.text1};
         searchAdapter = new SimpleCursorAdapter(MainActivity.this, R.layout.spinner_item, null, from, to, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
     }
-
-    //endregion
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -153,8 +175,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         initSearchView(searchView);
         return super.onCreateOptionsMenu(menu);
     }
-
-    //region onCreateOptionsMenu methods (open to view)
 
     private void initSearchView(SearchView searchView) {
         searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
@@ -188,30 +208,22 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void setTextSearch(int i) {
-        //TODO get selected doors.
         searchView.setQuery(listSearch.get(i), false);
-        ArrayList<Marker> markers = (ArrayList<Marker>) this.mapboxMap.getMarkers();
-        Marker mark = null;
-        DoorsInformationsForSearching doorsInformation = doorsRepositoryService.getSpecificDoors(listSearch.get(0));
-        LatLng aPosition = new LatLng(doorsInformation.getLati(),doorsInformation.getlongi());
-        CameraPosition position = new CameraPosition.Builder()
-                .target(aPosition) // St the camera tilt
-                .build(); // Creates a CameraPosition from the builder
-
-        mapboxMap.animateCamera(CameraUpdateFactory
-                .newCameraPosition(position), 5000);
     }
 
     private void searchQuery(String newText) {
-        //TODO faire la recherche avec le doorsRepositoryService.getDoorsList, ceci ne retourne que la liste des locaux de l etage selectionnee.
         listSearch = new ArrayList<>();
+        new setDoorsList(MainActivity.this, getString(R.string.getDoorsQuery) + newText).execute();
         final MatrixCursor mc = new MatrixCursor(new String[]{BaseColumns._ID, menuId});
-        String[] list = doorsDrawService.getDoorsListTitle();
-        for (int i = 0; i < list.length; i++) {
-            if (list[i].toLowerCase().startsWith(newText.toLowerCase())) {
-                mc.addRow(new Object[]{i, list[i]});
-                listSearch.add(list[i]);
+        if (doorsRepositoryService != null) {
+            String[] list = doorsRepositoryService.getDoorsList();
+            for (int i = 0; i < list.length; i++) {
+                if (list[i].toLowerCase().startsWith(newText.toLowerCase())) {
+                    mc.addRow(new Object[]{i, list[i]});
+                    listSearch.add(list[i]);
+                }
             }
+            searchAdapter.changeCursor(mc);
         }
         if (newText.length() >= 3) {
             toLocal.setVisibility(View.VISIBLE);
@@ -220,10 +232,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             toLocal.setVisibility(View.GONE);
             go.setVisibility(View.GONE);
         }
-        searchAdapter.changeCursor(mc);
     }
-
-    //endregion
 
     @Override
     public void onMapReady(final MapboxMap mapboxMap) {
@@ -246,8 +255,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
     }
 
-    //region onMapReady methods (open to view)
-
     private void setCenterCoordinates(int width, int height, Projection projection) {
         PointF centerPoint = new PointF(width / 2, height / 2);
         this.centerCoordinates = new LatLng(projection.fromScreenLocation(centerPoint));
@@ -261,6 +268,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void showDoors() {
         if (doorsDrawService != null) {
+            int positionZoomBeforePins = 18;
             if (positionZoom >= positionZoomBeforePins) {
                 doorsDrawService.drawDoors();
             } else {
@@ -275,13 +283,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .include(new LatLng(boundsCegep[2], boundsCegep[3]))
                 .build();
         mapboxMap.easeCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 10), 200);
-
     }
 
-    //endregion
-
-
-    //dessine la carte (locaux,porte)
     public void setMapGeoJson(String map) {
         this.mapGeoJson = map;
         initDrawableMaps();
@@ -290,32 +293,37 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void initDrawableMaps() {
         mapsDrawService = new DrawGeoJsonMapsService(mapboxMap, mapGeoJson);
         doorsDrawService = new DrawGeoJsonDoorsService(mapboxMap, this, mapGeoJson);
+        pathDrawService = new DrawGeoJsonPathService(mapboxMap);
         mapsDrawService.drawMaps();
         showDoors();
     }
 
-
-    //load toutes les portes pour une recherche
     public void setDoorListQuery(String doors) {
-        this.doorsInformaftions = doors;
+        this.doorsInformation = doors;
         initDoorsList();
     }
 
     private void initDoorsList() {
-        doorsRepositoryService = new DoorsRepositoryService(mapboxMap, doorsInformaftions);
-        toLocal = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView2);
-        go = (Button) findViewById(R.id.button4);
-        toAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, doorsRepositoryService.getDoorsList());
+        doorsRepositoryService = new DoorsRepositoryService(doorsInformation);
+        setAdapterString();
+    }
+
+    private void setAdapterString() {
+        ArrayAdapter toAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, doorsRepositoryService.getDoorsList());
         toLocal.setAdapter(toAdapter);
-        go.setVisibility(View.GONE);
-        toLocal.setVisibility(View.GONE);
     }
 
-    public void setPathGeoJson(String path) {
-        this.pathGeoJson = path;
+    public void setPathGeoJsonString(String path) {
+        pathGeoJson = path;
+        initPath();
     }
 
-    //region Activity methods (open to view)
+    private void initPath() {
+        mapboxMap.clear();
+        mapsDrawService.drawMaps();
+        showDoors();
+        pathDrawService.drawPath(pathGeoJson);
+    }
 
     @Override
     public void onResume() {
@@ -346,6 +354,4 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onDestroy();
         mapView.onDestroy();
     }
-
-    //endregion
 }
