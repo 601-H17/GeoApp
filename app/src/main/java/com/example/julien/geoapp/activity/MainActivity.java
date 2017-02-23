@@ -296,7 +296,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
     //load toutes les portes pour une recherche
-    public void setDoorList(String doors) {
+    public void setDoorListQuery(String doors) {
         this.doorsInformaftions = doors;
         initDoorsList();
     }
