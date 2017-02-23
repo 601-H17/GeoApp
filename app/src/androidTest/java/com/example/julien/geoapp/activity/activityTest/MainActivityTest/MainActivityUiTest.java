@@ -22,6 +22,7 @@ import org.junit.runner.RunWith;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
@@ -87,7 +88,7 @@ public class MainActivityUiTest {
                                                 1)),
                                 0),
                         isDisplayed()));
-        imageView2.check(matches(isDisplayed()));
+        imageView2.check(matches(isCompletelyDisplayed()));
         imageView2.perform(ViewActions.click());
 
         Matcher<View> relativeLayout = childAtPosition(withId(R.id.mapview),2);
