@@ -18,7 +18,7 @@ import java.util.ArrayList;
  * Created by Julien on 2017-02-10.
  */
 
-public class DoorsRepositoryService {
+public class DoorsRepositoryService implements IDoorsRepositoryService {
 
     private String featuresJson[] = {"features", "geometry", "type", "Point", "coordinates", "properties", "ref", "entrance", "Disponible: "};
     private String error[] = {"TAG", "Exception Loading GeoJSON "};

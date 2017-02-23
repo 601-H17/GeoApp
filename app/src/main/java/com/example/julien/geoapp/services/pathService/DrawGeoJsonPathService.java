@@ -21,8 +21,6 @@ public class DrawGeoJsonPathService implements  IDrawGeoJsonPathService {
 
 
     private MapboxMap mapboxMap;
-    private String routeMap;
-    private String apiUrl = " http://csf-geo-app.herokuapp.com/api/path?";
 
     public DrawGeoJsonPathService(MapboxMap mapboxMap) {
         this.mapboxMap = mapboxMap;

@@ -1,17 +1,11 @@
 package com.example.julien.geoapp.activity;
 
 import android.database.MatrixCursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.PointF;
 import android.location.Location;
 import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
@@ -22,7 +16,6 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CursorAdapter;
-import android.widget.MultiAutoCompleteTextView;
 import android.widget.SearchView;
 import android.widget.SimpleCursorAdapter;
 
@@ -47,16 +40,10 @@ import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Projection;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
-
-    //region Private Fields (open to view)
 
     private MapView mapView;
     private Button firstFloorButton;
@@ -66,7 +53,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private MapboxMap mapboxMap;
     private AutoCompleteTextView toLocal;
-    private ArrayAdapter toAdapter;
     private ArrayList<String> listSearch;
     private SearchView searchView;
     private LatLng centerCoordinates;
@@ -74,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private double[] boundsCegep = {46.78800596023283, -71.28548741340637, 46.784788302609186, -71.28870606422424};
 
     private String mapGeoJson;
-    private String doorsInformaftions;
+    private String doorsInformation;
     private String pathGeoJson;
 
     private IDrawGeoJsonMapsService mapsDrawService;
@@ -85,11 +71,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private SimpleCursorAdapter searchAdapter;
 
     private double positionZoom;
-    private int positionZoomBeforePins = 18;
     private int distanceBeforeRelocation = 200;
     private String menuId = "localName";
-
-    //endregion
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -98,11 +81,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         setButtonListener();
         setMap(savedInstanceState);
         setAdapter();
-        // initDoorsList();
-        //a retirer quand api va avoir les locaux lancer la requete
     }
-
-    //region onCreate methods (open to view)
 
     private void setView() {
 
@@ -140,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             @Override
             public void onClick(View v) {
-                new setPathGeoJson(MainActivity.this, "path?localA=" + searchView.getQuery().toString() + "&localB=" + toLocal.getText().toString()).execute();
+                new setPathGeoJson(MainActivity.this, "path?localA=" + searchView.getQuery().toString().toUpperCase() + "&localB=" + toLocal.getText().toString().toUpperCase()).execute();
             }
         });
         firstFloorButton.setOnClickListener(new View.OnClickListener() {
@@ -185,8 +164,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         searchAdapter = new SimpleCursorAdapter(MainActivity.this, R.layout.spinner_item, null, from, to, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
     }
 
-    //endregion
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -198,8 +175,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         initSearchView(searchView);
         return super.onCreateOptionsMenu(menu);
     }
-
-    //region onCreateOptionsMenu methods (open to view)
 
     private void initSearchView(SearchView searchView) {
         searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
@@ -259,8 +234,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    //endregion
-
     @Override
     public void onMapReady(final MapboxMap mapboxMap) {
         this.mapboxMap = mapboxMap;
@@ -282,8 +255,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
     }
 
-    //region onMapReady methods (open to view)
-
     private void setCenterCoordinates(int width, int height, Projection projection) {
         PointF centerPoint = new PointF(width / 2, height / 2);
         this.centerCoordinates = new LatLng(projection.fromScreenLocation(centerPoint));
@@ -297,6 +268,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void showDoors() {
         if (doorsDrawService != null) {
+            int positionZoomBeforePins = 18;
             if (positionZoom >= positionZoomBeforePins) {
                 doorsDrawService.drawDoors();
             } else {
@@ -311,13 +283,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .include(new LatLng(boundsCegep[2], boundsCegep[3]))
                 .build();
         mapboxMap.easeCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 10), 200);
-
     }
 
-    //endregion
-
-
-    //dessine la carte (locaux,porte)
     public void setMapGeoJson(String map) {
         this.mapGeoJson = map;
         initDrawableMaps();
@@ -331,32 +298,32 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         showDoors();
     }
 
-
-    //load toutes les portes pour une recherche
     public void setDoorListQuery(String doors) {
-        this.doorsInformaftions = doors;
+        this.doorsInformation = doors;
         initDoorsList();
     }
 
     private void initDoorsList() {
-        doorsRepositoryService = new DoorsRepositoryService(doorsInformaftions);
+        doorsRepositoryService = new DoorsRepositoryService(doorsInformation);
         setAdapterString();
     }
 
     private void setAdapterString() {
-        toAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, doorsRepositoryService.getDoorsList());
+        ArrayAdapter toAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, doorsRepositoryService.getDoorsList());
         toLocal.setAdapter(toAdapter);
     }
 
-    public void setPathGeoJson(String path) {
-        this.pathGeoJson = path;
+    public void setPathGeoJsonString(String path) {
+        pathGeoJson = path;
+        initPath();
+    }
+
+    private void initPath() {
         mapboxMap.clear();
         mapsDrawService.drawMaps();
         showDoors();
         pathDrawService.drawPath(pathGeoJson);
     }
-
-    //region Activity methods (open to view)
 
     @Override
     public void onResume() {
@@ -387,34 +354,4 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onDestroy();
         mapView.onDestroy();
     }
-
-
-    private void createIcon() {
-        Bitmap src = BitmapFactory.decodeResource(getResources(), R.drawable.test); // the original file yourimage.jpg i added in resources
-        Bitmap dest = Bitmap.createBitmap(src.getWidth(), src.getHeight(), Bitmap.Config.ARGB_8888);
-
-        String yourText = "G-165";
-
-        Canvas cs = new Canvas(dest);
-        Paint tPaint = new Paint();
-        tPaint.setTextSize(35);
-        tPaint.setColor(Color.BLACK);
-        tPaint.setStyle(Paint.Style.FILL);
-        cs.drawBitmap(src, 0f, 0f, null);
-        float height = tPaint.measureText("yY");
-        float width = tPaint.measureText(yourText);
-        float x_coord = (src.getWidth() - width) / 2;
-        float y_coord = (src.getHeight() - height) / 2;
-        cs.drawText(yourText, x_coord, y_coord, tPaint); // 15f is to put space between top edge and the text, if you want to change it, you can
-        try {
-            dest.compress(Bitmap.CompressFormat.JPEG, 100, new FileOutputStream(new File(getFilesDir(), "ImageAfterAddingText.jpg")));
-            // dest is Bitmap, if you want to preview the final image, you can display it on screen also before saving
-            int ad = 3;
-        } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
-
-    //endregion
 }
