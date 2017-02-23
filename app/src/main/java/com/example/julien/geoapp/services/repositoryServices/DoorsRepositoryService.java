@@ -9,7 +9,7 @@ import java.util.ArrayList;
  * Created by Julien on 2017-02-10.
  */
 
-public class DoorsRepositoryService {
+public class DoorsRepositoryService implements IDoorsRepositoryService {
 
 
     private MapboxMap mapboxMap;
