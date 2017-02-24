@@ -5,7 +5,15 @@ package com.example.julien.geoapp.models;
  */
 
 public class DoorsInformationForPins extends Point {
-    public DoorsInformationForPins(String Title, String Description, double lati, double longi) {
+    private String type;
+    public DoorsInformationForPins(String Title, String Description,String type, double lati, double longi) {
         super(Title, Description, lati, longi);
+        this.type = type;
+    }
+    public void setType(String type){
+        this.type = type;
+    }
+    public String getType(){
+       return type;
     }
 }
