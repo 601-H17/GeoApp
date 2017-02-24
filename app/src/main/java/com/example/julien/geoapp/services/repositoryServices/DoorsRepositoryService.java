@@ -31,7 +31,7 @@ public class DoorsRepositoryService implements IDoorsRepositoryService {
         initDoors();
     }
 
-    private void initDoors() {
+    private void initDoors(){
         try {
             JSONArray  json = new JSONArray (request);
             int i = json.length();

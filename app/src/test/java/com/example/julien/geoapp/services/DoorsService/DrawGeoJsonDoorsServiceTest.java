@@ -18,19 +18,6 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class DrawGeoJsonDoorsServiceTest {
 
-    @Test
-    public void getDoorsListShouldReturbList() {
-        String[] doorsList = {"G-120", "G=122"};
-
-        //  ARRANGE
-        IDrawGeoJsonDoorsService service = Mockito.mock(IDrawGeoJsonDoorsService.class);
-
-        // ACT
-        when(service.getDoorsListTitle()).thenReturn(doorsList);
-
-        // ASSERT
-        assertEquals(service.getDoorsListTitle(), doorsList);
-    }
 
     @Test
     public void methodHideDoorsShouldBeCalled() {
@@ -44,7 +31,18 @@ public class DrawGeoJsonDoorsServiceTest {
         // ASSERT
         verify(service, atLeastOnce()).hideDoors();
     }
+    @Test
+    public void methodShowDoorsShouldBeCalled() {
 
+        //  ARRANGE
+        IDrawGeoJsonDoorsService service = Mockito.mock(IDrawGeoJsonDoorsService.class);
+
+        // ACT
+        service.drawDoors();
+
+        // ASSERT
+        verify(service, atLeastOnce()).drawDoors();
+    }
     @Test
     public void methodDrawDoorsShouldBeCalled() {
 
