@@ -6,4 +6,5 @@ package com.example.julien.geoapp.services.repositoryServices;
 
 public interface IDoorsRepositoryService {
     String[] getDoorsList();
+
 }

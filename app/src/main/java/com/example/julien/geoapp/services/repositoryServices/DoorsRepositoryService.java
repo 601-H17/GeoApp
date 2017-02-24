@@ -38,6 +38,9 @@ public class DoorsRepositoryService implements IDoorsRepositoryService {
         }
     }
 
+    public ArrayList<DoorsInformationsForSearching> getDoorsInformation(){
+        return this.doorsInformationsForSearching;
+    }
 
     public String[] getDoorsList() {
         String[] list = new String[doorsInformationsForSearching.size()];

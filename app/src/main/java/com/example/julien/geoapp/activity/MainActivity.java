@@ -23,6 +23,7 @@ import com.example.julien.geoapp.R;
 import com.example.julien.geoapp.api.setDoorsList;
 import com.example.julien.geoapp.api.setGeoJsonMaps;
 import com.example.julien.geoapp.api.setPathGeoJson;
+import com.example.julien.geoapp.models.DoorsInformationsForSearching;
 import com.example.julien.geoapp.services.doorsService.DrawGeoJsonDoorsService;
 import com.example.julien.geoapp.services.doorsService.IDrawGeoJsonDoorsService;
 import com.example.julien.geoapp.services.mapsService.DrawGeoJsonMapsService;
@@ -207,8 +208,20 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
     }
 
+    private void changeCamera(int i) {
+        ArrayList<String> list = listSearch;
+        LatLng latLng = null;
+        ArrayList<DoorsInformationsForSearching> doorslist = doorsRepositoryService.getDoorsInformation();
+        for (DoorsInformationsForSearching doorInformation : doorslist) {if(doorInformation.getTitle().equals(list.get(0))){
+                latLng = new LatLng(doorInformation.getLati(), doorInformation.getlongi());
+            }
+        }
+        this.mapboxMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+    }
+
     private void setTextSearch(int i) {
         searchView.setQuery(listSearch.get(i), false);
+        changeCamera(i);
     }
 
     private void searchQuery(String newText) {
