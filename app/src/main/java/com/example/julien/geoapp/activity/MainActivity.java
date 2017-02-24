@@ -288,6 +288,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 doorsDrawService.hideDoors();
             }
         }
+
     }
 
     private void animateCamera() {

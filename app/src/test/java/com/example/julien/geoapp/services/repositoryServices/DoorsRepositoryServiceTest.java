@@ -1,29 +1,30 @@
 package com.example.julien.geoapp.services.repositoryServices;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
-/**
- * Created by eric3 on 2017-02-17.
- */
+import static org.mockito.Mockito.when;
 
+/**
+ * Created by Julien on 2017-02-23.
+ */
 
 @RunWith(MockitoJUnitRunner.class)
 public class DoorsRepositoryServiceTest {
-
-
     @Test
-    public void methodDrawgetSpecificDoorsShouldBeCalled() {
+    public void methodGetListShouldReturnDoorsList() {
 
-//        //  ARRANGE
-//        IDoorsRepositoryService service = Mockito.mock(IDoorsRepositoryService.class);
-//
-//        // ACT
-//        service.getSpecificDoors("G-165");
-//
-//        // ASSERT
-//        verify(service, atLeastOnce()).getSpecificDoors("G-165");
+        //  ARRANGE
+        String[] doorsList = {"G-120", "G=122"};
+        IDoorsRepositoryService service = Mockito.mock(IDoorsRepositoryService.class);
+
+        // ACT
+        when(service.getDoorsList()).thenReturn(doorsList);
+
+        // ASSERT
+        Assert.assertSame(service.getDoorsList(),doorsList);
     }
-
 }

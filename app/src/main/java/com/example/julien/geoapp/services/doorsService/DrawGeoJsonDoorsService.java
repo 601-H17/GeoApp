@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
@@ -68,7 +67,7 @@ public class DrawGeoJsonDoorsService implements IDrawGeoJsonDoorsService {
                         JSONArray coords = geometry.getJSONArray(featuresJson[4]);
                         try {
                             JSONObject description = feature.getJSONObject(featuresJson[5]);
-                            DoorsInformationForPins door = new DoorsInformationForPins(description.getString(featuresJson[6]), featuresJson[8] + description.getString(featuresJson[7]), coords.getDouble(1), coords.getDouble(0));
+                            DoorsInformationForPins door = new DoorsInformationForPins(description.getString(featuresJson[6]),description.getString(featuresJson[7]),description.getString(featuresJson[2]),coords.getDouble(1), coords.getDouble(0));
                             doorsInformationForPins.add(door);
                         } catch (Exception exception) {
                             Log.e(error[0], error[1]);
@@ -85,7 +84,7 @@ public class DrawGeoJsonDoorsService implements IDrawGeoJsonDoorsService {
     private void createMarkers() {
         if (doorsInformationForPins.size() > 0) {
             for (int i = 0; i < doorsInformationForPins.size(); i++) {
-                if (doorsInformationForPins.get(i).getDescription().equals(featuresJson[8] + "no")) {
+                if (doorsInformationForPins.get(i).getType().equals("image")) {
                     Bitmap bitmap = BitmapFactory.decodeFile("data/data/com.example.julien.geoapp/files/" + doorsInformationForPins.get(i).getTitle() + ".png");
                     if (bitmap == null) {
                         createIcon(doorsInformationForPins.get(i).getTitle());
@@ -95,9 +94,14 @@ public class DrawGeoJsonDoorsService implements IDrawGeoJsonDoorsService {
                     IconFactory iconFactory = IconFactory.getInstance(context);
                     Icon icon = iconFactory.fromDrawable(iconLocal);
                     addMarkersCustomIconNoDescription(i, icon);
-                } else if (doorsInformationForPins.get(i).getDescription().equals(featuresJson[8] + "yes")) {
+                } else if (doorsInformationForPins.get(i).getType().equals("doors")) {
                     IconFactory iconFactory = IconFactory.getInstance(context);
                     Drawable iconDrawable = ContextCompat.getDrawable(context, R.drawable.pin);
+                    Icon icon = iconFactory.fromDrawable(iconDrawable);
+                    addMarkersCustomIcon(i, icon);
+                }else if (doorsInformationForPins.get(i).getType().equals("stairs")) {
+                    IconFactory iconFactory = IconFactory.getInstance(context);
+                    Drawable iconDrawable = ContextCompat.getDrawable(context, R.drawable.stairs2);
                     Icon icon = iconFactory.fromDrawable(iconDrawable);
                     addMarkersCustomIcon(i, icon);
                 }

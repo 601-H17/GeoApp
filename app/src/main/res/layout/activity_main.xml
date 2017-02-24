@@ -91,6 +91,11 @@
             mapbox:zoom="16"
             mapbox:zoom_min="16">
 
+            <TextView
+                android:text=""
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/meterdistance" />
         </com.mapbox.mapboxsdk.maps.MapView>
 
     </LinearLayout>

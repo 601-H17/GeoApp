@@ -17,7 +17,7 @@ import java.util.List;
  * Created by Julien on 2017-01-30.
  */
 
-public class DrawGeoJsonPathService implements  IDrawGeoJsonPathService {
+public class DrawGeoJsonPathService implements IDrawGeoJsonPathService {
 
 
     private MapboxMap mapboxMap;
@@ -42,6 +42,19 @@ public class DrawGeoJsonPathService implements  IDrawGeoJsonPathService {
         }
         drawLinesCorridors(pointDoors);
     }
+
+    public String getWeight(String pathString) {
+        String meters = "";
+        try {
+            JSONObject json = new JSONObject(pathString);
+            JSONArray path = json.getJSONArray("weight");
+            meters = path.getString(0);
+        } catch (Exception exception) {
+            Log.e("TAG", "Exception Loading GeoJSON: " + exception.toString());
+        }
+        return meters;
+    }
+
     private void drawLinesCorridors(List<LatLng> pointDoors) {
         if (pointDoors.size() > 0) {
             mapboxMap.addPolyline(new PolylineOptions()

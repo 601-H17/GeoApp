@@ -11,8 +11,7 @@ public abstract class Point {
     private double lati;
     private double longi;
 
-    public Point(String Title, String Description,double lati,double longi) {
-
+    public Point(String Title, String Description, double lati, double longi) {
         this.title = Title;
         this.description = Description;
         this.longi = longi;
@@ -35,9 +34,5 @@ public abstract class Point {
 
     public String getTitle() {
         return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 }
