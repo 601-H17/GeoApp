@@ -46,6 +46,9 @@ public class MainActivityUnitTest {
 
     @Test
     public void setGeoJsonPathIsCalled() throws Exception {
+
+        //YM revoir les tests... ne fait rien (test du mock)... on regarde ca ensemble lundi 
+        
         // ACT
         mainActivityMock.setMapGeoJson(map);
         // ASSERT

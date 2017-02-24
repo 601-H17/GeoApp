@@ -21,8 +21,10 @@ import java.util.List;
 public class DrawGeoJsonMapsService implements IDrawGeoJsonMapsService {
 
 
+
     private MapboxMap mapboxMap;
     private String request;
+    //YM: répétition de code entre les services
     private String featuresJson[] = {"features", "geometry", "type", "Point", "coordinates", "properties", "ref", "entrance", "Disponible: ", "LineString"};
     private String error[] = {"TAG", "Exception Loading GeoJSON "};
     private String[] color = {"#ffffff"};

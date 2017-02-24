@@ -20,6 +20,7 @@ import static org.mockito.Mockito.when;
 public class DoorsRepositoryServiceTest {
     @Test
     public void methodGetListShouldReturnDoorsList() {
+        //YM revoir les tests... ne fait rien (test du mock)... on regarde ca ensemble lundi 
 
         //  ARRANGE
         String[] doorsList = {"G-120", "G=122"};

@@ -36,6 +36,8 @@ public class DoorsRepositoryService implements IDoorsRepositoryService {
             JSONArray  json = new JSONArray (request);
             int i = json.length();
             for (int fn = 0; fn < i; fn++) {
+                //YM ligne ci-dessous un peu longue. Fiare le getJSONObject sur une autre ligne
+                //YM revoir les noms...
                 DoorsInformationsForSearching classToAdd = new DoorsInformationsForSearching(json.getJSONObject(fn).getString("name"),json.getJSONObject(fn).getString("description"),1,2,3);
                 doorsInformationsForSearching.add(classToAdd);
             }

@@ -22,6 +22,8 @@ public class DrawGeoJsonDoorsServiceTest {
     @Test
     public void methodHideDoorsShouldBeCalled() {
 
+        //YM revoir les tests... ne fait rien (test du mock)... on regarde ca ensemble lundi 
+
         //  ARRANGE
         IDrawGeoJsonDoorsService service = Mockito.mock(IDrawGeoJsonDoorsService.class);
 

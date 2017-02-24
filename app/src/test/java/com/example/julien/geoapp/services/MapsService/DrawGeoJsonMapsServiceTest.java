@@ -18,6 +18,8 @@ public class DrawGeoJsonMapsServiceTest {
     @Test
     public void methodDrawMapsShouldBeCalled() {
 
+        //YM revoir les tests... ne fait rien (test du mock)... on regarde ca ensemble lundi 
+
         //  ARRANGE
         IDrawGeoJsonMapsService service = Mockito.mock(IDrawGeoJsonMapsService.class);
 

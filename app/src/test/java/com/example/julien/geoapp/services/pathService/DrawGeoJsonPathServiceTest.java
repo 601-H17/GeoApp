@@ -19,6 +19,9 @@ public class DrawGeoJsonPathServiceTest {
     @Test
     public void methodDrawPathShouldBeCalled() {
 
+        //YM revoir les tests... ne fait rien (test du mock)... on regarde ca ensemble lundi 
+
+
         //  ARRANGE
         String request = "path";
         IDrawGeoJsonPathService service = Mockito.mock(IDrawGeoJsonPathService.class);
@@ -27,7 +30,7 @@ public class DrawGeoJsonPathServiceTest {
         service.drawPath(request);
 
         // ASSERT
-        verify(service, atLeastOnce()).drawPath(request);
+        verify(service, atLeastOnce()).drawPath(request); 
     }
 
 }
