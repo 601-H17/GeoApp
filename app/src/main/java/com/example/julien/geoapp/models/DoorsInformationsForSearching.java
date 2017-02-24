@@ -10,4 +10,8 @@ public class DoorsInformationsForSearching extends Point {
         super(Title, Description, lati, longi);
         this.etage = etage;
     }
+
+    public int getEtage(){
+        return this.etage;
+    }
 }

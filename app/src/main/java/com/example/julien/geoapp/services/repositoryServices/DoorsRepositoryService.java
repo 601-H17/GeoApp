@@ -19,7 +19,7 @@ public class DoorsRepositoryService implements IDoorsRepositoryService {
     private String request;
     private ArrayList<DoorsInformationsForSearching> doorsInformationsForSearching;
 
-    public DoorsRepositoryService( String request) {
+    public DoorsRepositoryService(String request) {
         this.request = request;
         this.doorsInformationsForSearching = new ArrayList<DoorsInformationsForSearching>();
         initDoors();
@@ -27,9 +27,10 @@ public class DoorsRepositoryService implements IDoorsRepositoryService {
 
     private void initDoors(){
         try {
-            JSONArray  json = new JSONArray (request);
+            JSONArray  json = new JSONArray(request);
             int i = json.length();
             for (int fn = 0; fn < i; fn++) {
+                String Point = json.getJSONObject(fn).getString("point_id");
                 DoorsInformationsForSearching classToAdd = new DoorsInformationsForSearching(json.getJSONObject(fn).getString("name"),json.getJSONObject(fn).getString("description"),1,2,3);
                 doorsInformationsForSearching.add(classToAdd);
             }

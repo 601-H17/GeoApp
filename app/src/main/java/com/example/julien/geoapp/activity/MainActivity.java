@@ -210,12 +210,27 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void changeCamera(int i) {
         ArrayList<String> list = listSearch;
+        DoorsInformationsForSearching selectedDoor = null;
         LatLng latLng = null;
         ArrayList<DoorsInformationsForSearching> doorslist = doorsRepositoryService.getDoorsInformation();
-        for (DoorsInformationsForSearching doorInformation : doorslist) {if(doorInformation.getTitle().equals(list.get(0))){
+        for (DoorsInformationsForSearching doorInformation : doorslist) {
+            if(doorInformation.getTitle().equals(list.get(0))){
+                selectedDoor = doorInformation;
                 latLng = new LatLng(doorInformation.getLati(), doorInformation.getlongi());
             }
         }
+        int etage = selectedDoor.getEtage();
+
+        if (etage == 1){
+            firstFloorButton.callOnClick();
+        }
+        else if(etage == 2 ){
+            secondFloorButton2.callOnClick();
+        }
+        else if (etage == 3){
+            thirdFloorButton3.callOnClick();
+        }
+
         this.mapboxMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
     }
 
@@ -318,6 +333,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void initDoorsList() {
+
         doorsRepositoryService = new DoorsRepositoryService(doorsInformation);
         setAdapterString();
     }
