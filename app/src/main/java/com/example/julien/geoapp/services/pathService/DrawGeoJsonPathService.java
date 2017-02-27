@@ -1,8 +1,16 @@
 package com.example.julien.geoapp.services.pathService;
 
+import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
+import com.example.julien.geoapp.R;
+import com.example.julien.geoapp.activity.MainActivity;
+import com.mapbox.mapboxsdk.annotations.Icon;
+import com.mapbox.mapboxsdk.annotations.IconFactory;
+import com.mapbox.mapboxsdk.annotations.MarkerViewOptions;
 import com.mapbox.mapboxsdk.annotations.PolylineOptions;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
@@ -43,17 +51,6 @@ public class DrawGeoJsonPathService implements IDrawGeoJsonPathService {
         drawLinesCorridors(pointDoors);
     }
 
-    public String getWeight(String pathString) {
-        String meters = "";
-        try {
-            JSONObject json = new JSONObject(pathString);
-            JSONArray path = json.getJSONArray("weight");
-            meters = path.getString(0);
-        } catch (Exception exception) {
-            Log.e("TAG", "Exception Loading GeoJSON: " + exception.toString());
-        }
-        return meters;
-    }
 
     private void drawLinesCorridors(List<LatLng> pointDoors) {
         if (pointDoors.size() > 0) {
