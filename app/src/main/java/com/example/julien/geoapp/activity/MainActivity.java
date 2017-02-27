@@ -214,7 +214,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         LatLng latLng = null;
         ArrayList<DoorsInformationsForSearching> doorslist = doorsRepositoryService.getDoorsInformation();
         for (DoorsInformationsForSearching doorInformation : doorslist) {
-            if(doorInformation.getTitle().equals(list.get(0))){
+            if(doorInformation.getTitle().equals(list.get(i))){
                 selectedDoor = doorInformation;
                 latLng = new LatLng(doorInformation.getLati(), doorInformation.getlongi());
             }

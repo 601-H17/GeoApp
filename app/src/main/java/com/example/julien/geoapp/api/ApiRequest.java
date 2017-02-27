@@ -11,6 +11,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+
 /**
  * Created by Julien on 2017-02-10.
  */
@@ -55,6 +56,8 @@ public abstract class ApiRequest extends AsyncTask<Void, Void, String>{
         } catch (Exception exception) {
             Log.e("TAG", "Exception Loading GeoJSON: " + exception.toString());
         }
+
+
         return request;
     }
 

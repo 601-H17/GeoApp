@@ -30,8 +30,10 @@ public class DoorsRepositoryService implements IDoorsRepositoryService {
             JSONArray  json = new JSONArray(request);
             int i = json.length();
             for (int fn = 0; fn < i; fn++) {
-                String Point = json.getJSONObject(fn).getString("point_id");
-                DoorsInformationsForSearching classToAdd = new DoorsInformationsForSearching(json.getJSONObject(fn).getString("name"),json.getJSONObject(fn).getString("description"),1,2,3);
+                double latitude = json.getJSONObject(fn).getJSONObject("point").getDouble("lat");
+                double longitude = json.getJSONObject(fn).getJSONObject("point").getDouble("lng");
+                int stairs = json.getJSONObject(fn).getInt("floor");
+                DoorsInformationsForSearching classToAdd = new DoorsInformationsForSearching(json.getJSONObject(fn).getString("name"),json.getJSONObject(fn).getString("description"),stairs,latitude,longitude);
                 doorsInformationsForSearching.add(classToAdd);
             }
         } catch (Exception exception) {
