@@ -13,7 +13,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.example.julien.geoapp.R;
-import com.example.julien.geoapp.models.DoorsInformationForPins;
+import com.example.julien.geoapp.models.Entity;
 import com.mapbox.mapboxsdk.annotations.Icon;
 import com.mapbox.mapboxsdk.annotations.IconFactory;
 import com.mapbox.mapboxsdk.annotations.Marker;
@@ -40,7 +40,7 @@ public class DrawGeoJsonDoorsService implements IDrawGeoJsonDoorsService {
     private MapboxMap mapboxMap;
     private Context context;
     private String request;
-    private ArrayList<DoorsInformationForPins> doorsInformationForPins;
+    private ArrayList<Entity> doorsInformationForPins;
     private ArrayList<MarkerViewOptions> markers;
     private String featuresJson[] = {"features", "geometry", "type", "Point", "coordinates", "properties", "ref", "entrance", "doors: "};
     private String error[] = {"TAG", "Exception Loading GeoJSON "};
@@ -67,7 +67,7 @@ public class DrawGeoJsonDoorsService implements IDrawGeoJsonDoorsService {
                         JSONArray coords = geometry.getJSONArray(featuresJson[4]);
                         try {
                             JSONObject description = feature.getJSONObject(featuresJson[5]);
-                            DoorsInformationForPins door = new DoorsInformationForPins(description.getString(featuresJson[6]),description.getString(featuresJson[7]),description.getString(featuresJson[2]),coords.getDouble(1), coords.getDouble(0));
+                            Entity door = new Entity(description.getString(featuresJson[6]),description.getString(featuresJson[7]),description.getString(featuresJson[2]),coords.getDouble(1), coords.getDouble(0));
                             doorsInformationForPins.add(door);
                         } catch (Exception exception) {
                             Log.e(error[0], error[1]);
@@ -112,17 +112,18 @@ public class DrawGeoJsonDoorsService implements IDrawGeoJsonDoorsService {
     private void addMarkersCustomIconNoDescription(int i, Icon icon) {
         MarkerViewOptions mark = new MarkerViewOptions()
                 .position(new LatLng(doorsInformationForPins.get(i).getLati(), doorsInformationForPins.get(i).getlongi()))
+                .title(doorsInformationForPins.get(i).getTitle())
                 .icon(icon);
         markers.add(mark);
     }
 
     private void addMarkersCustomIcon(int i, Icon icon) {
-        MarkerViewOptions mark = new MarkerViewOptions()
-                .position(new LatLng(doorsInformationForPins.get(i).getLati(), doorsInformationForPins.get(i).getlongi()))
-                .title(doorsInformationForPins.get(i).getTitle())
-                .snippet(doorsInformationForPins.get(i).getDescription())
-                .icon(icon);
-        markers.add(mark);
+//        MarkerViewOptions mark = new MarkerViewOptions()
+//                .position(new LatLng(doorsInformationForPins.get(i).getLati(), doorsInformationForPins.get(i).getlongi()))
+//                .title(doorsInformationForPins.get(i).getTitle())
+//                .snippet(doorsInformationForPins.get(i).getDescription())
+//                .icon(icon);
+//        markers.add(mark);
     }
 
     public void drawDoors() {
@@ -141,7 +142,33 @@ public class DrawGeoJsonDoorsService implements IDrawGeoJsonDoorsService {
         }
     }
 
+    public void addFromToMarkers(String pathGeoJson) {
+        try {
+            JSONObject json = new JSONObject(pathGeoJson);
+            JSONArray path = json.getJSONArray("path");
+            JSONArray to = path.getJSONArray(path.length()-1);
+            LatLng latLngTo = new LatLng(to.getDouble(1), to.getDouble(0));
+            addTo(latLngTo);
+        } catch (Exception exception) {
+            Log.e("TAG", "Exception Loading GeoJSON: " + exception.toString());
+        }
+    }
 
+    private void addTo(LatLng latLong) {
+        for(int i=0;i<markers.size();i++){
+            if(markers.get(i).getTitle().equals("To")){
+                markers.remove(i);
+            }
+        }
+        IconFactory iconFactory = IconFactory.getInstance(context);
+        Drawable iconDrawable = ContextCompat.getDrawable(context, R.drawable.flag2);
+        Icon icon = iconFactory.fromDrawable(iconDrawable);
+        MarkerViewOptions mark = new MarkerViewOptions()
+                .position(new LatLng(latLong.getLatitude(), latLong.getLongitude()))
+                .title("To")
+                .icon(icon);
+        markers.add(mark);
+    }
     private void createIcon(String local) {
         Bitmap src = BitmapFactory.decodeResource(context.getResources(), R.drawable.llocal);
         Bitmap dest = Bitmap.createBitmap(src.getWidth(), src.getHeight(), Bitmap.Config.ARGB_8888);

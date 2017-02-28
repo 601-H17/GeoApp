@@ -7,4 +7,5 @@ package com.example.julien.geoapp.services.doorsService;
 public interface IDrawGeoJsonDoorsService {
     void drawDoors();
     void hideDoors();
+    void addFromToMarkers(String pathGeoJson);
 }

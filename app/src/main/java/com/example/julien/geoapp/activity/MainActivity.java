@@ -8,6 +8,7 @@ import android.provider.BaseColumns;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -23,7 +24,7 @@ import com.example.julien.geoapp.R;
 import com.example.julien.geoapp.api.setDoorsList;
 import com.example.julien.geoapp.api.setGeoJsonMaps;
 import com.example.julien.geoapp.api.setPathGeoJson;
-import com.example.julien.geoapp.models.DoorsInformationsForSearching;
+import com.example.julien.geoapp.models.Doors;
 import com.example.julien.geoapp.services.doorsService.DrawGeoJsonDoorsService;
 import com.example.julien.geoapp.services.doorsService.IDrawGeoJsonDoorsService;
 import com.example.julien.geoapp.services.mapsService.DrawGeoJsonMapsService;
@@ -63,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private String mapGeoJson;
     private String doorsInformation;
     private String pathGeoJson;
+    private String searchLocal;
 
     private IDrawGeoJsonMapsService mapsDrawService;
     private IDrawGeoJsonDoorsService doorsDrawService;
@@ -74,7 +76,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private double positionZoom;
     private int distanceBeforeRelocation = 200;
     private String menuId = "localName";
-    private boolean isSynced;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -86,16 +87,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void setView() {
+
         setContentView(R.layout.activity_main);
         firstFloorButton = (Button) findViewById(R.id.button);
         secondFloorButton2 = (Button) findViewById(R.id.button2);
         thirdFloorButton3 = (Button) findViewById(R.id.button3);
         go = (Button) findViewById(R.id.button4);
         toLocal = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView2);
-    }
 
-    public boolean isSyncFinished() {
-        return isSynced;
     }
 
     private void setButtonListener() {
@@ -124,6 +123,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onClick(View v) {
                 new setPathGeoJson(MainActivity.this, "path?localA=" + searchView.getQuery().toString().toUpperCase() + "&localB=" + toLocal.getText().toString().toUpperCase()).execute();
+                new setDoorsList(MainActivity.this, getString(R.string.getDoorsQuery) + searchView.getQuery().toString().toUpperCase()).execute();
+                searchLocal = searchView.getQuery().toString().toUpperCase();
             }
         });
         firstFloorButton.setOnClickListener(new View.OnClickListener() {
@@ -211,34 +212,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
     }
 
-    private void changeCamera(int i) {
-        ArrayList<String> list = listSearch;
-        DoorsInformationsForSearching selectedDoor = null;
-        LatLng latLng = null;
-        ArrayList<DoorsInformationsForSearching> doorslist = doorsRepositoryService.getDoorsInformation();
-        for (DoorsInformationsForSearching doorInformation : doorslist) {
-            if(doorInformation.getTitle().equals(list.get(0))){
-                selectedDoor = doorInformation;
-                latLng = new LatLng(doorInformation.getLati(), doorInformation.getlongi());
-            }
-        }
-        int etage = selectedDoor.getEtage();
-
-        if (etage == 1){
-            firstFloorButton.callOnClick();
-        }
-        else if(etage == 2 ){
-            secondFloorButton2.callOnClick();
-        }
-        else if (etage == 3){
-            thirdFloorButton3.callOnClick();
-        }
-        mapboxMap.easeCamera(CameraUpdateFactory.newLatLng(latLng), 200);
-    }
-
     private void setTextSearch(int i) {
         searchView.setQuery(listSearch.get(i), false);
-        changeCamera(i);
     }
 
     private void searchQuery(String newText) {
@@ -255,12 +230,31 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
             searchAdapter.changeCursor(mc);
         }
-        if (newText.length() >= 3) {
+        if (newText.length() >= 4) {
             toLocal.setVisibility(View.VISIBLE);
             go.setVisibility(View.VISIBLE);
         } else {
             toLocal.setVisibility(View.GONE);
             go.setVisibility(View.GONE);
+        }
+    }
+
+    private void setUserLocation() {
+        try {
+            Doors door = doorsRepositoryService.getSpecificDoor(searchLocal);
+            LatLng user = new LatLng(door.getlongi() - 0.00002295716656, door.getLati() - 0.00000000000007);
+            Log.d("TAG", Double.toString(user.getLatitude()) + " " + Double.toString(user.getLongitude()));
+            Log.d("TAG", Double.toString(centerCoordinates.getLatitude()) + " " + Double.toString(centerCoordinates.getLongitude()));
+
+            CameraPosition position = new CameraPosition.Builder()
+                    .target(user)
+                    .zoom(positionZoom)
+                    .zoom(19)
+                    .build();
+            mapboxMap.animateCamera(CameraUpdateFactory
+                    .newCameraPosition(position));
+        } catch (Exception e) {
+            Log.d("TAG", "error");
         }
     }
 
@@ -301,7 +295,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             int positionZoomBeforePins = 18;
             if (positionZoom >= positionZoomBeforePins) {
                 doorsDrawService.drawDoors();
-                this.isSynced = true;
             } else {
                 doorsDrawService.hideDoors();
             }
@@ -309,13 +302,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
-
     private void animateCamera() {
         LatLngBounds latLngBounds = new LatLngBounds.Builder()
                 .include(new LatLng(boundsCegep[0], boundsCegep[1]))
                 .include(new LatLng(boundsCegep[2], boundsCegep[3]))
                 .build();
-        mapboxMap.easeCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 10), 200);
+        mapboxMap.easeCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 0));
     }
 
     public void setMapGeoJson(String map) {
@@ -334,10 +326,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void setDoorListQuery(String doors) {
         this.doorsInformation = doors;
         initDoorsList();
+        if(searchLocal != null){
+            setUserLocation();
+        }
     }
 
     private void initDoorsList() {
-
         doorsRepositoryService = new DoorsRepositoryService(doorsInformation);
         setAdapterString();
     }
@@ -355,13 +349,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void initPath() {
         mapboxMap.clear();
         mapsDrawService.drawMaps();
-        showDoors();
         pathDrawService.drawPath(pathGeoJson);
-    }
-
-    @Override
-    public void onStop(){
-        super.onStop();
+        doorsDrawService.addFromToMarkers(pathGeoJson);
     }
 
     @Override
