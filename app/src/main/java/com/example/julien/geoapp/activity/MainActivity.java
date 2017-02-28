@@ -74,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private double positionZoom;
     private int distanceBeforeRelocation = 200;
     private String menuId = "localName";
+    private boolean isSynced;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -85,14 +86,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void setView() {
-
         setContentView(R.layout.activity_main);
         firstFloorButton = (Button) findViewById(R.id.button);
         secondFloorButton2 = (Button) findViewById(R.id.button2);
         thirdFloorButton3 = (Button) findViewById(R.id.button3);
         go = (Button) findViewById(R.id.button4);
         toLocal = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView2);
+    }
 
+    public boolean isSyncFinished() {
+        return isSynced;
     }
 
     private void setButtonListener() {
@@ -214,7 +217,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         LatLng latLng = null;
         ArrayList<DoorsInformationsForSearching> doorslist = doorsRepositoryService.getDoorsInformation();
         for (DoorsInformationsForSearching doorInformation : doorslist) {
-            if(doorInformation.getTitle().equals(list.get(i))){
+            if(doorInformation.getTitle().equals(list.get(0))){
                 selectedDoor = doorInformation;
                 latLng = new LatLng(doorInformation.getLati(), doorInformation.getlongi());
             }
@@ -230,8 +233,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         else if (etage == 3){
             thirdFloorButton3.callOnClick();
         }
-
-        this.mapboxMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+        mapboxMap.easeCamera(CameraUpdateFactory.newLatLng(latLng), 200);
     }
 
     private void setTextSearch(int i) {
@@ -299,12 +301,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             int positionZoomBeforePins = 18;
             if (positionZoom >= positionZoomBeforePins) {
                 doorsDrawService.drawDoors();
+                this.isSynced = true;
             } else {
                 doorsDrawService.hideDoors();
             }
         }
 
     }
+
 
     private void animateCamera() {
         LatLngBounds latLngBounds = new LatLngBounds.Builder()
@@ -353,6 +357,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mapsDrawService.drawMaps();
         showDoors();
         pathDrawService.drawPath(pathGeoJson);
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
     }
 
     @Override

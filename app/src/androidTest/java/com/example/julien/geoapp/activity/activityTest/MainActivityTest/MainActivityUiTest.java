@@ -1,6 +1,7 @@
 package com.example.julien.geoapp.activity.activityTest.MainActivityTest;
 
 
+import android.support.test.espresso.Espresso;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.action.ViewActions;
 import android.support.test.rule.ActivityTestRule;
@@ -15,6 +16,8 @@ import com.example.julien.geoapp.activity.MainActivity;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,10 +25,10 @@ import org.junit.runner.RunWith;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.*;
 import static org.hamcrest.Matchers.allOf;
 
 
@@ -36,29 +39,58 @@ import static org.hamcrest.Matchers.allOf;
 
 @RunWith(AndroidJUnit4.class)
 public class MainActivityUiTest {
+    private MainActivityIdlingResource idlingResource;
 
     @Rule
     public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
 
+    @Before
+    public void registerIntentServiceIdlingResource() {
+        MainActivity activity = mActivityTestRule.getActivity();
+        idlingResource = new MainActivityIdlingResource(activity);
+        Espresso.registerIdlingResources(idlingResource);
+    }
 
+    @After
+    public void unregisterIntentServiceIdlingResource() {
+        Espresso.unregisterIdlingResources(idlingResource);
+    }
 
     @Test
     public void seeAllFloorButtons1() {
-        onView(withId(R.id.button))
-                .check(matches(isDisplayed()));
+        GoToFloorOne();
     }
 
     @Test
     public void seeAllFloorButtons2() {
-        onView(withId(R.id.button2))
-                .check(matches(isDisplayed()));
+        GoToFloorTwo();
     }
 
     @Test
     public void seeAllFloorButtons3() {
-        onView(withId(R.id.button3))
-                .check(matches(isDisplayed()));
+        GoToFloorTwo();
     }
+
+    @Test
+    public void blockingOnLeftSideWhenSwipingLeftALot() throws InterruptedException {
+        for(int i = 0; i < 2; i++){
+            onView(withId(R.id.markerViewContainer))
+                    .perform(ViewActions.swipeLeft());
+        }
+        Thread.sleep(2000);
+    }
+
+    @Test
+    public void blockingOnRightSideWhenSwipingRightALot() throws InterruptedException {
+        for(int i = 0; i < 2; i++){
+            onView(withId(R.id.markerViewContainer))
+                    .perform(ViewActions.swipeRight());
+        }
+        Thread.sleep(2000);
+    }
+
+
+
 
     @Test
     public void seeSearchMenu() {
@@ -67,7 +99,7 @@ public class MainActivityUiTest {
     }
 
     @Test
-    public void seeDoor() {
+    public void seeDoorWithText() throws InterruptedException {
         onView(withId(R.id.button))
                 .check(matches(isDisplayed()));
         onView(withId(R.id.button))
@@ -78,7 +110,7 @@ public class MainActivityUiTest {
                 .perform(ViewActions.doubleClick());
         onView(withId(R.id.markerViewContainer))
                 .perform(ViewActions.doubleClick());
-
+        Thread.sleep(3000);
         ViewInteraction imageView2 = onView(
                 allOf(withId(R.id.image),
                         childAtPosition(
@@ -88,14 +120,14 @@ public class MainActivityUiTest {
                                                 1)),
                                 0),
                         isDisplayed()));
-        imageView2.check(matches(isCompletelyDisplayed()));
+        imageView2.check(matches(isDisplayed()));
         imageView2.perform(ViewActions.click());
 
-        Matcher<View> relativeLayout = childAtPosition(withId(R.id.mapview),2);
-        Matcher<View> linearLayout = childAtPosition(relativeLayout,0);
-        childAtPosition(linearLayout,0).matches(isDisplayed());
-        childAtPosition(linearLayout,0).matches(withText("G-153"));
+        Thread.sleep(1000);
+        onView(withId(R.id.infowindow_title)).check(matches(withText("G-116")));
     }
+
+
 
     private static Matcher<View> childAtPosition(final Matcher<View> parentMatcher, final int position) {
 
@@ -114,7 +146,5 @@ public class MainActivityUiTest {
             }
         };
     }
-
-
 
 }
