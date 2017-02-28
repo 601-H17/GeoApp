@@ -2,6 +2,7 @@ package com.example.julien.geoapp.services.repositoryServices;
 
 import android.util.Log;
 
+import com.example.julien.geoapp.Externalization.Message;
 import com.example.julien.geoapp.models.Doors;
 
 import org.json.JSONArray;
@@ -15,14 +16,12 @@ import java.util.ArrayList;
 
 public class DoorsRepositoryService implements IDoorsRepositoryService {
 
-    private String featuresJson[] = {"features", "geometry", "type", "Point", "coordinates", "properties", "ref", "entrance", "Disponible: "};
-    private String error[] = {"TAG", "Exception Loading GeoJSON "};
     private String request;
     private ArrayList<Doors> doors;
 
     public DoorsRepositoryService(String request) {
         this.request = request;
-        this.doors = new ArrayList<Doors>();
+        this.doors = new ArrayList<>();
         initDoors();
     }
 
@@ -31,11 +30,17 @@ public class DoorsRepositoryService implements IDoorsRepositoryService {
             JSONArray json = new JSONArray(request);
             int i = json.length();
             for (int fn = 0; fn < i; fn++) {
-                Doors classToAdd = new Doors(json.getJSONObject(fn).getString("name"), json.getJSONObject(fn).getString("description"), json.getJSONObject(fn).getInt("floor"), json.getJSONObject(fn).getJSONObject("point").getDouble("lat"), json.getJSONObject(fn).getJSONObject("point").getDouble("lng"));
+                String ref = json.getJSONObject(fn).getString(Message.FEATURES_JSON_PATH[0]);
+                String description = json.getJSONObject(fn).getString(Message.FEATURES_JSON_PATH[1]);
+                int floor = json.getJSONObject(fn).getInt(Message.FEATURES_JSON_PATH[2]);
+                double lat = json.getJSONObject(fn).getJSONObject(Message.FEATURES_JSON_PATH[3]).getDouble(Message.FEATURES_JSON_PATH[4]);
+                double longi = json.getJSONObject(fn).getJSONObject(Message.FEATURES_JSON_PATH[3]).getDouble(Message.FEATURES_JSON_PATH[5]);
+                String teacher = "Paul Moisant";
+                Doors classToAdd = new Doors(ref, description, teacher, floor, lat, longi);
                 doors.add(classToAdd);
             }
         } catch (Exception exception) {
-            Log.e(error[0], exception.toString());
+            Log.e(Message.ERROR[0], exception.toString());
         }
     }
 
@@ -56,6 +61,10 @@ public class DoorsRepositoryService implements IDoorsRepositoryService {
             }
         }
         return toReturn;
+    }
+
+    public ArrayList<Doors> allDoors() {
+        return doors;
     }
 
 }
