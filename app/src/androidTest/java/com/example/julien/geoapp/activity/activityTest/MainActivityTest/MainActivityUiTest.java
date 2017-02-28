@@ -6,16 +6,10 @@ import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.action.ViewActions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewParent;
 
 import com.example.julien.geoapp.R;
 import com.example.julien.geoapp.activity.MainActivity;
 
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeMatcher;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -23,7 +17,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -68,7 +61,7 @@ public class MainActivityUiTest {
 
     @Test
     public void seeAllFloorButtons3() {
-        GoToFloorTwo();
+        GoToFloorThree();
     }
 
     @Test
@@ -89,28 +82,14 @@ public class MainActivityUiTest {
         Thread.sleep(2000);
     }
 
-
-
-
     @Test
-    public void seeSearchMenu() {
-        onView(withId(R.id.searchMenu))
-                .check(matches(isDisplayed()));
-    }
-
-    @Test
-    public void seeDoorWithText() throws InterruptedException {
+    public void seeDoorWhenZoom() throws InterruptedException {
         onView(withId(R.id.button))
                 .check(matches(isDisplayed()));
-        onView(withId(R.id.button))
-                .perform(click());
-        onView(withId(R.id.markerViewContainer))
-                .perform(ViewActions.doubleClick());
-        onView(withId(R.id.markerViewContainer))
-                .perform(ViewActions.doubleClick());
-        onView(withId(R.id.markerViewContainer))
-                .perform(ViewActions.doubleClick());
-        Thread.sleep(3000);
+        for(int i = 0; i < 3; i++){
+            onView(withId(R.id.mapview)).perform(ViewActions.doubleClick());
+        }
+        Thread.sleep(2000);
         ViewInteraction imageView2 = onView(
                 allOf(withId(R.id.image),
                         childAtPosition(
@@ -121,30 +100,26 @@ public class MainActivityUiTest {
                                 0),
                         isDisplayed()));
         imageView2.check(matches(isDisplayed()));
-        imageView2.perform(ViewActions.click());
+    }
 
+
+    @Test
+    public void seeSearchMenu() throws InterruptedException {
+        Thread.sleep(1000);
+        onView(withId(R.id.searchMenu))
+                .check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void seeDoorWithText() throws InterruptedException {
+        seeDoorWhenZoom();
+        ClickOnFirstMarkerFound();
         Thread.sleep(1000);
         onView(withId(R.id.infowindow_title)).check(matches(withText("G-116")));
     }
 
 
 
-    private static Matcher<View> childAtPosition(final Matcher<View> parentMatcher, final int position) {
 
-        return new TypeSafeMatcher<View>() {
-            @Override
-            public void describeTo(Description description) {
-                description.appendText("Child at position " + position + " in parent ");
-                parentMatcher.describeTo(description);
-            }
-
-            @Override
-            public boolean matchesSafely(View view) {
-                ViewParent parent = view.getParent();
-                return parent instanceof ViewGroup && parentMatcher.matches(parent)
-                        && view.equals(((ViewGroup) parent).getChildAt(position));
-            }
-        };
-    }
 
 }
