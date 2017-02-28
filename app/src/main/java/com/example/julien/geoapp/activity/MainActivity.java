@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private String mapGeoJson;
     private String doorsInformation;
     private String pathGeoJson;
+    private String searchLocal;
 
     private IDrawGeoJsonMapsService mapsDrawService;
     private IDrawGeoJsonDoorsService doorsDrawService;
@@ -123,8 +124,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onClick(View v) {
                 new setPathGeoJson(MainActivity.this, "path?localA=" + searchView.getQuery().toString().toUpperCase() + "&localB=" + toLocal.getText().toString().toUpperCase()).execute();
                 new setDoorsList(MainActivity.this, getString(R.string.getDoorsQuery) + searchView.getQuery().toString().toUpperCase()).execute();
-                setUserLocation(searchView.getQuery().toString().toUpperCase());
-
+                searchLocal = searchView.getQuery().toString().toUpperCase();
             }
         });
         firstFloorButton.setOnClickListener(new View.OnClickListener() {
@@ -239,10 +239,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    private void setUserLocation(String local) {
+    private void setUserLocation() {
         try {
-            Doors door = doorsRepositoryService.getSpecificDoor(local);
-            LatLng user  = new LatLng(door.getlongi(), door.getLati());
+            Doors door = doorsRepositoryService.getSpecificDoor(searchLocal);
+            LatLng user = new LatLng(door.getlongi() - 0.00002295716656, door.getLati() - 0.00000000000007);
+            Log.d("TAG", Double.toString(user.getLatitude()) + " " + Double.toString(user.getLongitude()));
+            Log.d("TAG", Double.toString(centerCoordinates.getLatitude()) + " " + Double.toString(centerCoordinates.getLongitude()));
+
             CameraPosition position = new CameraPosition.Builder()
                     .target(user)
                     .zoom(positionZoom)
@@ -323,6 +326,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void setDoorListQuery(String doors) {
         this.doorsInformation = doors;
         initDoorsList();
+        if(searchLocal != null){
+            setUserLocation();
+        }
     }
 
     private void initDoorsList() {
@@ -345,7 +351,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mapsDrawService.drawMaps();
         pathDrawService.drawPath(pathGeoJson);
         doorsDrawService.addFromToMarkers(pathGeoJson);
-        showDoors();
     }
 
     @Override
