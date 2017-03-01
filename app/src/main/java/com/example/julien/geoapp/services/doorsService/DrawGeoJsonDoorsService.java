@@ -92,7 +92,7 @@ public class DrawGeoJsonDoorsService implements IDrawGeoJsonDoorsService {
                     Drawable iconLocal = new BitmapDrawable(context.getResources(), bitmap);
                     IconFactory iconFactory = IconFactory.getInstance(context);
                     Icon icon = iconFactory.fromDrawable(iconLocal);
-                    addMarkersCustomIconNoDescription(i, icon);
+                    addMarkersCustomIconNoDescriptionAndTitle(i, icon);
                 } else if (doorsInformationForPins.get(i).getType().equals(Message.ENTITY_TYPE[0])) {
 //                    IconFactory iconFactory = IconFactory.getInstance(context);
 //                    Drawable iconDrawable = ContextCompat.getDrawable(context, R.drawable.pin);
@@ -108,10 +108,10 @@ public class DrawGeoJsonDoorsService implements IDrawGeoJsonDoorsService {
         }
     }
 
-    private void addMarkersCustomIconNoDescription(int i, Icon icon) {
+    private void addMarkersCustomIconNoDescriptionAndTitle(int i, Icon icon) {
         MarkerViewOptions mark = new MarkerViewOptions()
                 .position(new LatLng(doorsInformationForPins.get(i).getLati(), doorsInformationForPins.get(i).getlongi()))
-                .title(doorsInformationForPins.get(i).getTitle())
+                //.title(doorsInformationForPins.get(i).getTitle())
                 .icon(icon);
         markers.add(mark);
     }
@@ -155,7 +155,7 @@ public class DrawGeoJsonDoorsService implements IDrawGeoJsonDoorsService {
 
     private void addTo(LatLng latLong) {
         for (int i = 0; i < markers.size(); i++) {
-            if (markers.get(i).getTitle().equals(Message.TO_MARKER)) {
+            if (markers.get(i).getTitle() != null && markers.get(i).getTitle().equals(Message.TO_MARKER)) {
                 markers.remove(i);
             }
         }

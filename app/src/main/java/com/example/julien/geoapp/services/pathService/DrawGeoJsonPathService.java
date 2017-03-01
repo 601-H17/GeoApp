@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.util.Log;
 
 import com.example.julien.geoapp.Externalization.Message;
+import com.mapbox.mapboxsdk.annotations.Annotation;
 import com.mapbox.mapboxsdk.annotations.PolylineOptions;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
