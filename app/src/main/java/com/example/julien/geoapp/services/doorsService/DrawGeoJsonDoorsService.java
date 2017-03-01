@@ -95,10 +95,10 @@ public class DrawGeoJsonDoorsService implements IDrawGeoJsonDoorsService {
                     Icon icon = iconFactory.fromDrawable(iconLocal);
                     addMarkersCustomIconNoDescription(i, icon);
                 } else if (doorsInformationForPins.get(i).getType().equals("doors")) {
-                    IconFactory iconFactory = IconFactory.getInstance(context);
-                    Drawable iconDrawable = ContextCompat.getDrawable(context, R.drawable.pin);
-                    Icon icon = iconFactory.fromDrawable(iconDrawable);
-                    addMarkersCustomIcon(i, icon);
+//                    IconFactory iconFactory = IconFactory.getInstance(context);
+//                    Drawable iconDrawable = ContextCompat.getDrawable(context, R.drawable.pin);
+//                    Icon icon = iconFactory.fromDrawable(iconDrawable);
+//                    addMarkersCustomIcon(i, icon);
                 }else if (doorsInformationForPins.get(i).getType().equals("stairs")) {
                     IconFactory iconFactory = IconFactory.getInstance(context);
                     Drawable iconDrawable = ContextCompat.getDrawable(context, R.drawable.stairs2);
@@ -118,12 +118,12 @@ public class DrawGeoJsonDoorsService implements IDrawGeoJsonDoorsService {
     }
 
     private void addMarkersCustomIcon(int i, Icon icon) {
-//        MarkerViewOptions mark = new MarkerViewOptions()
-//                .position(new LatLng(doorsInformationForPins.get(i).getLati(), doorsInformationForPins.get(i).getlongi()))
-//                .title(doorsInformationForPins.get(i).getTitle())
-//                .snippet(doorsInformationForPins.get(i).getDescription())
-//                .icon(icon);
-//        markers.add(mark);
+        MarkerViewOptions mark = new MarkerViewOptions()
+                .position(new LatLng(doorsInformationForPins.get(i).getLati(), doorsInformationForPins.get(i).getlongi()))
+                .title(doorsInformationForPins.get(i).getTitle())
+                .snippet(doorsInformationForPins.get(i).getDescription())
+                .icon(icon);
+        markers.add(mark);
     }
 
     public void drawDoors() {

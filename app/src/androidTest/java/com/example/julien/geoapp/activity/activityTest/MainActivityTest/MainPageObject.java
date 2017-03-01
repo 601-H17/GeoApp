@@ -10,14 +10,16 @@ import com.example.julien.geoapp.R;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
+import org.hamcrest.Matchers;
 import org.hamcrest.TypeSafeMatcher;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static org.hamcrest.core.AllOf.allOf;
 
 /**
  * Created by eric3 on 2017-02-28.
@@ -25,61 +27,51 @@ import static org.hamcrest.core.AllOf.allOf;
 
 public class MainPageObject {
 
-    private static void clickOverflowItem(int resId) {
-
-    }
-
-    // overflow menu
-    public static void GoToFloorOne() {
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+    public static void ClickFloor(int floor){
+        int ressourceId = 0;
+        switch (floor) {
+            case 1:  ressourceId = R.id.button;
+                break;
+            case 2:  ressourceId = R.id.button2;
+                break;
+            case 3:  ressourceId = R.id.button3;
+                break;
         }
-        onView(withId(R.id.button))
+        onView(withId(ressourceId))
                 .check(matches(isDisplayed()));
-        onView(withId(R.id.button))
+        onView(withId(ressourceId))
                 .perform(click());
     }
 
-    // overflow menu
-    public static void GoToFloorTwo() {
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        onView(withId(R.id.button2))
-                .check(matches(isDisplayed()));
-        onView(withId(R.id.button2))
-                .perform(click());
-    }
-
-    // overflow menu
-    public static void GoToFloorThree() {
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        onView(withId(R.id.button3))
-                .check(matches(isDisplayed()));
-        onView(withId(R.id.button3))
-                .perform(click());
-    }
-
-    public static void ClickOnFirstMarkerFound(){
-        ViewInteraction imageView2 = onView(
-                allOf(withId(R.id.image),
+    public static ViewInteraction getFirstMarkerFound() {
+        ViewInteraction imageView2;
+        imageView2 = onView(
+                Matchers.allOf(withId(R.id.image),
                         childAtPosition(
-                                allOf(withId(R.id.markerViewContainer),
+                                Matchers.allOf(withId(R.id.markerViewContainer),
                                         childAtPosition(
                                                 withId(R.id.mapview),
                                                 1)),
                                 0),
                         isDisplayed()));
-        imageView2.check(matches(isDisplayed()));
-        imageView2.perform(ViewActions.click());
+        return imageView2;
+    }
+
+    public static void SearchForLocal(String local){
+        onView(withId(R.id.searchMenu)).perform(typeText(local));
+    }
+
+    public static void ZoomInTheMap(){
+        for(int i = 0; i < 3; i++){
+            onView(withId(R.id.mapview)).perform(ViewActions.doubleClick());
+        }
+    }
+
+    public static void ClearTextOnFirstSearchView() throws InterruptedException {
+//        onView(withId(R.id.search_close_btn)).check(matches(isDisplayed()));
+//        onView(withId(R.id.search_close_btn)).perform(click())
+        onView(withId(R.id.searchMenu)).perform(closeSoftKeyboard());
+        //onView(withId(R.id.searchMenu)).perform(replaceText(""));
     }
 
     // settings overflow item

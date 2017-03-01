@@ -30,7 +30,7 @@ public class MainActivityIdlingResource implements IdlingResource {
     }
 
     public boolean isIdle() {
-        return activity != null && callback != null || activity.isSyncFinished();
+        return activity != null && callback != null;
     }
 
     @Override

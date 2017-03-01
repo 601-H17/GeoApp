@@ -21,8 +21,12 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.*;
-import static org.hamcrest.Matchers.allOf;
+import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.ClickFloor;
+import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.SearchForLocal;
+import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.ZoomInTheMap;
+import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.getFirstMarkerFound;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.startsWith;
 
 
 /**
@@ -51,17 +55,17 @@ public class MainActivityUiTest {
 
     @Test
     public void seeAllFloorButtons1() {
-        GoToFloorOne();
+        ClickFloor(1);
     }
 
     @Test
     public void seeAllFloorButtons2() {
-        GoToFloorTwo();
+        ClickFloor(2);
     }
 
     @Test
     public void seeAllFloorButtons3() {
-        GoToFloorThree();
+        ClickFloor(3);
     }
 
     @Test
@@ -70,7 +74,6 @@ public class MainActivityUiTest {
             onView(withId(R.id.markerViewContainer))
                     .perform(ViewActions.swipeLeft());
         }
-        Thread.sleep(2000);
     }
 
     @Test
@@ -79,47 +82,59 @@ public class MainActivityUiTest {
             onView(withId(R.id.markerViewContainer))
                     .perform(ViewActions.swipeRight());
         }
-        Thread.sleep(2000);
     }
 
     @Test
     public void seeDoorWhenZoom() throws InterruptedException {
-        onView(withId(R.id.button))
-                .check(matches(isDisplayed()));
-        for(int i = 0; i < 3; i++){
-            onView(withId(R.id.mapview)).perform(ViewActions.doubleClick());
+        // ACT
+        ClickFloor(1);
+        ZoomInTheMap();
+        //PO
+        ViewInteraction imageView2 = null;
+        while(imageView2 == null){
+            imageView2 = getFirstMarkerFound();
         }
-        Thread.sleep(2000);
-        ViewInteraction imageView2 = onView(
-                allOf(withId(R.id.image),
-                        childAtPosition(
-                                allOf(withId(R.id.markerViewContainer),
-                                        childAtPosition(
-                                                withId(R.id.mapview),
-                                                1)),
-                                0),
-                        isDisplayed()));
+        //ASSERT
         imageView2.check(matches(isDisplayed()));
     }
 
 
     @Test
-    public void seeSearchMenu() throws InterruptedException {
-        Thread.sleep(1000);
+    public void seeSearchMenu(){
+        //ASSERT
         onView(withId(R.id.searchMenu))
                 .check(matches(isDisplayed()));
     }
 
     @Test
     public void seeDoorWithText() throws InterruptedException {
+        //ACT
         seeDoorWhenZoom();
-        ClickOnFirstMarkerFound();
-        Thread.sleep(1000);
-        onView(withId(R.id.infowindow_title)).check(matches(withText("G-116")));
+        ViewInteraction imageView2 = getFirstMarkerFound();
+        imageView2.perform(ViewActions.click());
+        //ASSERT
+        onView(withId(R.id.infowindow_title)).check(matches(withText(startsWith("G-1"))));
     }
 
+    @Test
+    public void seeTheSecondSearchViewWhenTheFirstSearchviewContainsMoreThanFourCharacter() throws InterruptedException {
+        //ACT
+        SearchForLocal("G");
+        onView(withId(R.id.autoCompleteTextView2)).check(matches(not(isDisplayed())));
+        //ClearTextOnFirstSearchView();
+        SearchForLocal("-153");
+        onView(withId(R.id.autoCompleteTextView2)).check(matches(isDisplayed()));
+    }
 
+    @Test
+    public void seeTheSpinnerWhenWritingOnTheFirstSearchView(){
+        SearchForLocal("G-1");
+        //onView(withId(R.id.searchMenu)).check(matches(withSpinnerText("G-159")));
+    }
 
+    @Test
+    public void seeBlaBlaBla(){
 
+    }
 
 }
