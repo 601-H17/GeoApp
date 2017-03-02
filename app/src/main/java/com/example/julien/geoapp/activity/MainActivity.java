@@ -172,7 +172,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         try {
             ArrayList<Doors> list = doorsRepositoryService.getAllDoors();
             for (int i = 0; i < list.size(); i++) {
-                if (list.get(i).getTitle().toLowerCase().startsWith(typingQueryNavbar.toLowerCase()) || list.get(i).getTeacher().toLowerCase().startsWith(typingQueryNavbar.toLowerCase())) {
+//                if (list.get(i).getTitle().toLowerCase().startsWith(typingQueryNavbar.toLowerCase()) || list.get(i).getTeacher().toLowerCase().startsWith(typingQueryNavbar.toLowerCase())) {
+//                    mc.addRow(new Object[]{i, list.get(i).getTitle(), list.get(i).getTeacher()});
+//                    listSearch.add(list.get(i).getTitle());
+//                }
+                if (find(list.get(i))) {
                     mc.addRow(new Object[]{i, list.get(i).getTitle(), list.get(i).getTeacher()});
                     listSearch.add(list.get(i).getTitle());
                 }
@@ -181,7 +185,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         } catch (Exception e) {
             Log.d(Message.ERROR[0], e.toString());
         }
-        if (typingQueryNavbar.length() >= 4 && typingQueryNavbar != null) {
+        if (typingQueryNavbar.length() >= 1 && typingQueryNavbar != null) {
             toLocal.setVisibility(View.VISIBLE);
             goButton.setVisibility(View.VISIBLE);
         } else {
@@ -189,6 +193,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             goButton.setVisibility(View.GONE);
         }
     }
+
+    private boolean find(Doors door) {
+        boolean isFind = false;
+        String queryRegex = typingQueryNavbar.toLowerCase().replaceAll("[^A-Za-z^0-9.]+", "");
+        String titleRegex = door.getTitle().toLowerCase().replaceAll("[^A-Za-z^0-9.]+", "");
+        String refRegex = door.getTitle().toLowerCase().replaceAll("[^A-Za-z^0-9.]+", "");
+        if (titleRegex.contains(queryRegex) || refRegex.contains(queryRegex)) {
+            isFind = true;
+        }
+        return isFind;
+    }
+
 
     private void setUserLocation() {
         //Lorsqu'un local est entré, centrer la position du local sur le point vert (l'utilisateur).
@@ -361,6 +377,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void afterTextChanged(Editable s) {
                 typingQueryHelp = s.toString();
                 searchApiQueryHelper();
+
+            }
+        });
+
+        toLocal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
             }
         });
