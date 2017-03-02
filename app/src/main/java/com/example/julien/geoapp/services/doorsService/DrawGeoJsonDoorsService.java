@@ -183,7 +183,7 @@ public class DrawGeoJsonDoorsService implements IDrawGeoJsonDoorsService {
         tPaint.setTextAlign(Paint.Align.LEFT);
         tPaint.getTextBounds(yourText, 0, yourText.length(), r);
         float x = cWidth / 2f - r.width() / 2f - r.left;
-        float y = cHeight / 2f + r.height() / 2f - r.bottom + 40;
+        float y = cHeight / 2f + r.height() / 2f - r.bottom + 33;
         cs.drawText(yourText, x, y, tPaint);
         try {
             dest.compress(Bitmap.CompressFormat.PNG, 100, new FileOutputStream(new File(context.getFilesDir(), local + Message.TO_MARKER)));
