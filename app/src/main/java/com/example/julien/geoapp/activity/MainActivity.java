@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.SearchView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
 
 import com.example.julien.geoapp.R;
 import com.example.julien.geoapp.api.setDoorsList;
@@ -41,6 +42,7 @@ import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Projection;
+import com.example.julien.geoapp.Externalisation.Message;
 
 import java.util.ArrayList;
 
@@ -65,6 +67,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private String doorsInformation;
     private String pathGeoJson;
     private String searchLocal;
+    private TextView floorTextView;
 
     private IDrawGeoJsonMapsService mapsDrawService;
     private IDrawGeoJsonDoorsService doorsDrawService;
@@ -94,7 +97,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         thirdFloorButton3 = (Button) findViewById(R.id.button3);
         go = (Button) findViewById(R.id.button4);
         toLocal = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView2);
-
+        floorTextView = (TextView) findViewById(R.id.currentFloor);
+        floorTextView.setText(Message.FIRST_FLOOR_TEXT);
     }
 
     private void setButtonListener() {
@@ -133,6 +137,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onClick(View v) {
                 new setGeoJsonMaps(MainActivity.this, getString(R.string.map)).execute();
                 mapboxMap.clear();
+                floorTextView.setText(Message.FIRST_FLOOR_TEXT);
             }
         });
         secondFloorButton2.setOnClickListener(new View.OnClickListener() {
@@ -141,6 +146,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onClick(View v) {
                 new setGeoJsonMaps(MainActivity.this, getString(R.string.map2)).execute();
                 mapboxMap.clear();
+                floorTextView.setText(Message.SECOND_FLOOR_TEXT);
             }
         });
         thirdFloorButton3.setOnClickListener(new View.OnClickListener() {
@@ -149,6 +155,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onClick(View v) {
                 new setGeoJsonMaps(MainActivity.this, getString(R.string.map3)).execute();
                 mapboxMap.clear();
+                floorTextView.setText(Message.THIRD_FLOOR_TEXT);
             }
         });
         go.setVisibility(View.GONE);

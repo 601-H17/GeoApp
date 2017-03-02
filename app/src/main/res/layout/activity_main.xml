@@ -96,6 +96,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/meterdistance" />
+
+            <TextView
+                android:text="TextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/currentFloor"
+                android:lineSpacingExtra="8sp"
+                android:layout_margin="15dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="18sp" />
         </com.mapbox.mapboxsdk.maps.MapView>
 
     </LinearLayout>

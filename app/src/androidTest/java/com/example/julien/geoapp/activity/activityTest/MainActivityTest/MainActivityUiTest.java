@@ -2,11 +2,13 @@ package com.example.julien.geoapp.activity.activityTest.MainActivityTest;
 
 
 import android.support.test.espresso.Espresso;
+import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.action.ViewActions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.example.julien.geoapp.Externalisation.Message;
 import com.example.julien.geoapp.R;
 import com.example.julien.geoapp.activity.MainActivity;
 
@@ -56,16 +58,19 @@ public class MainActivityUiTest {
     @Test
     public void seeAllFloorButtons1() {
         ClickFloor(1);
+        onView(withId(R.id.currentFloor)).check(matches(withText(Message.FIRST_FLOOR_TEXT)));
     }
 
     @Test
     public void seeAllFloorButtons2() {
         ClickFloor(2);
+        onView(withId(R.id.currentFloor)).check(matches(withText(Message.SECOND_FLOOR_TEXT)));
     }
 
     @Test
     public void seeAllFloorButtons3() {
         ClickFloor(3);
+        onView(withId(R.id.currentFloor)).check(matches(withText(Message.THIRD_FLOOR_TEXT)));
     }
 
     @Test
@@ -85,17 +90,24 @@ public class MainActivityUiTest {
     }
 
     @Test
-    public void seeDoorWhenZoom() throws InterruptedException {
+    public void seeDoorWhenZoom(){
         // ACT
         ClickFloor(1);
         ZoomInTheMap();
         //PO
         ViewInteraction imageView2 = null;
         while(imageView2 == null){
-            imageView2 = getFirstMarkerFound();
+            try{
+                imageView2 = getFirstMarkerFound();
+            }
+            catch (NoMatchingViewException e){
+                System.out.print(e.toString());
+            }
         }
         //ASSERT
-        imageView2.check(matches(isDisplayed()));
+        ViewInteraction check = imageView2.check(matches(isDisplayed()));
+        //imageView2.
+        
     }
 
 

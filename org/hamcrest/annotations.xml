@@ -1,0 +1,6 @@
+<root>
+  <item
+      name='org.hamcrest.Matchers org.hamcrest.Matcher&lt;T&gt; allOf(org.hamcrest.Matcher&lt;? super T&gt;...)'>
+    <annotation name='android.support.annotation.NonNull' />
+  </item>
+</root>
