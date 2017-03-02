@@ -8,7 +8,7 @@ import android.support.test.espresso.action.ViewActions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import com.example.julien.geoapp.Externalisation.Message;
+import com.example.julien.geoapp.Externalization.Message;
 import com.example.julien.geoapp.R;
 import com.example.julien.geoapp.activity.MainActivity;
 
