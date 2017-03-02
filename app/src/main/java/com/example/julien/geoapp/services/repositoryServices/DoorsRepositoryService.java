@@ -63,7 +63,7 @@ public class DoorsRepositoryService implements IDoorsRepositoryService {
         return toReturn;
     }
 
-    public ArrayList<Doors> allDoors() {
+    public ArrayList<Doors> getAllDoors() {
         return doors;
     }
 

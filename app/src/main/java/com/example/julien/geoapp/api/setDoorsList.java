@@ -13,6 +13,6 @@ public class setDoorsList extends ApiRequest {
     @Override
     protected void onPostExecute(String request) {
         super.onPostExecute(request);
-        super.context.setDoorListQuery(request);
+        super.context.setDoorsListCallback(request);
     }
 }
