@@ -3,6 +3,7 @@ package com.example.julien.geoapp.api;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.example.julien.geoapp.Externalization.Message;
 import com.example.julien.geoapp.R;
 import com.example.julien.geoapp.activity.MainActivity;
 
@@ -16,7 +17,7 @@ import java.net.URL;
  * Created by Julien on 2017-02-10.
  */
 
-public abstract class ApiRequest extends AsyncTask<Void, Void, String>{
+abstract class ApiRequest extends AsyncTask<Void, Void, String> {
 
 
     protected MainActivity context;
@@ -36,7 +37,7 @@ public abstract class ApiRequest extends AsyncTask<Void, Void, String>{
     @Override
     protected String doInBackground(Void... voids) {
 
-        String request = "";
+        String request = Message.REQUEST_NULL;
         try {
             URL url = new URL(context.getString(R.string.apiUrl) + routeMap);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
@@ -46,7 +47,7 @@ public abstract class ApiRequest extends AsyncTask<Void, Void, String>{
                 StringBuilder stringBuilder = new StringBuilder();
                 String line;
                 while ((line = bufferedReader.readLine()) != null) {
-                    stringBuilder.append(line).append("\n");
+                    stringBuilder.append(line).append(Message.ENTER);
                 }
                 bufferedReader.close();
                 request = stringBuilder.toString();
@@ -54,7 +55,7 @@ public abstract class ApiRequest extends AsyncTask<Void, Void, String>{
                 urlConnection.disconnect();
             }
         } catch (Exception exception) {
-            Log.e("TAG", "Exception Loading GeoJSON: " + exception.toString());
+            Log.e(Message.ERROR[0], exception.toString());
         }
 
 

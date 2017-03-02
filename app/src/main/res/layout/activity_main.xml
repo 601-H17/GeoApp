@@ -53,7 +53,8 @@
         android:background="?attr/colorPrimary"
         android:orientation="vertical"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:backgroundTint="@color/theme_color">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -74,10 +75,10 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/autoCompleteTextView2"
                 android:singleLine="true"
-                android:textColor="@android:color/white"
                 android:completionThreshold="1"
                 android:layout_centerVertical="true"
-                android:layout_alignParentStart="true" />
+                android:layout_alignParentStart="true"
+                android:completionHint="1"/>
         </RelativeLayout>
 
 

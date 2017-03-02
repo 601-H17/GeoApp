@@ -23,6 +23,6 @@ public class setGeoJsonMaps extends ApiRequest {
     @Override
     protected void onPostExecute(String request) {
         super.onPostExecute(request);
-        super.context.setMapGeoJson(request);
+        super.context.setMapGeoJsonCallback(request);
     }
 }
