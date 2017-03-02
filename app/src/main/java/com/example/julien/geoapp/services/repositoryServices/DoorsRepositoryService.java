@@ -6,7 +6,6 @@ import com.example.julien.geoapp.Externalization.Message;
 import com.example.julien.geoapp.models.Doors;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 

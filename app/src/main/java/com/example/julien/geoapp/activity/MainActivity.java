@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.SearchView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
 
 import com.example.julien.geoapp.Externalization.Message;
 import com.example.julien.geoapp.R;
@@ -83,6 +84,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private IDrawGeoJsonDoorsService doorsDrawService;
     private IDrawGeoJsonPathService pathDrawService;
     private DoorsRepositoryService doorsRepositoryService;
+    private TextView currentFloor;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -125,6 +127,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         thirdFloorButton3 = (Button) findViewById(R.id.button3);
         goButton = (Button) findViewById(R.id.button4);
         toLocal = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView2);
+        currentFloor = (TextView) findViewById(R.id.currentFloor);
+        currentFloor.setText(Message.FIRST_FLOOR_TEXT);
     }
 
 
@@ -379,6 +383,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onClick(View v) {
                 new setGeoJsonMaps(MainActivity.this, getString(R.string.map)).execute();
                 mapboxMap.clear();
+                currentFloor.setText(Message.FIRST_FLOOR_TEXT);
             }
         });
         secondFloorButton2.setOnClickListener(new View.OnClickListener() {
@@ -387,6 +392,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onClick(View v) {
                 new setGeoJsonMaps(MainActivity.this, getString(R.string.map2)).execute();
                 mapboxMap.clear();
+                currentFloor.setText(Message.SECOND_FLOOR_TEXT);
             }
         });
         thirdFloorButton3.setOnClickListener(new View.OnClickListener() {
@@ -395,6 +401,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onClick(View v) {
                 new setGeoJsonMaps(MainActivity.this, getString(R.string.map3)).execute();
                 mapboxMap.clear();
+                currentFloor.setText(Message.THIRD_FLOOR_TEXT);
             }
         });
         goButton.setVisibility(View.GONE);
