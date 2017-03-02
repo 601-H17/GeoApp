@@ -77,7 +77,8 @@
                 android:singleLine="true"
                 android:completionThreshold="1"
                 android:layout_centerVertical="true"
-                android:layout_alignParentStart="true" />
+                android:layout_alignParentStart="true"
+                android:completionHint="1"/>
         </RelativeLayout>
 
 
