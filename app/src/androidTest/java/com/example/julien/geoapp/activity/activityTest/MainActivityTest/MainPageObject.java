@@ -44,7 +44,8 @@ public class MainPageObject {
     }
 
     public static ViewInteraction getFirstMarkerFound(){
-        ViewInteraction imageView2;
+        ViewInteraction imageView2 = null;
+        try{
         imageView2 = onView(
                 Matchers.allOf(withId(R.id.image),
                         childAtPosition(
@@ -54,6 +55,10 @@ public class MainPageObject {
                                                 1)),
                                 0),
                         isDisplayed()));
+        }
+        catch(Exception e){
+            System.out.print(e);
+        }
         return imageView2;
     }
 

@@ -94,9 +94,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         setView();
         setButtonListener();
-        //setMarkerListener();
         setSlidePanelListener();
         setMap(savedInstanceState);
+        //setMarkerListener();
         setAdapter();
     }
 
@@ -117,11 +117,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 centerUser();
             }
         });
-        this.mapboxMap.setOnMarkerClickListener(new MapboxMap.OnMarkerClickListener() {
+        setMarkerListener();
+        this.mapboxMap.setOnMapClickListener(new MapboxMap.OnMapClickListener() {
             @Override
-            public boolean onMarkerClick(@NonNull Marker marker) {
-
-                return false;
+            public void onMapClick(@NonNull LatLng point) {
+                mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
             }
         });
     }
@@ -136,6 +136,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         currentFloor = (TextView) findViewById(R.id.currentFloor);
         currentFloor.setText(Message.FIRST_FLOOR_TEXT);
         mLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
+        mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
     }
 
     @Override
@@ -479,46 +480,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Log.i(TAG, "onPanelStateChanged " + newState);
             }
         });
-        mLayout.setFadeOnClickListener(new View.OnClickListener() {
+    }
+
+    private void setMarkerListener() {
+        mapboxMap.setOnMarkerClickListener(new MapboxMap.OnMarkerClickListener() {
             @Override
-            public void onClick(View view) {
+            public boolean onMarkerClick(@NonNull Marker marker) {
                 mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                return false;
             }
         });
     }
-
-//    private void setMarkerListener() {
-//        mapboxMap.setMapViewListener(new MapViewListener() {
-//            @Override
-//            public void onShowMarker(MapView mapView, Marker marker) {
-//
-//            }
-//
-//            @Override
-//            public void onHideMarker(MapView mapView, Marker marker) {
-//
-//            }
-//
-//            @Override
-//            public void onTapMarker(MapView mapView, Marker marker) {
-//
-//            }
-//
-//            @Override
-//            public void onLongPressMarker(MapView mapView, Marker marker) {
-//
-//            }
-//
-//            @Override
-//            public void onTapMap(MapView mapView, ILatLng iLatLng) {
-//
-//            }
-//
-//            @Override
-//            public void onLongPressMap(MapView mapView, ILatLng iLatLng) {
-//
-//            }
-//        });
-//    }
 
 }
