@@ -1,6 +1,7 @@
 package com.example.julien.geoapp.services.pathService;
 
 import android.graphics.Color;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.example.julien.geoapp.Externalization.Message;
@@ -23,6 +24,7 @@ public class DrawGeoJsonPathService implements IDrawGeoJsonPathService {
 
 
     private MapboxMap mapboxMap;
+    private ArrayList<ArrayList<LatLng>> stepsPath;
 
     public DrawGeoJsonPathService(MapboxMap mapboxMap) {
         this.mapboxMap = mapboxMap;
@@ -32,13 +34,25 @@ public class DrawGeoJsonPathService implements IDrawGeoJsonPathService {
 
         ArrayList<LatLng> pointDoors = new ArrayList<>();
         try {
+//            JSONObject json = new JSONObject(pathString);
+//            JSONArray features = json.getJSONArray(Message.FEATURES_JSON[9]);
+//
+//            for (int fn = 0; fn <= features.length(); fn++) {
+//                JSONObject feature = features.getJSONObject(fn);
+//                JSONObject geometry = feature.getJSONObject(Message.FEATURES_JSON[1]);
+//            }
+
             JSONObject json = new JSONObject(pathString);
-            JSONArray path = json.getJSONArray(Message.FEATURES_JSON[9]);
-            for (int i = 0; i < path.length(); i++) {
-                JSONArray coord = path.getJSONArray(i);
-                LatLng latLng = new LatLng(coord.getDouble(1), coord.getDouble(0));
-                pointDoors.add(latLng);
+            for (int b = 0; b < json.length(); b++) {
+                Object pathStepObj = json.get(Message.FEATURES_JSON[9]);
+                JSONArray path = (JSONArray) pathStepObj;
+                for (int fn = 0; fn <= path.length(); fn++) {
+                    JSONArray coord = path.getJSONArray(fn);
+                    LatLng latLng = new LatLng(coord.getDouble(1), coord.getDouble(0));
+                    pointDoors.add(latLng);
+                }
             }
+
         } catch (Exception exception) {
             Log.e(Message.ERROR[0], exception.toString());
         }
