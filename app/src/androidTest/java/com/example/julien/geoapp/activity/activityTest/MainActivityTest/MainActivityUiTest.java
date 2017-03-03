@@ -2,7 +2,6 @@ package com.example.julien.geoapp.activity.activityTest.MainActivityTest;
 
 
 import android.support.test.espresso.Espresso;
-import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.action.ViewActions;
 import android.support.test.rule.ActivityTestRule;
@@ -11,6 +10,7 @@ import android.support.test.runner.AndroidJUnit4;
 import com.example.julien.geoapp.Externalization.Message;
 import com.example.julien.geoapp.R;
 import com.example.julien.geoapp.activity.MainActivity;
+import com.example.julien.geoapp.activity.activityTest.MainActivityTest.services.CustomFailureHandler;
 
 import org.junit.After;
 import org.junit.Before;
@@ -18,7 +18,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.Espresso.setFailureHandler;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -46,6 +48,7 @@ public class MainActivityUiTest {
     public void registerIntentServiceIdlingResource() {
         MainActivity activity = mActivityTestRule.getActivity();
         idlingResource = new MainActivityIdlingResource(activity);
+        setFailureHandler(new CustomFailureHandler(getInstrumentation().getTargetContext()));
         Espresso.registerIdlingResources(idlingResource);
     }
 
@@ -93,15 +96,11 @@ public class MainActivityUiTest {
         // ACT
         ClickFloor(1);
         ZoomInTheMap();
+
         //PO
         ViewInteraction imageView2 = null;
         while(imageView2 == null){
-            try{
-                imageView2 = getFirstMarkerFound();
-            }
-            catch (NoMatchingViewException e){
-                System.out.print(e.toString());
-            }
+            imageView2 = getFirstMarkerFound();
         }
         //ASSERT
         ViewInteraction check = imageView2.check(matches(isDisplayed()));

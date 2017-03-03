@@ -136,6 +136,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         currentFloor = (TextView) findViewById(R.id.currentFloor);
         currentFloor.setText(Message.FIRST_FLOOR_TEXT);
         mLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
+        mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
     }
 
     @Override
