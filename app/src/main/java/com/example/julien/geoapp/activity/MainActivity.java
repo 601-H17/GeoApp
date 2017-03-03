@@ -118,6 +118,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
         setMarkerListener();
+        this.mapboxMap.setOnMapClickListener(new MapboxMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(@NonNull LatLng point) {
+                mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+            }
+        });
     }
 
     private void setView() {
@@ -474,19 +480,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Log.i(TAG, "onPanelStateChanged " + newState);
             }
         });
-        mLayout.setFadeOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-            }
-        });
     }
 
     private void setMarkerListener() {
         mapboxMap.setOnMarkerClickListener(new MapboxMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(@NonNull Marker marker) {
-                mLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
+                mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                 return false;
             }
         });
