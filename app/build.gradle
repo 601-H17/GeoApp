@@ -90,6 +90,7 @@ dependencies {
     compile('com.mapbox.mapboxsdk:mapbox-android-sdk:4.2.2@aar') {
         transitive = true
     }
+    compile 'com.sothree.slidinguppanel:library:3.3.1'
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.github.arimorty:floatingsearchview:2.0.3'
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
