@@ -89,8 +89,9 @@ public class MainActivityUiTest {
         }
     }
 
+
     @Test
-    public void seeDoorWhenZoom(){
+    public void seeDoorWhenZoom() throws InterruptedException {
         // ACT
         ClickFloor(1);
         ZoomInTheMap();
@@ -118,6 +119,7 @@ public class MainActivityUiTest {
                 .check(matches(isDisplayed()));
     }
 
+    /*
     @Test
     public void seeDoorWithText() throws InterruptedException {
         //ACT
@@ -125,8 +127,8 @@ public class MainActivityUiTest {
         ViewInteraction imageView2 = getFirstMarkerFound();
         imageView2.perform(ViewActions.click());
         //ASSERT
-        onView(withId(R.id.infowindow_title)).check(matches(withText(startsWith("G-1"))));
-    }
+        //onView(withId(R.id.infowindow_title)).check(matches(withText(startsWith("G-1"))));
+    }*/
 
     @Test
     public void seeTheSecondSearchViewWhenTheFirstSearchviewContainsMoreThanFourCharacter() throws InterruptedException {
@@ -142,11 +144,6 @@ public class MainActivityUiTest {
     public void seeTheSpinnerWhenWritingOnTheFirstSearchView(){
         SearchForLocal("G-1");
         //onView(withId(R.id.searchMenu)).check(matches(withSpinnerText("G-159")));
-    }
-
-    @Test
-    public void seeBlaBlaBla(){
-
     }
 
 }

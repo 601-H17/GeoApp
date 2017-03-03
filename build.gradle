@@ -7,7 +7,7 @@ buildscript {
         maven { url 'http://nexus.testobject.org/nexus/content/repositories/testobject-public-repo' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.3'
+        classpath 'com.android.tools.build:gradle:2.3.0'
         classpath group: 'org.testobject', name: 'testobject-gradle-plugin', version: '0.0.41'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
