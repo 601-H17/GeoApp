@@ -29,6 +29,7 @@ import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.M
 import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.SearchForLocal;
 import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.ZoomInTheMap;
 import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.getFirstMarkerFound;
+import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.zoomToLocalMarker;
 import static org.hamcrest.Matchers.not;
 
 
@@ -92,22 +93,28 @@ public class MainActivityUiTest {
     }
 
     @Test
-    public void seeDoorWhenZoom(){
-        // ACT
-        ClickFloor(1);
-        ZoomInTheMap();
-
-        //PO
-        ViewInteraction imageView2 = null;
-        while(imageView2 == null){
-            imageView2 = getFirstMarkerFound();
+    public void blockingOnTopSideWhenSwipingUpALot() throws InterruptedException {
+        for(int i = 0; i < 2; i++){
+            onView(withId(R.id.markerViewContainer))
+                    .perform(ViewActions.swipeUp());
         }
-        //ASSERT
-        ViewInteraction check = imageView2.check(matches(isDisplayed()));
-        //imageView2.
-        
     }
 
+    @Test
+    public void blockingOnBottomSideWhenSwipingDownALot() throws InterruptedException {
+        for(int i = 0; i < 2; i++){
+            onView(withId(R.id.markerViewContainer))
+                    .perform(ViewActions.swipeDown());
+        }
+    }
+
+    @Test
+    public void seeLocalMarkerWhenZoom(){
+        // ACT
+        ViewInteraction imageView = zoomToLocalMarker();
+        //ASSERT
+        imageView.check(matches(isDisplayed()));
+    }
 
     @Test
     public void seeSearchMenu(){
@@ -117,11 +124,10 @@ public class MainActivityUiTest {
     }
 
     @Test
-    public void seeDoorWithText() throws InterruptedException {
+    public void seeLocalMarkerWithText() throws InterruptedException {
         //ACT
-        seeDoorWhenZoom();
-        ViewInteraction imageView2 = getFirstMarkerFound();
-        imageView2.perform(ViewActions.click());
+        ViewInteraction imageView = zoomToLocalMarker();
+        imageView.perform(ViewActions.click());
         //ASSERT
         //onView(withId(R.id.infowindow_title)).check(matches(withText(startsWith("G-1"))));
     }
@@ -140,11 +146,6 @@ public class MainActivityUiTest {
     public void seeTheSpinnerWhenWritingOnTheFirstSearchView(){
         SearchForLocal("G-1");
         //onView(withId(R.id.searchMenu)).check(matches(withSpinnerText("G-159")));
-    }
-
-    @Test
-    public void seeBlaBlaBla(){
-
     }
 
 }

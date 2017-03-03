@@ -16,8 +16,10 @@ import org.hamcrest.TypeSafeMatcher;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.hasFocus;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
@@ -87,6 +89,19 @@ public class MainPageObject {
     // post overflow item
     public static void navigateToPost() {
         //clickOverflowItem(R.string.action_post);
+    }
+
+    public static ViewInteraction zoomToLocalMarker() {
+        ClickFloor(1);
+        ZoomInTheMap();
+
+        //Page Object
+        ViewInteraction imageView = null;
+        while(imageView == null){
+            imageView = getFirstMarkerFound();
+        }
+
+        return imageView;
     }
 
     public static Matcher<View> childAtPosition(final Matcher<View> parentMatcher, final int position) {
