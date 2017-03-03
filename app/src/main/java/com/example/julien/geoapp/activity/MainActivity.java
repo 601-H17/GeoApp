@@ -45,6 +45,7 @@ import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Projection;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.ArrayList;
 
@@ -85,12 +86,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private IDrawGeoJsonPathService pathDrawService;
     private DoorsRepositoryService doorsRepositoryService;
     private TextView currentFloor;
+    private SlidingUpPanelLayout mLayout;
+    private static final String TAG = "MainActivity";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setView();
         setButtonListener();
+        //setMarkerListener();
+        setSlidePanelListener();
         setMap(savedInstanceState);
         setAdapter();
     }
@@ -115,6 +120,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         this.mapboxMap.setOnMarkerClickListener(new MapboxMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(@NonNull Marker marker) {
+
                 return false;
             }
         });
@@ -129,6 +135,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         toLocal = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView2);
         currentFloor = (TextView) findViewById(R.id.currentFloor);
         currentFloor.setText(Message.FIRST_FLOOR_TEXT);
+        mLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mLayout != null &&
+                (mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED || mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.ANCHORED)) {
+            mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+        } else {
+            super.onBackPressed();
+        }
     }
 
 
@@ -449,4 +466,59 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void searchApiQueryHelper() {
         new setDoorsList(MainActivity.this, getString(R.string.getDoorsQuery) + typingQueryHelp).execute();
     }
+
+    private void setSlidePanelListener(){
+        mLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
+            @Override
+            public void onPanelSlide(View panel, float slideOffset) {
+                Log.i(TAG, "onPanelSlide, offset " + slideOffset);
+            }
+
+            @Override
+            public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
+                Log.i(TAG, "onPanelStateChanged " + newState);
+            }
+        });
+        mLayout.setFadeOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+            }
+        });
+    }
+
+//    private void setMarkerListener() {
+//        mapboxMap.setMapViewListener(new MapViewListener() {
+//            @Override
+//            public void onShowMarker(MapView mapView, Marker marker) {
+//
+//            }
+//
+//            @Override
+//            public void onHideMarker(MapView mapView, Marker marker) {
+//
+//            }
+//
+//            @Override
+//            public void onTapMarker(MapView mapView, Marker marker) {
+//
+//            }
+//
+//            @Override
+//            public void onLongPressMarker(MapView mapView, Marker marker) {
+//
+//            }
+//
+//            @Override
+//            public void onTapMap(MapView mapView, ILatLng iLatLng) {
+//
+//            }
+//
+//            @Override
+//            public void onLongPressMap(MapView mapView, ILatLng iLatLng) {
+//
+//            }
+//        });
+//    }
+
 }

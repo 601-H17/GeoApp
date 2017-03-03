@@ -1,113 +1,170 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:mapbox="http://schemas.android.com/apk/res-auto"
+
+<com.sothree.slidinguppanel.SlidingUpPanelLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_main"
+    xmlns:sothree="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/sliding_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="0dp"
-    android:paddingLeft="0dp"
-    android:paddingRight="0dp"
-    android:paddingTop="0dp"
-    tools:context="com.example.julien.geoapp.activity.MainActivity">
-
-
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:elevation="1dp"
-        app:srcCompat="@android:drawable/presence_online" />
-
-    <Button
-        android:id="@+id/button"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:text="1" />
-
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_above="@+id/button"
-        android:layout_alignParentEnd="true"
-        android:elevation="0dp"
-        android:text="2" />
-
-    <Button
-        android:id="@+id/button3"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_above="@+id/button2"
-        android:layout_alignParentEnd="true"
-        android:elevation="0dp"
-        android:text="3" />
-
-    <LinearLayout
+    android:gravity="bottom"
+    sothree:umanoPanelHeight="68dp"
+    sothree:umanoShadowHeight="4dp"
+    sothree:umanoParallaxOffset="100dp"
+    sothree:umanoDragView="@+id/dragView"
+    sothree:umanoOverlay="true"
+    sothree:umanoScrollableView="@+id/list">
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:orientation="vertical"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:backgroundTint="@color/theme_color">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <Button
-                android:id="@+id/button4"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:elevation="0dp"
-                android:text="GO !"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_toEndOf="@+id/autoCompleteTextView2" />
-
-            <AutoCompleteTextView
-                android:layout_width="320dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/autoCompleteTextView2"
-                android:singleLine="true"
-                android:completionThreshold="1"
-                android:layout_centerVertical="true"
-                android:layout_alignParentStart="true"
-                android:completionHint="1"/>
-        </RelativeLayout>
-
-
-        <com.mapbox.mapboxsdk.maps.MapView
-            android:id="@+id/mapview"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:mapbox="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/activity_main"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            mapbox:center_latitude="46.78642133499"
-            mapbox:center_longitude="-71.28739276585"
-            mapbox:compass_enabled="false"
-            mapbox:zoom="16"
-            mapbox:zoom_min="16">
+            android:paddingBottom="0dp"
+            android:paddingLeft="0dp"
+            android:paddingRight="0dp"
+            android:paddingTop="0dp"
+            tools:context="com.example.julien.geoapp.activity.MainActivity">
 
-            <TextView
-                android:text=""
+
+            <ImageView
+                android:id="@+id/imageView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/meterdistance" />
+                android:layout_centerInParent="true"
+                android:elevation="1dp"
+                app:srcCompat="@android:drawable/presence_online" />
+
+            <Button
+                android:id="@+id/button"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:text="1" />
+
+            <Button
+                android:id="@+id/button2"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_above="@+id/button"
+                android:layout_alignParentEnd="true"
+                android:elevation="0dp"
+                android:text="2" />
+
+            <Button
+                android:id="@+id/button3"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_above="@+id/button2"
+                android:layout_alignParentEnd="true"
+                android:elevation="0dp"
+                android:text="3" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/colorPrimary"
+                android:orientation="vertical"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true"
+                android:backgroundTint="@color/theme_color">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <Button
+                        android:id="@+id/button4"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:elevation="0dp"
+                        android:text="GO !"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_toEndOf="@+id/autoCompleteTextView2" />
+
+                    <AutoCompleteTextView
+                        android:layout_width="320dp"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/autoCompleteTextView2"
+                        android:singleLine="true"
+                        android:completionThreshold="1"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentStart="true"
+                        android:completionHint="1"/>
+                </RelativeLayout>
+
+
+                <com.mapbox.mapboxsdk.maps.MapView
+                    android:id="@+id/mapview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    mapbox:center_latitude="46.78642133499"
+                    mapbox:center_longitude="-71.28739276585"
+                    mapbox:compass_enabled="false"
+                    mapbox:zoom="16"
+                    mapbox:zoom_min="16">
+
+                    <TextView
+                        android:id="@+id/meterdistance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="" />
+
+                    <TextView
+                        android:id="@+id/currentFloor"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="15dp"
+                        android:lineSpacingExtra="8sp"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="18sp" />
+                </com.mapbox.mapboxsdk.maps.MapView>
+
+            </LinearLayout>
+        </RelativeLayout>
+    </FrameLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ffffff"
+        android:orientation="vertical"
+        android:clickable="true"
+        android:focusable="false"
+        android:id="@+id/dragView">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
             <TextView
-                android:text="TextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/currentFloor"
-                android:lineSpacingExtra="8sp"
-                android:layout_margin="15dp"
-                android:textColor="@color/colorPrimary"
-                android:textSize="18sp" />
-        </com.mapbox.mapboxsdk.maps.MapView>
+                android:id="@+id/local_name"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:textSize="14sp"
+                android:gravity="center_vertical"
+                android:paddingLeft="10dp"
+                android:text="G-*"/>
 
+
+            <TextView
+                android:id="@+id/local_description"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:textSize="14sp"
+                android:gravity="center_vertical"
+                android:paddingLeft="10dp"
+                android:text="Description"/>
+
+        </LinearLayout>
     </LinearLayout>
-</RelativeLayout>
+</com.sothree.slidinguppanel.SlidingUpPanelLayout>
+
