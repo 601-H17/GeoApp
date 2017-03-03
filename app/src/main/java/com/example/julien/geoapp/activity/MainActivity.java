@@ -94,9 +94,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         setView();
         setButtonListener();
-        //setMarkerListener();
         setSlidePanelListener();
         setMap(savedInstanceState);
+        //setMarkerListener();
         setAdapter();
     }
 
@@ -117,13 +117,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 centerUser();
             }
         });
-        this.mapboxMap.setOnMarkerClickListener(new MapboxMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(@NonNull Marker marker) {
-
-                return false;
-            }
-        });
+        setMarkerListener();
     }
 
     private void setView() {
@@ -488,38 +482,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
     }
 
-//    private void setMarkerListener() {
-//        mapboxMap.setMapViewListener(new MapViewListener() {
-//            @Override
-//            public void onShowMarker(MapView mapView, Marker marker) {
-//
-//            }
-//
-//            @Override
-//            public void onHideMarker(MapView mapView, Marker marker) {
-//
-//            }
-//
-//            @Override
-//            public void onTapMarker(MapView mapView, Marker marker) {
-//
-//            }
-//
-//            @Override
-//            public void onLongPressMarker(MapView mapView, Marker marker) {
-//
-//            }
-//
-//            @Override
-//            public void onTapMap(MapView mapView, ILatLng iLatLng) {
-//
-//            }
-//
-//            @Override
-//            public void onLongPressMap(MapView mapView, ILatLng iLatLng) {
-//
-//            }
-//        });
-//    }
+    private void setMarkerListener() {
+        mapboxMap.setOnMarkerClickListener(new MapboxMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(@NonNull Marker marker) {
+                mLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
+                return false;
+            }
+        });
+    }
 
 }
