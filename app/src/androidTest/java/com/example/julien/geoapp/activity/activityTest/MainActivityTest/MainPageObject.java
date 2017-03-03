@@ -43,9 +43,8 @@ public class MainPageObject {
                 .perform(click());
     }
 
-    public static ViewInteraction getFirstMarkerFound() throws InterruptedException {
+    public static ViewInteraction getFirstMarkerFound(){
         ViewInteraction imageView2;
-        Thread.sleep(5000);
         imageView2 = onView(
                 Matchers.allOf(withId(R.id.image),
                         childAtPosition(
