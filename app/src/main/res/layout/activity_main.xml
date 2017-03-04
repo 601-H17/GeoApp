@@ -148,7 +148,9 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:textSize="14sp"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorBlack"
                 android:gravity="center_vertical"
                 android:paddingLeft="10dp"
                 android:text="G-*"/>

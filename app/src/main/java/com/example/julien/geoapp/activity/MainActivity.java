@@ -27,6 +27,7 @@ import com.example.julien.geoapp.adapter.CustomAdapterQuery;
 import com.example.julien.geoapp.api.setDoorsList;
 import com.example.julien.geoapp.api.setGeoJsonMaps;
 import com.example.julien.geoapp.api.setPathGeoJson;
+import com.example.julien.geoapp.api.setSpecificDoorInformation;
 import com.example.julien.geoapp.models.Doors;
 import com.example.julien.geoapp.services.doorsService.DrawGeoJsonDoorsService;
 import com.example.julien.geoapp.services.doorsService.IDrawGeoJsonDoorsService;
@@ -96,7 +97,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         setButtonListener();
         setSlidePanelListener();
         setMap(savedInstanceState);
-        //setMarkerListener();
         setAdapter();
     }
 
@@ -118,12 +118,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
         setMarkerListener();
-        this.mapboxMap.setOnMapClickListener(new MapboxMap.OnMapClickListener() {
-            @Override
-            public void onMapClick(@NonNull LatLng point) {
-                mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
-            }
-        });
+        setMapClickListener();
     }
 
     private void setView() {
@@ -350,6 +345,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         initDoorsList();
     }
 
+    public void setSpecificDoorInformationCallback(String request) {
+        doorsRepositoryService = new DoorsRepositoryService(request);
+
+        TextView localNameTextView = (TextView) findViewById(R.id.local_name);
+        TextView localDescriptionTextView = (TextView) findViewById(R.id.local_description);
+        Doors specificDoor = doorsRepositoryService.getAllDoors().get(0);
+        localNameTextView.setText(specificDoor.getTitle());
+        localDescriptionTextView.setText(specificDoor.getDescription());
+        mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+    }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -491,6 +497,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         new setDoorsList(MainActivity.this, getString(R.string.getDoorsQuery) + typingQueryHelp).execute();
     }
 
+    private void setSearchDoorInformationQuery(String localName) {
+        new setSpecificDoorInformation(MainActivity.this, getString(R.string.getDoorsQuery) + localName).execute();
+    }
+
     private void setSlidePanelListener(){
         mLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
             @Override
@@ -509,10 +519,22 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mapboxMap.setOnMarkerClickListener(new MapboxMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(@NonNull Marker marker) {
-                mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                String localName = doorsDrawService.getLocalName(marker);
+                setSearchDoorInformationQuery(localName);
                 return false;
             }
         });
     }
+
+    private void setMapClickListener() {
+        this.mapboxMap.setOnMapClickListener(new MapboxMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(@NonNull LatLng point) {
+                mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+            }
+        });
+    }
+
+
 
 }
