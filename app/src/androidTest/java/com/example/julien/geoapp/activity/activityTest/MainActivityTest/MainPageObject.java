@@ -21,13 +21,19 @@ import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.hasFocus;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
+import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withParent;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.is;
 
 /**
  * Created by eric3 on 2017-02-28.
  */
 
 public class MainPageObject {
+    static final int OBJECT_ID_MARKER_VIEW_CONTAINER = R.id.markerViewContainer;
 
     public static void ClickFloor(int floor){
         int ressourceId = 0;
@@ -64,6 +70,34 @@ public class MainPageObject {
         return imageView2;
     }
 
+    public static void SwipingToADirection(int numberOfSwiping, String swipingDirection){
+        final String RIGHT_DIRECTION = "Right";
+        final String LEFT_DIRECTION = "Left";
+        final String UP_DIRECTION = "Up";
+        final String DOWN_DIRECTION = "Down";
+
+        for(int i = 0; i < numberOfSwiping; i++){
+            switch (swipingDirection) {
+                case RIGHT_DIRECTION:
+                    onView(withId(OBJECT_ID_MARKER_VIEW_CONTAINER))
+                            .perform(ViewActions.swipeRight());
+                    break;
+                case LEFT_DIRECTION:
+                    onView(withId(OBJECT_ID_MARKER_VIEW_CONTAINER))
+                            .perform(ViewActions.swipeLeft());
+                    break;
+                case UP_DIRECTION:
+                    onView(withId(OBJECT_ID_MARKER_VIEW_CONTAINER))
+                            .perform(ViewActions.swipeUp());
+                    break;
+                case DOWN_DIRECTION:
+                    onView(withId(OBJECT_ID_MARKER_VIEW_CONTAINER))
+                            .perform(ViewActions.swipeDown());
+                    break;
+            }
+        }
+    }
+
     public static void SearchForLocal(String local){
         onView(withId(R.id.searchMenu)).perform(typeText(local));
     }
@@ -72,6 +106,15 @@ public class MainPageObject {
         for(int i = 0; i < 3; i++){
             onView(withId(R.id.mapview)).perform(ViewActions.doubleClick());
         }
+    }
+
+    public static void ClickOnClearQueryButton(){
+        ViewInteraction appCompatImageView = onView(
+                allOf(withClassName(is("android.support.v7.widget.AppCompatImageView")), withContentDescription("Clear query"),
+                        withParent(allOf(withClassName(is("android.widget.LinearLayout")),
+                                withParent(withClassName(is("android.widget.LinearLayout"))))),
+                        isDisplayed()));
+        appCompatImageView.perform(click());
     }
 
     public static void ClearTextOnFirstSearchView() throws InterruptedException {
@@ -91,7 +134,7 @@ public class MainPageObject {
         //clickOverflowItem(R.string.action_post);
     }
 
-    public static ViewInteraction zoomToLocalMarker() {
+    public static ViewInteraction ZoomToLocalMarker() {
         ClickFloor(1);
         ZoomInTheMap();
 

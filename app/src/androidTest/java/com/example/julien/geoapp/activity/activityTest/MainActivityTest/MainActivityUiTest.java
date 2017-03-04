@@ -21,15 +21,23 @@ import org.junit.runner.RunWith;
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.setFailureHandler;
+import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
+import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.ClickFloor;
 import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.SearchForLocal;
 import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.ZoomInTheMap;
 import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.getFirstMarkerFound;
-import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.zoomToLocalMarker;
+import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.ZoomToLocalMarker;
+import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.ClickOnClearQueryButton;
+import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.SwipingToADirection;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 
 
@@ -41,6 +49,12 @@ import static org.hamcrest.Matchers.not;
 @RunWith(AndroidJUnit4.class)
 public class MainActivityUiTest {
     private MainActivityIdlingResource idlingResource;
+    private final String LOCAL = "G-159";
+    private final int NUMBER_OF_SWIPING = 2;
+    final int OBJECT_ID_MARKER_VIEW_CONTAINER = R.id.markerViewContainer;
+    final int OBJECT_ID_CURRENT_FLOOR = R.id.currentFloor;
+    final int OBJECT_ID_SEARCH_MENU = R.id.searchMenu;
+    final int OBJECT_ID_SEARCH_SRC_TEXT = R.id.search_src_text;
 
     @Rule
     public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
@@ -60,58 +74,75 @@ public class MainActivityUiTest {
 
     @Test
     public void seeAllFloorButtons1() {
-        ClickFloor(1);
-        onView(withId(R.id.currentFloor)).check(matches(withText(Message.FIRST_FLOOR_TEXT)));
+        //ARRANGE
+        int floorNumber = 1;
+
+        // ACT
+        ClickFloor(floorNumber);
+        onView(withId(OBJECT_ID_CURRENT_FLOOR)).check(matches(withText(Message.FIRST_FLOOR_TEXT)));
     }
 
     @Test
     public void seeAllFloorButtons2() {
-        ClickFloor(2);
-        onView(withId(R.id.currentFloor)).check(matches(withText(Message.SECOND_FLOOR_TEXT)));
+        //ARRANGE
+        int floorNumber = 2;
+
+        // ACT
+        ClickFloor(floorNumber);
+        onView(withId(OBJECT_ID_CURRENT_FLOOR)).check(matches(withText(Message.SECOND_FLOOR_TEXT)));
     }
 
     @Test
     public void seeAllFloorButtons3() {
-        ClickFloor(3);
-        onView(withId(R.id.currentFloor)).check(matches(withText(Message.THIRD_FLOOR_TEXT)));
+        //ARRANGE
+        int floorNumber = 3;
+
+        // ACT
+        ClickFloor(floorNumber);
+        onView(withId(OBJECT_ID_CURRENT_FLOOR)).check(matches(withText(Message.THIRD_FLOOR_TEXT)));
     }
 
     @Test
     public void blockingOnLeftSideWhenSwipingLeftALot() throws InterruptedException {
-        for(int i = 0; i < 2; i++){
-            onView(withId(R.id.markerViewContainer))
-                    .perform(ViewActions.swipeLeft());
-        }
+        //ARRANGE
+        String swipingDirection = "Left";
+
+        // ACT
+        SwipingToADirection(NUMBER_OF_SWIPING, swipingDirection);
     }
 
     @Test
     public void blockingOnRightSideWhenSwipingRightALot() throws InterruptedException {
-        for(int i = 0; i < 2; i++){
-            onView(withId(R.id.markerViewContainer))
-                    .perform(ViewActions.swipeRight());
-        }
+        //ARRANGE
+        String swipingDirection = "Right";
+
+        // ACT
+        SwipingToADirection(NUMBER_OF_SWIPING, swipingDirection);
     }
 
     @Test
     public void blockingOnTopSideWhenSwipingUpALot() throws InterruptedException {
-        for(int i = 0; i < 2; i++){
-            onView(withId(R.id.markerViewContainer))
-                    .perform(ViewActions.swipeUp());
-        }
+        //ARRANGE
+        String swipingDirection = "Up";
+
+        // ACT
+        SwipingToADirection(NUMBER_OF_SWIPING, swipingDirection);
     }
 
     @Test
     public void blockingOnBottomSideWhenSwipingDownALot() throws InterruptedException {
-        for(int i = 0; i < 2; i++){
-            onView(withId(R.id.markerViewContainer))
-                    .perform(ViewActions.swipeDown());
-        }
+        //ARRANGE
+        String swipingDirection = "Down";
+
+        // ACT
+        SwipingToADirection(NUMBER_OF_SWIPING, swipingDirection);
     }
 
     @Test
     public void seeLocalMarkerWhenZoom(){
         // ACT
-        ViewInteraction imageView = zoomToLocalMarker();
+        ViewInteraction imageView = ZoomToLocalMarker();
+
         //ASSERT
         imageView.check(matches(isDisplayed()));
     }
@@ -119,15 +150,40 @@ public class MainActivityUiTest {
     @Test
     public void seeSearchMenu(){
         //ASSERT
-        onView(withId(R.id.searchMenu))
-                .check(matches(isDisplayed()));
+        onView(withId(OBJECT_ID_SEARCH_MENU)).check(matches(isDisplayed()));
+    }
+    
+    @Test
+    public void insertTextInSearchMenu(){
+        //ARRANGE
+        String resultLocal = LOCAL;
+
+        //ACT
+        SearchForLocal(LOCAL);
+
+        //ASSERT
+        onView(withId(OBJECT_ID_SEARCH_SRC_TEXT)).check(matches(withText(resultLocal)));
+    }
+
+    @Test
+    public void ClearTextInSearchMenu(){
+        //ARRANGE
+        String resultLocal = "";
+
+        //ACT
+        SearchForLocal(LOCAL);
+        ClickOnClearQueryButton();
+
+        //ASSERT
+        onView(withId(OBJECT_ID_SEARCH_SRC_TEXT)).check(matches(withText(resultLocal)));
     }
 
     @Test
     public void seeLocalMarkerWithText() throws InterruptedException {
         //ACT
-        ViewInteraction imageView = zoomToLocalMarker();
+        ViewInteraction imageView = ZoomToLocalMarker();
         imageView.perform(ViewActions.click());
+
         //ASSERT
         //onView(withId(R.id.infowindow_title)).check(matches(withText(startsWith("G-1"))));
     }
@@ -142,10 +198,11 @@ public class MainActivityUiTest {
         onView(withId(R.id.autoCompleteTextView2)).check(matches(isDisplayed()));
     }
 
+    /*
     @Test
     public void seeTheSpinnerWhenWritingOnTheFirstSearchView(){
         SearchForLocal("G-1");
         //onView(withId(R.id.searchMenu)).check(matches(withSpinnerText("G-159")));
-    }
+    }*/
 
 }
