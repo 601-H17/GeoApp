@@ -27,7 +27,6 @@ import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.M
 import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.SearchForLocal;
 import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.ZoomInTheMap;
 import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.getFirstMarkerFound;
-import static org.hamcrest.Matchers.not;
 
 
 /**
@@ -120,16 +119,6 @@ public class MainActivityUiTest {
         Thread.sleep(5000);
         //ASSERT
         //onView(withId(R.id.infowindow_title)).check(matches(withText(startsWith("G-1"))));
-    }
-
-    @Test
-    public void seeTheSecondSearchViewWhenTheFirstSearchviewContainsMoreThanFourCharacter() throws InterruptedException {
-        //ACT
-        SearchForLocal("G");
-        onView(withId(R.id.autoCompleteTextView2)).check(matches(not(isDisplayed())));
-        //ClearTextOnFirstSearchView();
-        SearchForLocal("-153");
-        onView(withId(R.id.autoCompleteTextView2)).check(matches(isDisplayed()));
     }
 
     @Test
