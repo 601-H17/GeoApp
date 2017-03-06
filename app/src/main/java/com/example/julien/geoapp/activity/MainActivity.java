@@ -86,7 +86,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private IDrawGeoJsonDoorsService doorsDrawService;
     private IDrawGeoJsonPathService pathDrawService;
     private DoorsRepositoryService doorsRepositoryService;
-    private TextView currentFloor;
     private SlidingUpPanelLayout mLayout;
     private static final String TAG = "MainActivity";
 
@@ -128,8 +127,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         thirdFloorButton3 = (Button) findViewById(R.id.button3);
         goButton = (Button) findViewById(R.id.button4);
         toLocal = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView2);
-        currentFloor = (TextView) findViewById(R.id.currentFloor);
-        currentFloor.setText(Message.FIRST_FLOOR_TEXT);
         mLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
         mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
     }
@@ -433,7 +430,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onClick(View v) {
                 new setGeoJsonMaps(MainActivity.this, getString(R.string.map)).execute();
                 mapboxMap.clear();
-                currentFloor.setText(Message.FIRST_FLOOR_TEXT);
             }
         });
         secondFloorButton2.setOnClickListener(new View.OnClickListener() {
@@ -442,7 +438,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onClick(View v) {
                 new setGeoJsonMaps(MainActivity.this, getString(R.string.map2)).execute();
                 mapboxMap.clear();
-                currentFloor.setText(Message.SECOND_FLOOR_TEXT);
             }
         });
         thirdFloorButton3.setOnClickListener(new View.OnClickListener() {
@@ -451,7 +446,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onClick(View v) {
                 new setGeoJsonMaps(MainActivity.this, getString(R.string.map3)).execute();
                 mapboxMap.clear();
-                currentFloor.setText(Message.THIRD_FLOOR_TEXT);
             }
         });
         goButton.setVisibility(View.GONE);

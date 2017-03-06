@@ -7,7 +7,6 @@ import android.support.test.espresso.action.ViewActions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import com.example.julien.geoapp.Externalization.Message;
 import com.example.julien.geoapp.R;
 import com.example.julien.geoapp.activity.MainActivity;
 import com.example.julien.geoapp.activity.activityTest.MainActivityTest.services.CustomFailureHandler;
@@ -24,7 +23,6 @@ import static android.support.test.espresso.Espresso.setFailureHandler;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.ClickFloor;
 import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.SearchForLocal;
 import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.ZoomInTheMap;
@@ -60,19 +58,16 @@ public class MainActivityUiTest {
     @Test
     public void seeAllFloorButtons1() {
         ClickFloor(1);
-        onView(withId(R.id.currentFloor)).check(matches(withText(Message.FIRST_FLOOR_TEXT)));
     }
 
     @Test
     public void seeAllFloorButtons2() {
         ClickFloor(2);
-        onView(withId(R.id.currentFloor)).check(matches(withText(Message.SECOND_FLOOR_TEXT)));
     }
 
     @Test
     public void seeAllFloorButtons3() {
         ClickFloor(3);
-        onView(withId(R.id.currentFloor)).check(matches(withText(Message.THIRD_FLOOR_TEXT)));
     }
 
     @Test
