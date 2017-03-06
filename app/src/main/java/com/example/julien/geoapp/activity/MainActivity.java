@@ -27,6 +27,7 @@ import com.example.julien.geoapp.adapter.CustomAdapterQuery;
 import com.example.julien.geoapp.api.setDoorsList;
 import com.example.julien.geoapp.api.setGeoJsonMaps;
 import com.example.julien.geoapp.api.setPathGeoJson;
+import com.example.julien.geoapp.api.setSpecificDoorInformation;
 import com.example.julien.geoapp.models.Doors;
 import com.example.julien.geoapp.services.doorsService.DrawGeoJsonDoorsService;
 import com.example.julien.geoapp.services.doorsService.IDrawGeoJsonDoorsService;
@@ -96,7 +97,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         setButtonListener();
         setSlidePanelListener();
         setMap(savedInstanceState);
-        //setMarkerListener();
         setAdapter();
     }
 
@@ -118,12 +118,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
         setMarkerListener();
-        this.mapboxMap.setOnMapClickListener(new MapboxMap.OnMapClickListener() {
-            @Override
-            public void onMapClick(@NonNull LatLng point) {
-                mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
-            }
-        });
+        setMapClickListener();
     }
 
     private void setView() {
@@ -194,7 +189,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         try {
             ArrayList<Doors> list = doorsRepositoryService.getAllDoors();
             for (int i = 0; i < list.size(); i++) {
-                if (list.get(i).getTitle().toLowerCase().startsWith(typingQueryNavbar.toLowerCase()) || list.get(i).getTeacher().toLowerCase().startsWith(typingQueryNavbar.toLowerCase())) {
+//                if (list.get(i).getTitle().toLowerCase().startsWith(typingQueryNavbar.toLowerCase()) || list.get(i).getTeacher().toLowerCase().startsWith(typingQueryNavbar.toLowerCase())) {
+//                    mc.addRow(new Object[]{i, list.get(i).getTitle(), list.get(i).getTeacher()});
+//                    listSearch.add(list.get(i).getTitle());
+//                }
+                if (find(list.get(i))) {
                     mc.addRow(new Object[]{i, list.get(i).getTitle(), list.get(i).getTeacher()});
                     listSearch.add(list.get(i).getTitle());
                 }
@@ -203,7 +202,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         } catch (Exception e) {
             Log.d(Message.ERROR[0], e.toString());
         }
-        if (typingQueryNavbar.length() >= 4 && typingQueryNavbar != null) {
+        if (typingQueryNavbar.length() >= 1 && typingQueryNavbar != null) {
             toLocal.setVisibility(View.VISIBLE);
             goButton.setVisibility(View.VISIBLE);
         } else {
@@ -211,6 +210,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             goButton.setVisibility(View.GONE);
         }
     }
+
+    private boolean find(Doors door) {
+        boolean isFind = false;
+        String queryRegex = typingQueryNavbar.toLowerCase().replaceAll("[^A-Za-z^0-9.]+", "");
+        String titleRegex = door.getTitle().toLowerCase().replaceAll("[^A-Za-z^0-9.]+", "");
+        String refRegex = door.getTitle().toLowerCase().replaceAll("[^A-Za-z^0-9.]+", "");
+        if (titleRegex.contains(queryRegex) || refRegex.contains(queryRegex)) {
+            isFind = true;
+        }
+        return isFind;
+    }
+
 
     private void setUserLocation() {
         //Lorsqu'un local est entré, centrer la position du local sur le point vert (l'utilisateur).
@@ -334,6 +345,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         initDoorsList();
     }
 
+    public void setSpecificDoorInformationCallback(String request) {
+        doorsRepositoryService = new DoorsRepositoryService(request);
+
+        TextView localNameTextView = (TextView) findViewById(R.id.local_name);
+        TextView localDescriptionTextView = (TextView) findViewById(R.id.local_description);
+        Doors specificDoor = doorsRepositoryService.getAllDoors().get(0);
+        localNameTextView.setText(specificDoor.getTitle());
+        localDescriptionTextView.setText(specificDoor.getDescription());
+        mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+    }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -383,6 +405,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void afterTextChanged(Editable s) {
                 typingQueryHelp = s.toString();
                 searchApiQueryHelper();
+
+            }
+        });
+
+        toLocal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
             }
         });
@@ -468,6 +497,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         new setDoorsList(MainActivity.this, getString(R.string.getDoorsQuery) + typingQueryHelp).execute();
     }
 
+    private void setSearchDoorInformationQuery(String localName) {
+        new setSpecificDoorInformation(MainActivity.this, getString(R.string.getDoorsQuery) + localName).execute();
+    }
+
     private void setSlidePanelListener(){
         mLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
             @Override
@@ -486,10 +519,22 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mapboxMap.setOnMarkerClickListener(new MapboxMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(@NonNull Marker marker) {
-                mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                String localName = doorsDrawService.getLocalName(marker);
+                setSearchDoorInformationQuery(localName);
                 return false;
             }
         });
     }
+
+    private void setMapClickListener() {
+        this.mapboxMap.setOnMapClickListener(new MapboxMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(@NonNull LatLng point) {
+                mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+            }
+        });
+    }
+
+
 
 }
