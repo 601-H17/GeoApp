@@ -24,20 +24,15 @@ import static android.support.test.espresso.Espresso.setFailureHandler;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
-import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.ClickFloor;
 import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.SearchForLocal;
-import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.ZoomInTheMap;
-import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.getFirstMarkerFound;
+import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.SearchForDestination;
 import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.ZoomToLocalMarker;
 import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.ClickOnClearQueryButton;
 import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.SwipingToADirection;
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.is;
+import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.SelectFirstLocalInAutoCompleteMenu;
 import static org.hamcrest.Matchers.not;
 
 
@@ -50,6 +45,7 @@ import static org.hamcrest.Matchers.not;
 public class MainActivityUiTest {
     private MainActivityIdlingResource idlingResource;
     private final String LOCAL = "G-159";
+    private final String DESTINATION = "G-170";
     private final int NUMBER_OF_SWIPING = 2;
     final int OBJECT_ID_MARKER_VIEW_CONTAINER = R.id.markerViewContainer;
     final int OBJECT_ID_CURRENT_FLOOR = R.id.currentFloor;
@@ -152,7 +148,7 @@ public class MainActivityUiTest {
         //ASSERT
         onView(withId(OBJECT_ID_SEARCH_MENU)).check(matches(isDisplayed()));
     }
-    
+
     @Test
     public void insertTextInSearchMenu(){
         //ARRANGE
@@ -177,6 +173,37 @@ public class MainActivityUiTest {
         //ASSERT
         onView(withId(OBJECT_ID_SEARCH_SRC_TEXT)).check(matches(withText(resultLocal)));
     }
+
+    @Test
+    public void insertTextOnDestinationSearchMenu(){
+        //ARRANGE
+        String resultLocal = LOCAL;
+        String resultDestination = DESTINATION;
+
+        //ACT
+        SearchForLocal(LOCAL);
+        onView(withId(MainPageObject.OBJECT_ID_AUTO_COMPLETE_TEXT_VIEW_2)).perform(click());
+        SearchForDestination(DESTINATION);
+
+        //ASSERT
+        onView(withId(OBJECT_ID_SEARCH_SRC_TEXT)).check(matches(withText(resultLocal)));
+        onView(withId(MainPageObject.OBJECT_ID_AUTO_COMPLETE_TEXT_VIEW_2))
+                .check(matches(withText(resultDestination)));
+    }
+
+    @Test
+    public void selectLocalInAutoCompleteSearchMenu(){
+        //ARRANGE
+        String resultLocal = LOCAL;
+
+        //ACT
+        SearchForLocal("G-");
+        SelectFirstLocalInAutoCompleteMenu();
+
+        //ASSERT
+        onView(withId(OBJECT_ID_SEARCH_SRC_TEXT)).check(matches(withText(resultLocal)));
+    }
+
 
     @Test
     public void seeLocalMarkerWithText() throws InterruptedException {

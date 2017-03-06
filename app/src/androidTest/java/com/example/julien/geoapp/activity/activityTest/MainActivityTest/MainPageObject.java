@@ -1,7 +1,10 @@
 package com.example.julien.geoapp.activity.activityTest.MainActivityTest;
 
+import android.inputmethodservice.Keyboard;
 import android.support.test.espresso.ViewInteraction;
+import android.support.test.espresso.action.KeyEventAction;
 import android.support.test.espresso.action.ViewActions;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -16,10 +19,9 @@ import org.hamcrest.TypeSafeMatcher;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
-import static android.support.test.espresso.action.ViewActions.scrollTo;
+import static android.support.test.espresso.action.ViewActions.pressKey;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.hasFocus;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
@@ -34,6 +36,7 @@ import static org.hamcrest.Matchers.is;
 
 public class MainPageObject {
     static final int OBJECT_ID_MARKER_VIEW_CONTAINER = R.id.markerViewContainer;
+    static final int OBJECT_ID_AUTO_COMPLETE_TEXT_VIEW_2 = R.id.autoCompleteTextView2;
 
     public static void ClickFloor(int floor){
         int ressourceId = 0;
@@ -99,7 +102,16 @@ public class MainPageObject {
     }
 
     public static void SearchForLocal(String local){
-        onView(withId(R.id.searchMenu)).perform(typeText(local));
+        onView(withId(R.id.searchMenu)).perform(typeText(local), closeSoftKeyboard());
+    }
+
+    public static void SearchForDestination(String destination){
+        onView(withId(OBJECT_ID_AUTO_COMPLETE_TEXT_VIEW_2))
+                .perform(typeText(destination), closeSoftKeyboard());
+    }
+
+    public static void SelectFirstLocalInAutoCompleteMenu(){
+        onView(withId(R.id.searchMenu)).perform(pressKey(KeyEvent.KEYCODE_DPAD_DOWN), pressKey(KeyEvent.KEYCODE_ENTER));
     }
 
     public static void ZoomInTheMap(){
@@ -115,13 +127,6 @@ public class MainPageObject {
                                 withParent(withClassName(is("android.widget.LinearLayout"))))),
                         isDisplayed()));
         appCompatImageView.perform(click());
-    }
-
-    public static void ClearTextOnFirstSearchView() throws InterruptedException {
-//        onView(withId(R.id.search_close_btn)).check(matches(isDisplayed()));
-//        onView(withId(R.id.search_close_btn)).perform(click())
-        onView(withId(R.id.searchMenu)).perform(closeSoftKeyboard());
-        //onView(withId(R.id.searchMenu)).perform(replaceText(""));
     }
 
     // settings overflow item
