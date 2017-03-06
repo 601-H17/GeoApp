@@ -122,6 +122,7 @@ public class MainActivityUiTest {
         seeDoorWhenZoom();
         ViewInteraction imageView2 = getFirstMarkerFound();
         imageView2.perform(ViewActions.click());
+        Thread.sleep(5000);
         //ASSERT
         //onView(withId(R.id.infowindow_title)).check(matches(withText(startsWith("G-1"))));
     }

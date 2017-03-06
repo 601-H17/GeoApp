@@ -353,6 +353,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         Doors specificDoor = doorsRepositoryService.getAllDoors().get(0);
         localNameTextView.setText(specificDoor.getTitle());
         localDescriptionTextView.setText(specificDoor.getDescription());
+        mLayout.setClipPanel(true);
+        int panelHeight = mLayout.getPanelHeight();
+
         mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
     }
 
