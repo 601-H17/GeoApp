@@ -29,12 +29,14 @@ import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.M
 import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.OBJECT_ID_AUTO_COMPLETE_TEXT_VIEW_2;
 import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.SearchForLocal;
 import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.SearchForDestination;
+import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.ZoomInTheMap;
 import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.ZoomToLocalMarker;
 import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.ClickOnClearQueryButton;
 import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.SwipingToADirection;
 import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.SelectFirstLocalInAutoCompleteMenu;
 import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.GetFirstMarkerFound;
 import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.startsWith;
 
 
 /**
@@ -55,6 +57,7 @@ public class MainActivityUiTest {
     final int OBJECT_ID_DRAG_VIEW = R.id.dragView;
     final int OBJECT_ID_BUTTON_OK = R.id.button4;
     final int OBJECT_ID_MARKER = R.id.image;
+    final int OBJECT_ID_LOCAL_NAME =  R.id.local_name;
 
     @Rule
     public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
@@ -76,20 +79,36 @@ public class MainActivityUiTest {
     public void seeAllFloorButtons1() {
         //ARRANGE
         int floorNumber = 1;
+        String resultLocal = "G-1";
 
         // ACT
         ClickFloor(floorNumber);
-        onView(withId(OBJECT_ID_CURRENT_FLOOR)).check(matches(withText(Message.FIRST_FLOOR_TEXT)));
+        ZoomInTheMap();
+        ViewInteraction viewMarker = null;
+        while (viewMarker == null){
+            viewMarker = GetFirstMarkerFound();
+        }
+        viewMarker.check(matches(isDisplayed()));
+        viewMarker.perform(click());
+        onView(withId(OBJECT_ID_LOCAL_NAME)).check(matches(withText(startsWith(resultLocal))));
     }
 
     @Test
     public void seeAllFloorButtons2() {
         //ARRANGE
         int floorNumber = 2;
+        String resultLocal = "G-2";
 
         // ACT
         ClickFloor(floorNumber);
-        onView(withId(OBJECT_ID_CURRENT_FLOOR)).check(matches(withText(Message.SECOND_FLOOR_TEXT)));
+        ZoomInTheMap();
+        ViewInteraction viewMarker = null;
+        while (viewMarker == null){
+            viewMarker = GetFirstMarkerFound();
+        }
+        viewMarker.check(matches(isDisplayed()));
+        viewMarker.perform(click());
+        onView(withId(OBJECT_ID_LOCAL_NAME)).check(matches(withText(startsWith(resultLocal))));
     }
 
     @Test
@@ -99,7 +118,7 @@ public class MainActivityUiTest {
 
         // ACT
         ClickFloor(floorNumber);
-        onView(withId(OBJECT_ID_CURRENT_FLOOR)).check(matches(withText(Message.THIRD_FLOOR_TEXT)));
+        //Nothing to test - TO DO when the map is finished
     }
 
     @Test
@@ -242,7 +261,7 @@ public class MainActivityUiTest {
     }
 
     @Test
-    public void secondSearchViewIsDisplayedWhenTheFirstSearchviewContainsMoreThanFourCharacter() {
+    public void secondSearchViewIsDisplayedWhenTheFirstSearchviewContainsMoreThanOneCharacter() {
         //ACT
         SearchForLocal("G-153");
 
@@ -250,14 +269,6 @@ public class MainActivityUiTest {
         onView(withId(OBJECT_ID_AUTO_COMPLETE_TEXT_VIEW_2)).check(matches(isDisplayed()));
     }
 
-    @Test
-    public void secondSearchViewIsNotDisplayedWhenTheFirstSearchviewContainsLessThanFourCharacter() {
-        //ACT
-        SearchForLocal("G");
-
-        //ASSERT
-        onView(withId(OBJECT_ID_AUTO_COMPLETE_TEXT_VIEW_2)).check(matches(not(isDisplayed())));
-    }
 
     /*
     @Test

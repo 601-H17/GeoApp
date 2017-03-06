@@ -64,7 +64,7 @@ public class MainPageObject {
                                         childAtPosition(
                                                 withId(R.id.mapview),
                                                 1)),
-                                0),
+                                2),
                         isDisplayed()));
         }
         catch(Exception e){
@@ -115,7 +115,7 @@ public class MainPageObject {
     }
 
     public static void ZoomInTheMap(){
-        for(int i = 0; i < 4; i++){
+        for(int i = 0; i < 3; i++){
             onView(withId(R.id.mapview)).perform(ViewActions.doubleClick());
         }
     }
