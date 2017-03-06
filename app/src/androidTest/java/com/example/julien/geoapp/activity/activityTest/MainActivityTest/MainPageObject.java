@@ -56,19 +56,20 @@ public class MainPageObject {
 
     public static ViewInteraction GetFirstMarkerFound(){
         ViewInteraction imageView2 = null;
-        try{
-        imageView2 = onView(
-                Matchers.allOf(withId(R.id.image),
-                        childAtPosition(
-                                Matchers.allOf(withId(R.id.markerViewContainer),
-                                        childAtPosition(
-                                                withId(R.id.mapview),
-                                                1)),
-                                2),
-                        isDisplayed()));
-        }
-        catch(Exception e){
-            System.out.print(e);
+        while(imageView2 == null) {
+            try {
+                imageView2 = onView(
+                        Matchers.allOf(withId(R.id.image),
+                                childAtPosition(
+                                        Matchers.allOf(withId(R.id.markerViewContainer),
+                                                childAtPosition(
+                                                        withId(R.id.mapview),
+                                                        1)),
+                                        0),
+                                isDisplayed()));
+            } catch (Exception e) {
+                System.out.print(e);
+            }
         }
         return imageView2;
     }

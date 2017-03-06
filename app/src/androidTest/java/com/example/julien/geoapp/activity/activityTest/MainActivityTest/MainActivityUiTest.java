@@ -76,20 +76,21 @@ public class MainActivityUiTest {
     }
 
     @Test
-    public void seeAllFloorButtons1() {
+    public void seeAllFloorButtons1() throws InterruptedException {
         //ARRANGE
         int floorNumber = 1;
         String resultLocal = "G-1";
+        ViewInteraction viewMarker = null;
 
         // ACT
         ClickFloor(floorNumber);
         ZoomInTheMap();
-        ViewInteraction viewMarker = null;
-        while (viewMarker == null){
+        while (viewMarker == null) {
             viewMarker = GetFirstMarkerFound();
         }
-        viewMarker.check(matches(isDisplayed()));
         viewMarker.perform(click());
+
+        //ASSERT
         onView(withId(OBJECT_ID_LOCAL_NAME)).check(matches(withText(startsWith(resultLocal))));
     }
 
@@ -229,9 +230,6 @@ public class MainActivityUiTest {
 
     @Test
     public void seeLocalMarkerWithText() throws InterruptedException {
-        //ARRANGE
-        ViewInteraction view = null;
-
         //ACT
         SearchForLocal(LOCAL);
         SelectFirstLocalInAutoCompleteMenu();
@@ -240,12 +238,7 @@ public class MainActivityUiTest {
         imageView.perform(click());
 
         //ASSERT
-        while (view == null){
-            try {
-                view = onView(withId(OBJECT_ID_DRAG_VIEW)).check(matches(isDisplayed()));
-            }catch(Exception e){
-            }
-        }
+        onView(withId(OBJECT_ID_DRAG_VIEW)).check(matches(isDisplayed()));
     }
 
     @Test
