@@ -53,35 +53,17 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:background="?attr/colorPrimary"
-<<<<<<< HEAD
         android:backgroundTint="@color/theme_color"
         android:orientation="vertical">
-=======
-        android:orientation="vertical"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:backgroundTint="@color/theme_color">
->>>>>>> parent of f016f6b... added auto create path
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <Button
-                android:id="@+id/button4"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:elevation="0dp"
-                android:text="GO !"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_toEndOf="@+id/autoCompleteTextView2" />
-
             <AutoCompleteTextView
                 android:id="@+id/autoCompleteTextView2"
                 android:layout_width="320dp"
                 android:layout_height="wrap_content"
-<<<<<<< HEAD
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
@@ -89,14 +71,6 @@
                 android:completionThreshold="1"
                 android:imeOptions="actionSearch"
                 android:maxLines="1" />
-=======
-                android:id="@+id/autoCompleteTextView2"
-                android:singleLine="true"
-                android:completionThreshold="1"
-                android:layout_centerVertical="true"
-                android:layout_alignParentStart="true"
-                android:completionHint="1"/>
->>>>>>> parent of f016f6b... added auto create path
         </RelativeLayout>
 
 
@@ -109,12 +83,6 @@
             mapbox:compass_enabled="false"
             mapbox:zoom="16"
             mapbox:zoom_min="16">
-
-            <TextView
-                android:text=""
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/meterdistance" />
         </com.mapbox.mapboxsdk.maps.MapView>
 
     </LinearLayout>
