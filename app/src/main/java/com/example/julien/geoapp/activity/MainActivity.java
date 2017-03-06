@@ -168,7 +168,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         searchView.setQuery(listSearch.get(i), true);
         searchLocal = searchView.getQuery().toString().toUpperCase();
         isQueryNavBar = false;
-       // setUserLocation();
+        setUserLocation();
     }
 
     private void searchQuery() {
@@ -178,10 +178,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         try {
             ArrayList<Doors> list = doorsRepositoryService.getAllDoors();
             for (int i = 0; i < list.size(); i++) {
-//                if (list.get(i).getTitle().toLowerCase().startsWith(typingQueryNavbar.toLowerCase()) || list.get(i).getTeacher().toLowerCase().startsWith(typingQueryNavbar.toLowerCase())) {
-//                    mc.addRow(new Object[]{i, list.get(i).getTitle(), list.get(i).getTeacher()});
-//                    listSearch.add(list.get(i).getTitle());
-//                }
                 if (find(list.get(i))) {
                     mc.addRow(new Object[]{i, list.get(i).getTitle(), list.get(i).getTeacher()});
                     listSearch.add(list.get(i).getTitle());
@@ -214,6 +210,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         //Lorsqu'un local est entré, centrer la position du local sur le point vert (l'utilisateur).
         try {
             Doors door = doorsRepositoryService.getSpecificDoor(searchLocal);
+            setStair(door);
             LatLng user = new LatLng(door.getlongi() - CENTER_VS_USER[0], door.getLati() - CENTER_VS_USER[1]);
             int positionZoomCameraMove = 19;
             CameraPosition position = new CameraPosition.Builder()
@@ -229,6 +226,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         } catch (Exception e) {
             Log.d(Message.ERROR[0], e.toString());
         }
+    }
+
+    private void setStair(Doors door) {
+        if (door.getEtage() == 1)
+            firstFloorButton.performClick();
+        if (door.getEtage() == 2)
+            secondFloorButton2.performClick();
     }
 
     private void setCenterCoordinates(int width, int height, Projection projection) {
@@ -329,7 +333,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         //Instancier les services lorsque l'API recoit une réponse.
         this.doorsInformation = doors;
         //Si une recherche a été lancée, localiser l'utilisateur à la réponse de l'API.
-        setUserLocation();
+        //setUserLocation();
         initDoorsList();
     }
 
