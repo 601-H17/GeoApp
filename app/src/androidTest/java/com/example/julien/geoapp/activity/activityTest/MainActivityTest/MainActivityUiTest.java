@@ -3,7 +3,6 @@ package com.example.julien.geoapp.activity.activityTest.MainActivityTest;
 
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.ViewInteraction;
-import android.support.test.espresso.action.ViewActions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -33,6 +32,7 @@ import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.M
 import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.ClickOnClearQueryButton;
 import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.SwipingToADirection;
 import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.SelectFirstLocalInAutoCompleteMenu;
+import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.GetFirstMarkerFound;
 import static org.hamcrest.Matchers.not;
 
 
@@ -51,6 +51,9 @@ public class MainActivityUiTest {
     final int OBJECT_ID_CURRENT_FLOOR = R.id.currentFloor;
     final int OBJECT_ID_SEARCH_MENU = R.id.searchMenu;
     final int OBJECT_ID_SEARCH_SRC_TEXT = R.id.search_src_text;
+    final int OBJECT_ID_DRAG_VIEW = R.id.dragView;
+    final int OBJECT_ID_BUTTON_OK = R.id.button4;
+    final int OBJECT_ID_MARKER = R.id.image;
 
     @Rule
     public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
@@ -162,7 +165,7 @@ public class MainActivityUiTest {
     }
 
     @Test
-    public void ClearTextInSearchMenu(){
+    public void clearTextInSearchMenu(){
         //ARRANGE
         String resultLocal = "";
 
@@ -206,13 +209,35 @@ public class MainActivityUiTest {
 
 
     @Test
-    public void seeLocalMarkerWithText() throws InterruptedException {
-        //ACT
-        ViewInteraction imageView = ZoomToLocalMarker();
-        imageView.perform(ViewActions.click());
+    public void seeLocalMarkerWithText(){
+        //ARRANGE
+        ViewInteraction view = null;
+
+        SearchForLocal(LOCAL);
+        SelectFirstLocalInAutoCompleteMenu();
+        onView(withId(OBJECT_ID_BUTTON_OK)).perform(click());
+        ViewInteraction imageView = GetFirstMarkerFound();
+        imageView.perform(click());
 
         //ASSERT
-        //onView(withId(R.id.infowindow_title)).check(matches(withText(startsWith("G-1"))));
+        while (view == null){
+            try {
+                view = onView(withId(OBJECT_ID_DRAG_VIEW)).check(matches(isDisplayed()));
+            }catch(Exception e){
+            }
+        }
+    }
+
+    @Test
+    public void dragViewMarkerIsNotDisplayedWhenApplicationLaunch(){
+        //ASSERT
+        onView(withId(OBJECT_ID_DRAG_VIEW)).check(matches(not(isDisplayed())));
+    }
+
+    @Test
+    public void markerIsNotDisplayedOnTheMapWhenApplicationLaunch(){
+        //ASSERT
+        onView(withId(OBJECT_ID_MARKER)).check(matches(not(isDisplayed())));
     }
 
     @Test

@@ -54,7 +54,7 @@ public class MainPageObject {
                 .perform(click());
     }
 
-    public static ViewInteraction getFirstMarkerFound(){
+    public static ViewInteraction GetFirstMarkerFound(){
         ViewInteraction imageView2 = null;
         try{
         imageView2 = onView(
@@ -115,7 +115,7 @@ public class MainPageObject {
     }
 
     public static void ZoomInTheMap(){
-        for(int i = 0; i < 3; i++){
+        for(int i = 0; i < 4; i++){
             onView(withId(R.id.mapview)).perform(ViewActions.doubleClick());
         }
     }
@@ -146,7 +146,7 @@ public class MainPageObject {
         //Page Object
         ViewInteraction imageView = null;
         while(imageView == null){
-            imageView = getFirstMarkerFound();
+            imageView = GetFirstMarkerFound();
         }
 
         return imageView;
