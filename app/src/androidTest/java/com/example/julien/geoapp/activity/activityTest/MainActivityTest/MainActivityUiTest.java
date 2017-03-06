@@ -26,6 +26,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.ClickFloor;
+import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.OBJECT_ID_AUTO_COMPLETE_TEXT_VIEW_2;
 import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.SearchForLocal;
 import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.SearchForDestination;
 import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.ZoomToLocalMarker;
@@ -207,12 +208,12 @@ public class MainActivityUiTest {
         onView(withId(OBJECT_ID_SEARCH_SRC_TEXT)).check(matches(withText(resultLocal)));
     }
 
-
     @Test
-    public void seeLocalMarkerWithText(){
+    public void seeLocalMarkerWithText() throws InterruptedException {
         //ARRANGE
         ViewInteraction view = null;
 
+        //ACT
         SearchForLocal(LOCAL);
         SelectFirstLocalInAutoCompleteMenu();
         onView(withId(OBJECT_ID_BUTTON_OK)).perform(click());
@@ -241,13 +242,21 @@ public class MainActivityUiTest {
     }
 
     @Test
-    public void seeTheSecondSearchViewWhenTheFirstSearchviewContainsMoreThanFourCharacter() throws InterruptedException {
+    public void secondSearchViewIsDisplayedWhenTheFirstSearchviewContainsMoreThanFourCharacter() {
+        //ACT
+        SearchForLocal("G-153");
+
+        //ASSERT
+        onView(withId(OBJECT_ID_AUTO_COMPLETE_TEXT_VIEW_2)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void secondSearchViewIsNotDisplayedWhenTheFirstSearchviewContainsLessThanFourCharacter() {
         //ACT
         SearchForLocal("G");
-        onView(withId(R.id.autoCompleteTextView2)).check(matches(not(isDisplayed())));
-        //ClearTextOnFirstSearchView();
-        SearchForLocal("-153");
-        onView(withId(R.id.autoCompleteTextView2)).check(matches(isDisplayed()));
+
+        //ASSERT
+        onView(withId(OBJECT_ID_AUTO_COMPLETE_TEXT_VIEW_2)).check(matches(not(isDisplayed())));
     }
 
     /*
