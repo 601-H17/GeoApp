@@ -3,6 +3,7 @@
     <string name="access_token">pk.eyJ1IjoianVsaWVudHVyY290dGUiLCJhIjoiY2l5aXdqMjg1MDR3djJ3cnd4bXY0bHdjYyJ9.5fm_zldCIWla9crEDKWmfw</string>
     <string name="route_map">/map</string>
     <string name="api_url">https://csf-geo-app.herokuapp.com/api</string>
+    <string name="api_url_path">https://pathfinder-csf-geo-app.herokuapp.com/api/pathfinder?</string>
     <string name="map">map</string>
     <string name="map2">map2</string>
     <string name="map3">map3</string>

@@ -6,7 +6,7 @@ import com.example.julien.geoapp.activity.MainActivity;
  * Created by Julien on 2017-02-14.
  */
 
-public class setPathGeoJson extends ApiRequest {
+public class setPathGeoJson extends ApiRequestPathfinder {
     public setPathGeoJson(MainActivity context, String route) {
         super(context, route);
     }
