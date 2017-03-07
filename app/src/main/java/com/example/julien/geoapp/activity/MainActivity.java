@@ -351,12 +351,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         TextView localNameTextView = (TextView) findViewById(R.id.local_name);
         TextView localDescriptionTextView = (TextView) findViewById(R.id.local_description);
+        TextView localTagTextView = (TextView) findViewById(R.id.local_tag);
+        TextView localFloorTextView = (TextView) findViewById(R.id.local_floor);
+
         Doors specificDoor = doorsRepositoryService.getAllDoors().get(0);
         localNameTextView.setText(specificDoor.getTitle());
         localDescriptionTextView.setText(specificDoor.getDescription());
-        mLayout.setClipPanel(true);
-        int panelHeight = mLayout.getPanelHeight();
-
+        localTagTextView.setText(specificDoor.getTag());
+        localFloorTextView.setText(Integer.toString(specificDoor.getEtage()));
         mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
         panelIsShowed = true;
     }

@@ -128,43 +128,6 @@
             </LinearLayout>
         </RelativeLayout>
     </FrameLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#ffffff"
-        android:orientation="vertical"
-        android:clickable="true"
-        android:focusable="false"
-        android:id="@+id/dragView">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/local_name"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:textColor="@color/colorBlack"
-                android:gravity="center_vertical"
-                android:paddingLeft="10dp"
-                android:text="G-*"/>
-
-
-            <TextView
-                android:id="@+id/local_description"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:textSize="14sp"
-                android:gravity="center_vertical"
-                android:paddingLeft="10dp"
-                android:text="Description"/>
-
-        </LinearLayout>
-    </LinearLayout>
+    <include layout="@layout/sliding_layout" />
 </com.sothree.slidinguppanel.SlidingUpPanelLayout>
 
