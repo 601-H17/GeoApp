@@ -56,6 +56,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private Button firstFloorButton;
     private Button secondFloorButton2;
     private Button thirdFloorButton3;
+    private Button nextStepButton;
+    private Button finishButton;
 
     private MapboxMap mapboxMap;
     private MapView mapView;
@@ -67,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private String MENU_ID = "id";
     private String MENU_REF = "ref";
-    private String FROM = "path?localA=";
+    private String FROM = "localA=";
     private String TO = "&localB=";
     private String mapGeoJson;
     private String doorsInformation;
@@ -128,6 +130,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         secondFloorButton2 = (Button) findViewById(R.id.button2);
         thirdFloorButton3 = (Button) findViewById(R.id.button3);
         toLocal = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView2);
+        nextStepButton = (Button) findViewById(R.id.next);
+        finishButton = (Button) findViewById(R.id.finish);
+        finishButton.setVisibility(View.INVISIBLE);
+        nextStepButton.setVisibility(View.INVISIBLE);
     }
 
 
@@ -235,6 +241,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             secondFloorButton2.performClick();
     }
 
+    private void setStairNumber(int door) {
+        if (door == 1)
+            firstFloorButton.performClick();
+        if (door == 2)
+            secondFloorButton2.performClick();
+    }
+
     private void setCenterCoordinates(int width, int height, Projection projection) {
         //Position du point vert.
         PointF centerPoint = new PointF(width / 2, height / 2);
@@ -303,7 +316,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         //Sert à instancier tous les services lorsqu'un nouvel étage est chargé + le dessiner.
         mapsDrawService = new DrawGeoJsonMapsService(mapboxMap, mapGeoJson);
         doorsDrawService = new DrawGeoJsonDoorsService(mapboxMap, this, mapGeoJson);
-        pathDrawService = new DrawGeoJsonPathService(mapboxMap);
+        pathDrawService = new DrawGeoJsonPathService(mapboxMap, this);
         mapsDrawService.drawMaps();
         showDoors();
     }
@@ -315,7 +328,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         mapsDrawService.drawMaps();
         pathDrawService.drawPath(pathGeoJson);
-        doorsDrawService.addFromToMarkers(pathGeoJson);
+        //doorsDrawService.addFromToMarkers(pathGeoJson);
+        pathDrawService.drawLinesCorridorsStep();
+        if (pathGeoJson.length() > 20) {
+            if (pathDrawService.isLastStep()) {
+                nextStepButton.setVisibility(View.INVISIBLE);
+                finishButton.setVisibility(View.VISIBLE);
+            } else
+                nextStepButton.setVisibility(View.VISIBLE);
+        }
         showDoors();
     }
 
@@ -335,11 +356,27 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         //Instancier les services lorsque l'API recoit une réponse.
         this.doorsInformation = doors;
         //Si une recherche a été lancée, localiser l'utilisateur à la réponse de l'API.
-<<<<<<< HEAD
-=======
-        //setUserLocation();
->>>>>>> parent of 01b06d2... added next step for path
         initDoorsList();
+    }
+
+    private void setUserLocationNoStair() {
+        try {
+            Doors door = doorsRepositoryService.getSpecificDoor(searchLocal);
+            LatLng user = new LatLng(door.getlongi() - CENTER_VS_USER[0], door.getLati() - CENTER_VS_USER[1]);
+            int positionZoomCameraMove = 19;
+            CameraPosition position = new CameraPosition.Builder()
+                    .target(user)
+                    .zoom(positionZoomCameraMove)
+                    .tilt(0)
+                    .bearing(0)
+                    .build();
+            mapboxMap.animateCamera(CameraUpdateFactory
+                    .newCameraPosition(position));
+            positionZoom = positionZoomCameraMove;
+            showDoors();
+        } catch (Exception e) {
+            Log.d(Message.ERROR[0], e.toString());
+        }
     }
 
     @Override
@@ -373,6 +410,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void setButtonListener() {
         //Une requête à l'API est lancée pour chaque touche entrée lors de la recherche dans helper bar.
+        nextStepButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setStairNumber(pathDrawService.getFloor());
+                pathDrawService.drawLinesCorridorsStep();
+                if (pathDrawService.isLastStep())
+                    nextStepButton.setVisibility(View.INVISIBLE);
+                else
+                    nextStepButton.setVisibility(View.VISIBLE);
+            }
+        });
+
         toLocal.addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -404,6 +453,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 isQueryHelpBar = false;
                 InputMethodManager in = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 in.hideSoftInputFromWindow(adapterView.getApplicationWindowToken(), 0);
+                setUserLocation();
                 researchPath();
             }
         });
@@ -431,6 +481,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onClick(View v) {
                 new setGeoJsonMaps(MainActivity.this, getString(R.string.map3)).execute();
                 mapboxMap.clear();
+            }
+        });
+        finishButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setUserLocationNoStair();
+                finishButton.setVisibility(View.INVISIBLE);
             }
         });
         toLocal.setVisibility(View.GONE);
