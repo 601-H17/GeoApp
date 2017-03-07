@@ -9,4 +9,5 @@ public interface IDrawGeoJsonPathService {
    int getFloor();
    int getTotalStep();
    void drawPath(String requestapi);
+   boolean isLastStep();
 }
