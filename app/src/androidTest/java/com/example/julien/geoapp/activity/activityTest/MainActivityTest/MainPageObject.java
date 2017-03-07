@@ -1,8 +1,6 @@
 package com.example.julien.geoapp.activity.activityTest.MainActivityTest;
 
-import android.inputmethodservice.Keyboard;
 import android.support.test.espresso.ViewInteraction;
-import android.support.test.espresso.action.KeyEventAction;
 import android.support.test.espresso.action.ViewActions;
 import android.view.KeyEvent;
 import android.view.View;
@@ -56,8 +54,6 @@ public class MainPageObject {
 
     public static ViewInteraction GetFirstMarkerFound(){
         ViewInteraction imageView2 = null;
-        while(imageView2 == null) {
-            try {
                 imageView2 = onView(
                         Matchers.allOf(withId(R.id.image),
                                 childAtPosition(
@@ -65,12 +61,8 @@ public class MainPageObject {
                                                 childAtPosition(
                                                         withId(R.id.mapview),
                                                         1)),
-                                        0),
+                                        1),
                                 isDisplayed()));
-            } catch (Exception e) {
-                System.out.print(e);
-            }
-        }
         return imageView2;
     }
 
@@ -115,9 +107,9 @@ public class MainPageObject {
         onView(withId(R.id.searchMenu)).perform(pressKey(KeyEvent.KEYCODE_DPAD_DOWN), pressKey(KeyEvent.KEYCODE_ENTER));
     }
 
-    public static void ZoomInTheMap(){
-        for(int i = 0; i < 3; i++){
-            onView(withId(R.id.mapview)).perform(ViewActions.doubleClick());
+    public static void ZoomInTheMap(int zoom){
+        for(int i = 0; i < zoom; i++){
+            onView(withId(R.id.activity_main)).perform(ViewActions.doubleClick());
         }
     }
 
@@ -142,7 +134,7 @@ public class MainPageObject {
 
     public static ViewInteraction ZoomToLocalMarker() {
         ClickFloor(1);
-        ZoomInTheMap();
+        ZoomInTheMap(3);
 
         //Page Object
         ViewInteraction imageView = null;

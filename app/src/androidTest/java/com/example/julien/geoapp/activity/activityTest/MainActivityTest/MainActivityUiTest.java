@@ -84,15 +84,14 @@ public class MainActivityUiTest {
 
         // ACT
         ClickFloor(floorNumber);
-        ZoomInTheMap();
-        Espresso.registerIdlingResources(idlingResource);
+        ZoomInTheMap(3);
+        //Espresso.registerIdlingResources(idlingResource);
         viewMarker = GetFirstMarkerFound();
-        Espresso.unregisterIdlingResources(idlingResource);
+        //Espresso.unregisterIdlingResources(idlingResource);
         viewMarker.perform(click());
-
-        Espresso.registerIdlingResources(idlingResourceSlideUp);
-        onView(withId(OBJECT_ID_LOCAL_NAME)).check(matches(isDisplayed()));
-        Espresso.unregisterIdlingResources(idlingResourceSlideUp);
+       // Espresso.registerIdlingResources(idlingResourceSlideUp);
+        ViewInteraction slidingUpView = null;
+                slidingUpView = onView(withId(OBJECT_ID_LOCAL_NAME)).check(matches(isDisplayed()));
 
         //ASSERT
         onView(withId(OBJECT_ID_LOCAL_NAME)).check(matches(withText(startsWith(resultLocal))));
@@ -107,15 +106,21 @@ public class MainActivityUiTest {
 
         // ACT
         ClickFloor(floorNumber);
-        ZoomInTheMap();
+        ZoomInTheMap(3);
         Espresso.registerIdlingResources(idlingResource);
         viewMarker = GetFirstMarkerFound();
         Espresso.unregisterIdlingResources(idlingResource);
         viewMarker.perform(click());
-
-        Espresso.registerIdlingResources(idlingResourceSlideUp);
-        onView(withId(OBJECT_ID_LOCAL_NAME)).check(matches(isDisplayed()));
-        Espresso.unregisterIdlingResources(idlingResourceSlideUp);
+        // Espresso.registerIdlingResources(idlingResourceSlideUp);
+        ViewInteraction slidingUpView = null;
+//        while(slidingUpView == null){
+//            try {
+        slidingUpView = onView(withId(OBJECT_ID_LOCAL_NAME)).check(matches(isDisplayed()));
+//            }catch(AssertionFailedError e){
+//                slidingUpView = null;
+//            }
+//        }
+//        Espresso.unregisterIdlingResources(idlingResourceSlideUp);
 
         //ASSERT
         onView(withId(OBJECT_ID_LOCAL_NAME)).check(matches(withText(startsWith(resultLocal))));
@@ -246,9 +251,9 @@ public class MainActivityUiTest {
         ViewInteraction imageView = GetFirstMarkerFound();
         imageView.perform(click());
         //ASSERT
-        Espresso.registerIdlingResources(idlingResourceSlideUp);
+        //Espresso.registerIdlingResources(idlingResourceSlideUp);
         onView(withId(OBJECT_ID_DRAG_VIEW)).check(matches(isDisplayed()));
-        Espresso.unregisterIdlingResources(idlingResourceSlideUp);
+        //Espresso.unregisterIdlingResources(idlingResourceSlideUp);
     }
 
     @Test
