@@ -74,7 +74,7 @@ public class MainActivityUiTest {
     public void unregisterIntentServiceIdlingResource() {
         //Espresso.unregisterIdlingResources(idlingResource);
     }
-
+/*s
     @Test
     public void seeAllFloorButtons1() throws InterruptedException {
         //ARRANGE
@@ -134,7 +134,7 @@ public class MainActivityUiTest {
         // ACT
         ClickFloor(floorNumber);
         //Nothing to test - TO DO when the map is finished
-    }
+    }*/
 
     @Test
     public void blockingOnLeftSideWhenSwipingLeftALot() throws InterruptedException {
@@ -243,17 +243,19 @@ public class MainActivityUiTest {
     }
 
     @Test
-    public void seeLocalMarkerWithText() throws InterruptedException {
+    public void seeDragViewForLocalMarkerWhenMarkerIsClicked() throws InterruptedException {
         //ACT
         SearchForLocal(LOCAL);
         SelectFirstLocalInAutoCompleteMenu();
         onView(withId(OBJECT_ID_BUTTON_OK)).perform(click());
-        ViewInteraction imageView = GetFirstMarkerFound();
+        ViewInteraction imageView = null;
+        while(imageView == null) {
+            imageView = GetFirstMarkerFound();
+        }
         imageView.perform(click());
+
         //ASSERT
-        //Espresso.registerIdlingResources(idlingResourceSlideUp);
         onView(withId(OBJECT_ID_DRAG_VIEW)).check(matches(isDisplayed()));
-        //Espresso.unregisterIdlingResources(idlingResourceSlideUp);
     }
 
     @Test
