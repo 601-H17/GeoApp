@@ -1,6 +1,5 @@
 package com.example.julien.geoapp.activity.activityTest.MainActivityTest;
 
-
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.rule.ActivityTestRule;
@@ -32,8 +31,10 @@ import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.M
 import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.SearchForLocal;
 import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.SelectFirstLocalInAutoCompleteMenu;
 import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.SwipingToADirection;
+import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.ZoomInTheMap;
 import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.ZoomToLocalMarker;
 import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.startsWith;
 
 
 /**
@@ -44,6 +45,7 @@ import static org.hamcrest.Matchers.not;
 @RunWith(AndroidJUnit4.class)
 public class MainActivityUiTest {
     private MainActivityIdlingResource idlingResource;
+    private SlidingUpResource idlingResourceSlideUp;
     private final String LOCAL = "G-159";
     private final String DESTINATION = "G-170";
     private final int NUMBER_OF_SWIPING = 2;
@@ -54,6 +56,7 @@ public class MainActivityUiTest {
     final int OBJECT_ID_DRAG_VIEW = R.id.dragView;
     final int OBJECT_ID_BUTTON_OK = R.id.button4;
     final int OBJECT_ID_MARKER = R.id.image;
+    final int OBJECT_ID_LOCAL_NAME =  R.id.local_name;
 
     @Rule
     public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
@@ -62,31 +65,65 @@ public class MainActivityUiTest {
     public void registerIntentServiceIdlingResource() {
         MainActivity activity = mActivityTestRule.getActivity();
         idlingResource = new MainActivityIdlingResource(activity);
+        idlingResourceSlideUp = new SlidingUpResource(activity);
         setFailureHandler(new CustomFailureHandler(getInstrumentation().getTargetContext()));
-        Espresso.registerIdlingResources(idlingResource);
+
     }
 
     @After
     public void unregisterIntentServiceIdlingResource() {
-        Espresso.unregisterIdlingResources(idlingResource);
+        //Espresso.unregisterIdlingResources(idlingResource);
     }
 
     @Test
-    public void seeAllFloorButtons1() {
+    public void seeAllFloorButtons1() throws InterruptedException {
         //ARRANGE
         int floorNumber = 1;
+        String resultLocal = "G-1";
+        ViewInteraction viewMarker = null;
 
         // ACT
         ClickFloor(floorNumber);
+        ZoomInTheMap(3);
+        //Espresso.registerIdlingResources(idlingResource);
+        viewMarker = GetFirstMarkerFound();
+        //Espresso.unregisterIdlingResources(idlingResource);
+        viewMarker.perform(click());
+        // Espresso.registerIdlingResources(idlingResourceSlideUp);
+        ViewInteraction slidingUpView = null;
+        slidingUpView = onView(withId(OBJECT_ID_LOCAL_NAME)).check(matches(isDisplayed()));
+
+        //ASSERT
+        onView(withId(OBJECT_ID_LOCAL_NAME)).check(matches(withText(startsWith(resultLocal))));
     }
 
     @Test
     public void seeAllFloorButtons2() {
         //ARRANGE
         int floorNumber = 2;
+        String resultLocal = "G-2";
+        ViewInteraction viewMarker = null;
 
         // ACT
         ClickFloor(floorNumber);
+        ZoomInTheMap(3);
+        Espresso.registerIdlingResources(idlingResource);
+        viewMarker = GetFirstMarkerFound();
+        Espresso.unregisterIdlingResources(idlingResource);
+        viewMarker.perform(click());
+        // Espresso.registerIdlingResources(idlingResourceSlideUp);
+        ViewInteraction slidingUpView = null;
+//        while(slidingUpView == null){
+//            try {
+        slidingUpView = onView(withId(OBJECT_ID_LOCAL_NAME)).check(matches(isDisplayed()));
+//            }catch(AssertionFailedError e){
+//                slidingUpView = null;
+//            }
+//        }
+//        Espresso.unregisterIdlingResources(idlingResourceSlideUp);
+
+        //ASSERT
+        onView(withId(OBJECT_ID_LOCAL_NAME)).check(matches(withText(startsWith(resultLocal))));
     }
 
     @Test
@@ -96,6 +133,7 @@ public class MainActivityUiTest {
 
         // ACT
         ClickFloor(floorNumber);
+        //Nothing to test - TO DO when the map is finished
     }
 
     @Test
@@ -206,23 +244,16 @@ public class MainActivityUiTest {
 
     @Test
     public void seeLocalMarkerWithText() throws InterruptedException {
-        //ARRANGE
-        ViewInteraction view = null;
-
         //ACT
         SearchForLocal(LOCAL);
         SelectFirstLocalInAutoCompleteMenu();
         onView(withId(OBJECT_ID_BUTTON_OK)).perform(click());
         ViewInteraction imageView = GetFirstMarkerFound();
         imageView.perform(click());
-
         //ASSERT
-        while (view == null){
-            try {
-                view = onView(withId(OBJECT_ID_DRAG_VIEW)).check(matches(isDisplayed()));
-            }catch(Exception e){
-            }
-        }
+        //Espresso.registerIdlingResources(idlingResourceSlideUp);
+        onView(withId(OBJECT_ID_DRAG_VIEW)).check(matches(isDisplayed()));
+        //Espresso.unregisterIdlingResources(idlingResourceSlideUp);
     }
 
     @Test
@@ -238,13 +269,14 @@ public class MainActivityUiTest {
     }
 
     @Test
-    public void secondSearchViewIsDisplayedWhenTheFirstSearchviewContainsMoreThanFourCharacter() {
+    public void secondSearchViewIsDisplayedWhenTheFirstSearchviewContainsMoreThanOneCharacter() {
         //ACT
         SearchForLocal("G-153");
 
         //ASSERT
         onView(withId(OBJECT_ID_AUTO_COMPLETE_TEXT_VIEW_2)).check(matches(isDisplayed()));
     }
+
 
     /*
     @Test

@@ -54,20 +54,15 @@ public class MainPageObject {
 
     public static ViewInteraction GetFirstMarkerFound(){
         ViewInteraction imageView2 = null;
-        try{
-            imageView2 = onView(
-                    Matchers.allOf(withId(R.id.image),
-                            childAtPosition(
-                                    Matchers.allOf(withId(R.id.markerViewContainer),
-                                            childAtPosition(
-                                                    withId(R.id.mapview),
-                                                    1)),
-                                    0),
-                            isDisplayed()));
-        }
-        catch(Exception e){
-            System.out.print(e);
-        }
+        imageView2 = onView(
+                Matchers.allOf(withId(R.id.image),
+                        childAtPosition(
+                                Matchers.allOf(withId(R.id.markerViewContainer),
+                                        childAtPosition(
+                                                withId(R.id.mapview),
+                                                1)),
+                                1),
+                        isDisplayed()));
         return imageView2;
     }
 
@@ -112,9 +107,9 @@ public class MainPageObject {
         onView(withId(R.id.searchMenu)).perform(pressKey(KeyEvent.KEYCODE_DPAD_DOWN), pressKey(KeyEvent.KEYCODE_ENTER));
     }
 
-    public static void ZoomInTheMap(){
-        for(int i = 0; i < 4; i++){
-            onView(withId(R.id.mapview)).perform(ViewActions.doubleClick());
+    public static void ZoomInTheMap(int zoom){
+        for(int i = 0; i < zoom; i++){
+            onView(withId(R.id.activity_main)).perform(ViewActions.doubleClick());
         }
     }
 
@@ -139,7 +134,7 @@ public class MainPageObject {
 
     public static ViewInteraction ZoomToLocalMarker() {
         ClickFloor(1);
-        ZoomInTheMap();
+        ZoomInTheMap(3);
 
         //Page Object
         ViewInteraction imageView = null;
