@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private Button secondFloorButton2;
     private Button thirdFloorButton3;
     private Button nextStepButton;
-    private Button finishButton;
+    private Button beforeButton;
 
     private MapboxMap mapboxMap;
     private MapView mapView;
@@ -138,8 +138,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         thirdFloorButton3 = (Button) findViewById(R.id.button3);
         toLocal = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView2);
         nextStepButton = (Button) findViewById(R.id.next);
-        finishButton = (Button) findViewById(R.id.finish);
-        finishButton.setVisibility(View.INVISIBLE);
+        beforeButton = (Button) findViewById(R.id.before);
+        beforeButton.setVisibility(View.INVISIBLE);
         nextStepButton.setVisibility(View.INVISIBLE);
     }
 
@@ -341,13 +341,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         pathDrawService.drawLinesCorridorsStep();
         if (pathGeoJson.length() > 20) {
             //mapboxMap.clear();
+            beforeButton.setVisibility(View.VISIBLE);
+            nextStepButton.setVisibility(View.VISIBLE);
             if (pathDrawService.isLastStep()) {
-                nextStepButton.setVisibility(View.INVISIBLE);
-                finishButton.setVisibility(View.VISIBLE);
+                nextStepButton.setEnabled(true);
+                nextStepButton.setText("FINISH");
+                beforeButton.setEnabled(false);
             } else {
-                nextStepButton.setVisibility(View.VISIBLE);
-                nextStepButton.setText("NEXT: " + Integer.toString(pathDrawService.getStep()));
-                finishButton.setVisibility(View.INVISIBLE);
+                nextStepButton.setEnabled(true);
+                beforeButton.setEnabled(false);
             }
         }
     }
@@ -432,102 +434,151 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void setButtonListener() {
         //Une requête à l'API est lancée pour chaque touche entrée lors de la recherche dans helper bar.
-        nextStepButton.setOnClickListener(new View.OnClickListener() {
+
+        beforeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                setStairNumber(pathDrawService.getFloorBefore());
+                pathDrawService.drawLinesCorridorsBack();
+                if (nextStepButton.getText().equals("FINISH")) {
+                    nextStepButton.setText("NEXT");
+                }
+
+                if (pathDrawService.isLastStep()) {
+                    nextStepButton.setText("FINISH");
+                    beforeButton.setEnabled(true);
+                }
+                if (pathDrawService.isLastStep()) {
+                    nextStepButton.setText("FINISH");
+                    beforeButton.setEnabled(true);
+                } else if (pathDrawService.isFistStep()) {
+                    beforeButton.setEnabled(false);
+                    nextStepButton.setEnabled(true);
+                } else {
+                    nextStepButton.setEnabled(true);
+                    beforeButton.setEnabled(true);
+                }
+
+            }
+        });
+        nextStepButton.setOnClickListener(new View.OnClickListener() {
+                                              @Override
+                                              public void onClick(View view) {
 //                setStairNumber(pathDrawService.getFloor());
 //                pathDrawService.drawLinesCorridorsStep();
 //                if (pathDrawService.isLastStep())
 //                    nextStepButton.setVisibility(View.INVISIBLE);
 //                else
 //                    nextStepButton.setVisibility(View.VISIBLE);
-                setStairNumber(pathDrawService.getFloor());
-                pathDrawService.drawLinesCorridorsStep();
-                if (pathDrawService.isLastStep()) {
-                    nextStepButton.setVisibility(View.INVISIBLE);
-                    finishButton.setVisibility(View.VISIBLE);
-                } else {
-                    nextStepButton.setVisibility(View.VISIBLE);
-                    nextStepButton.setText("NEXT: " + Integer.toString(pathDrawService.getStep()));
-                }
+                                                  if (nextStepButton.getText().equals("FINISH")) {
+                                                      nextStepButton.setVisibility(View.INVISIBLE);
+                                                      beforeButton.setVisibility(View.INVISIBLE);
+                                                      nextStepButton.setText("NEXT");
+                                                      pathDrawService.deletePath();
+                                                  } else {
+                                                      setStairNumber(pathDrawService.getFloor());
+                                                      pathDrawService.drawLinesCorridorsStep();
+                                                      if (pathDrawService.isLastStep()) {
+                                                          nextStepButton.setText("FINISH");
+                                                          beforeButton.setEnabled(true);
+                                                      } else if (pathDrawService.isFistStep()) {
+                                                          beforeButton.setEnabled(false);
+                                                          nextStepButton.setEnabled(true);
+                                                      } else {
+                                                          nextStepButton.setEnabled(true);
+                                                          beforeButton.setEnabled(true);
+                                                      }
+                                                  }
+                                              }
+                                          }
+        );
+
+        toLocal.addTextChangedListener(new
+
+                                               TextWatcher() {
+                                                   @Override
+                                                   public void onTextChanged(CharSequence s, int start, int before, int count) {
+                                                       isQueryHelpBar = true;
+                                                       typingQueryHelp = s.toString();
+                                                       searchApiQueryHelper();
+                                                   }
+
+                                                   @Override
+                                                   public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                                                       isQueryHelpBar = true;
+                                                       typingQueryHelp = s.toString();
+                                                       searchApiQueryHelper();
+
+                                                   }
+
+                                                   @Override
+                                                   public void afterTextChanged(Editable s) {
+                                                       isQueryHelpBar = true;
+                                                       typingQueryHelp = s.toString();
+                                                       searchApiQueryHelper();
+
+                                                   }
+                                               }
+
+        );
+
+        toLocal.setOnItemClickListener(new AdapterView.OnItemClickListener()
+
+                                       {
+                                           @Override
+                                           public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                               isQueryHelpBar = false;
+                                               InputMethodManager in = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                                               in.hideSoftInputFromWindow(adapterView.getApplicationWindowToken(), 0);
+                                               setUserLocation();
+                                               researchPath();
+                                           }
+                                       }
+
+        );
 
 
-            }
-        });
+        firstFloorButton.setOnClickListener(new View.OnClickListener()
 
-        toLocal.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                isQueryHelpBar = true;
-                typingQueryHelp = s.toString();
-                searchApiQueryHelper();
-            }
+                                            {
 
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                isQueryHelpBar = true;
-                typingQueryHelp = s.toString();
-                searchApiQueryHelper();
+                                                @Override
+                                                public void onClick(View v) {
+                                                    new setGeoJsonMaps(MainActivity.this, getString(R.string.map)).execute();
+                                                    mapboxMap.clear();
+                                                }
+                                            }
 
-            }
+        );
+        secondFloorButton2.setOnClickListener(new View.OnClickListener()
 
-            @Override
-            public void afterTextChanged(Editable s) {
-                isQueryHelpBar = true;
-                typingQueryHelp = s.toString();
-                searchApiQueryHelper();
+                                              {
 
-            }
-        });
+                                                  @Override
+                                                  public void onClick(View v) {
+                                                      new setGeoJsonMaps(MainActivity.this, getString(R.string.map2)).execute();
+                                                      mapboxMap.clear();
+                                                  }
+                                              }
 
-        toLocal.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                isQueryHelpBar = false;
-                InputMethodManager in = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                in.hideSoftInputFromWindow(adapterView.getApplicationWindowToken(), 0);
-                setUserLocationNoStair();
-                researchPath();
-            }
-        });
+        );
+        thirdFloorButton3.setOnClickListener(new View.OnClickListener()
 
+                                             {
 
-        firstFloorButton.setOnClickListener(new View.OnClickListener() {
+                                                 @Override
+                                                 public void onClick(View v) {
+                                                     new setGeoJsonMaps(MainActivity.this, getString(R.string.map3)).execute();
+                                                     mapboxMap.clear();
+                                                 }
+                                             }
 
-            @Override
-            public void onClick(View v) {
-                new setGeoJsonMaps(MainActivity.this, getString(R.string.map)).execute();
-                mapboxMap.clear();
-            }
-        });
-        secondFloorButton2.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                new setGeoJsonMaps(MainActivity.this, getString(R.string.map2)).execute();
-                mapboxMap.clear();
-            }
-        });
-        thirdFloorButton3.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                new setGeoJsonMaps(MainActivity.this, getString(R.string.map3)).execute();
-                mapboxMap.clear();
-            }
-        });
-        finishButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // setUserLocationNoStair();
-                finishButton.setVisibility(View.INVISIBLE);
-                pathDrawService.deletePath();
-            }
-        });
+        );
         toLocal.setVisibility(View.GONE);
     }
 
     private void researchPath() {
+        nextStepButton.setText("NEXT");
         new setPathGeoJson(MainActivity.this, FROM + searchView.getQuery().toString().toUpperCase() + TO + toLocal.getText().toString().toUpperCase()).execute();
         new setDoorsList(MainActivity.this, getString(R.string.getDoorsQuery) + searchView.getQuery().toString().toUpperCase()).execute();
     }
