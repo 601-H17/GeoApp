@@ -7,8 +7,8 @@ package com.example.julien.geoapp.services.pathService;
 public interface IDrawGeoJsonPathService {
    void drawLinesCorridorsStep();
    int getFloor();
-   int getTotalStep();
    void drawPath(String requestapi);
+   void drawLinesCorridorsBack();
    boolean isLastStep();
    int getStep();
    void deletePath();
