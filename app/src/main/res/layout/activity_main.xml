@@ -82,8 +82,7 @@
             mapbox:center_longitude="-71.28739276585"
             mapbox:compass_enabled="false"
             mapbox:zoom="16"
-            mapbox:zoom_min="16">
-        </com.mapbox.mapboxsdk.maps.MapView>
+            mapbox:zoom_min="16"></com.mapbox.mapboxsdk.maps.MapView>
 
     </LinearLayout>
 
@@ -91,29 +90,19 @@
         android:id="@+id/next"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="NEXT STEP !"
         android:background="@color/theme_color"
+        android:text="NEXT"
         android:layout_below="@+id/button2"
-        android:layout_centerHorizontal="true" />
+        android:layout_toEndOf="@+id/imageView" />
 
     <Button
-        android:id="@+id/finish"
+        android:id="@+id/before"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="FINISH"
         android:background="@color/theme_color"
+        android:text="before"
         android:layout_alignBaseline="@+id/next"
         android:layout_alignBottom="@+id/next"
-        android:layout_alignStart="@+id/next" />
-
-    <Button
-        android:id="@+id/button4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="FINISH"
-        android:background="@color/theme_color"
-        android:layout_alignBaseline="@+id/next"
-        android:layout_alignBottom="@+id/next"
-        android:layout_alignStart="@+id/next" />
+        android:layout_toStartOf="@+id/imageView" />
 
 </RelativeLayout>

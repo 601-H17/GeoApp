@@ -83,10 +83,10 @@ public class DrawGeoJsonPathService implements IDrawGeoJsonPathService {
     public void drawLinesCorridorsBack() {
         try {
             mapboxMap.addPolyline(new PolylineOptions()
-                    .addAll(stepsPath.get(steps).getPath())
+                    .addAll(stepsPath.get(steps-2).getPath())
                     .color(Color.parseColor(Message.COLOR_PATH))
                     .width(2));
-            steps++;
+            steps--;
         } catch (Exception e) {
             Log.d(Message.ERROR[0], e.toString());
         }
@@ -105,6 +105,16 @@ public class DrawGeoJsonPathService implements IDrawGeoJsonPathService {
         if (stepsPath.size() == steps)
             last = true;
         return last;
+    }
+    public boolean isFistStep() {
+        boolean last = false;
+        if (steps == 1)
+            last = true;
+        return last;
+    }
+
+    public int getFloorBefore(){
+        return stepsPath.get(steps -2).getFloor();
     }
 
     public void deletePath() {
