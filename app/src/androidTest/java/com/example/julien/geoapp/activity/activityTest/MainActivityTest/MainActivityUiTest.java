@@ -36,12 +36,6 @@ import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.M
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.startsWith;
 
-
-/**
- * Created by Julien on 2017-02-13.
- */
-
-
 @RunWith(AndroidJUnit4.class)
 public class MainActivityUiTest {
     private MainActivityIdlingResource idlingResource;
@@ -69,72 +63,6 @@ public class MainActivityUiTest {
         setFailureHandler(new CustomFailureHandler(getInstrumentation().getTargetContext()));
 
     }
-
-    @After
-    public void unregisterIntentServiceIdlingResource() {
-        //Espresso.unregisterIdlingResources(idlingResource);
-    }
-/*s
-    @Test
-    public void seeAllFloorButtons1() throws InterruptedException {
-        //ARRANGE
-        int floorNumber = 1;
-        String resultLocal = "G-1";
-        ViewInteraction viewMarker = null;
-
-        // ACT
-        ClickFloor(floorNumber);
-        ZoomInTheMap(3);
-        //Espresso.registerIdlingResources(idlingResource);
-        viewMarker = GetFirstMarkerFound();
-        //Espresso.unregisterIdlingResources(idlingResource);
-        viewMarker.perform(click());
-       // Espresso.registerIdlingResources(idlingResourceSlideUp);
-        ViewInteraction slidingUpView = null;
-                slidingUpView = onView(withId(OBJECT_ID_LOCAL_NAME)).check(matches(isDisplayed()));
-
-        //ASSERT
-        onView(withId(OBJECT_ID_LOCAL_NAME)).check(matches(withText(startsWith(resultLocal))));
-    }
-
-    @Test
-    public void seeAllFloorButtons2() {
-        //ARRANGE
-        int floorNumber = 2;
-        String resultLocal = "G-2";
-        ViewInteraction viewMarker = null;
-
-        // ACT
-        ClickFloor(floorNumber);
-        ZoomInTheMap(3);
-        Espresso.registerIdlingResources(idlingResource);
-        viewMarker = GetFirstMarkerFound();
-        Espresso.unregisterIdlingResources(idlingResource);
-        viewMarker.perform(click());
-        // Espresso.registerIdlingResources(idlingResourceSlideUp);
-        ViewInteraction slidingUpView = null;
-//        while(slidingUpView == null){
-//            try {
-        slidingUpView = onView(withId(OBJECT_ID_LOCAL_NAME)).check(matches(isDisplayed()));
-//            }catch(AssertionFailedError e){
-//                slidingUpView = null;
-//            }
-//        }
-//        Espresso.unregisterIdlingResources(idlingResourceSlideUp);
-
-        //ASSERT
-        onView(withId(OBJECT_ID_LOCAL_NAME)).check(matches(withText(startsWith(resultLocal))));
-    }
-
-    @Test
-    public void seeAllFloorButtons3() {
-        //ARRANGE
-        int floorNumber = 3;
-
-        // ACT
-        ClickFloor(floorNumber);
-        //Nothing to test - TO DO when the map is finished
-    }*/
 
     @Test
     public void blockingOnLeftSideWhenSwipingLeftALot() throws InterruptedException {
@@ -243,22 +171,6 @@ public class MainActivityUiTest {
     }
 
     @Test
-    public void seeDragViewForLocalMarkerWhenMarkerIsClicked() throws InterruptedException {
-        //ACT
-        SearchForLocal(LOCAL);
-        SelectFirstLocalInAutoCompleteMenu();
-        onView(withId(OBJECT_ID_BUTTON_OK)).perform(click());
-        ViewInteraction imageView = null;
-        while(imageView == null) {
-            imageView = GetFirstMarkerFound();
-        }
-        imageView.perform(click());
-
-        //ASSERT
-        onView(withId(OBJECT_ID_DRAG_VIEW)).check(matches(isDisplayed()));
-    }
-
-    @Test
     public void dragViewMarkerIsNotDisplayedWhenApplicationLaunch(){
         //ASSERT
         onView(withId(OBJECT_ID_DRAG_VIEW)).check(matches(not(isDisplayed())));
@@ -279,12 +191,72 @@ public class MainActivityUiTest {
         onView(withId(OBJECT_ID_AUTO_COMPLETE_TEXT_VIEW_2)).check(matches(isDisplayed()));
     }
 
-
+    /***************************************************************/
+    /*        TO DO: FIX ASYNC TASK WITH THE MARKER CLICK          */
+    /***************************************************************/
     /*
     @Test
-    public void seeTheSpinnerWhenWritingOnTheFirstSearchView(){
-        SearchForLocal("G-1");
-        //onView(withId(R.id.searchMenu)).check(matches(withSpinnerText("G-159")));
+    public void seeDragViewForLocalMarkerWhenMarkerIsClicked() throws InterruptedException {
+        //ACT
+        SearchForLocal(LOCAL);
+        SelectFirstLocalInAutoCompleteMenu();
+        onView(withId(OBJECT_ID_BUTTON_OK)).perform(click());
+        ViewInteraction imageView = null;
+        while(imageView == null) {
+            imageView = GetFirstMarkerFound();
+        }
+        imageView.perform(click());
+
+        //ASSERT
+        onView(withId(OBJECT_ID_DRAG_VIEW)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void seeAllFloorButtons1() throws InterruptedException {
+        //ARRANGE
+        int floorNumber = 1;
+        String resultLocal = "G-1";
+        ViewInteraction viewMarker = null;
+
+        // ACT
+        ClickFloor(floorNumber);
+        ZoomInTheMap(3);
+        viewMarker = GetFirstMarkerFound();
+        viewMarker.perform(click());
+        onView(withId(OBJECT_ID_LOCAL_NAME)).check(matches(isDisplayed()));
+
+        //ASSERT
+        onView(withId(OBJECT_ID_LOCAL_NAME)).check(matches(withText(startsWith(resultLocal))));
+    }
+
+    @Test
+    public void seeAllFloorButtons2() {
+        //ARRANGE
+        int floorNumber = 2;
+        String resultLocal = "G-2";
+        ViewInteraction viewMarker = null;
+
+        // ACT
+        ClickFloor(floorNumber);
+        ZoomInTheMap(3);
+        Espresso.registerIdlingResources(idlingResource);
+        viewMarker = GetFirstMarkerFound();
+        Espresso.unregisterIdlingResources(idlingResource);
+        viewMarker.perform(click());
+        onView(withId(OBJECT_ID_LOCAL_NAME)).check(matches(isDisplayed()));
+
+        //ASSERT
+        onView(withId(OBJECT_ID_LOCAL_NAME)).check(matches(withText(startsWith(resultLocal))));
+    }
+
+    @Test
+    public void seeAllFloorButtons3() {
+        //ARRANGE
+        int floorNumber = 3;
+
+        // ACT
+        ClickFloor(floorNumber);
+        //Nothing to test - TO DO when the map is finished
     }*/
 
 }
