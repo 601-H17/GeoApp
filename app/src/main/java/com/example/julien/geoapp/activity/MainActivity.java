@@ -308,6 +308,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         //Lorsque la réponse de l'API est recue, l'adapter charge sa liste de *things*repository pour l'autocomplete.
         if (isQueryHelpBar)
             setAdapterString();
+        setUserLocationNoStair();
+
     }
 
     private void initDrawableMaps() {
@@ -354,7 +356,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         //Instancier les services lorsque l'API recoit une réponse.
         this.doorsInformation = doors;
         //Si une recherche a été lancée, localiser l'utilisateur à la réponse de l'API.
-        setUserLocationNoStair();
         initDoorsList();
     }
 
