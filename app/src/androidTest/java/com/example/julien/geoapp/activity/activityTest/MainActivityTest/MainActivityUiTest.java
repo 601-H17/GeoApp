@@ -41,24 +41,24 @@ import static org.hamcrest.Matchers.is;
 @RunWith(AndroidJUnit4.class)
 public class MainActivityUiTest {
 
-    @Rule
-    public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
-
-    @Test
-    public void seeAllFloorButtons1() {
-        onView(withId(R.id.button))
-                .check(ViewAssertions.matches(isDisplayed()));
-    }
-
-    @Test
-    public void seeAllFloorButtons2() {
-        onView(withId(R.id.button2))
-                .check(ViewAssertions.matches(isDisplayed()));
-    }
-
-    @Test
-    public void seeAllFloorButtons3() {
-        onView(withId(R.id.button3))
-                .check(ViewAssertions.matches(isDisplayed()));
-    }
+//    @Rule
+//    public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
+//
+//    @Test
+//    public void seeAllFloorButtons1() {
+//        onView(withId(R.id.button))
+//                .check(ViewAssertions.matches(isDisplayed()));
+//    }
+//
+//    @Test
+//    public void seeAllFloorButtons2() {
+//        onView(withId(R.id.button2))
+//                .check(ViewAssertions.matches(isDisplayed()));
+//    }
+//
+//    @Test
+//    public void seeAllFloorButtons3() {
+//        onView(withId(R.id.button3))
+//                .check(ViewAssertions.matches(isDisplayed()));
+//    }
 }
