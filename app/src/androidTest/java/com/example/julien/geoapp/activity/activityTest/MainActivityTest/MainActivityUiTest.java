@@ -1,6 +1,5 @@
 package com.example.julien.geoapp.activity.activityTest.MainActivityTest;
 
-
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.rule.ActivityTestRule;
@@ -73,7 +72,7 @@ public class MainActivityUiTest {
 
     @After
     public void unregisterIntentServiceIdlingResource() {
-        Espresso.unregisterIdlingResources(idlingResource);
+        //Espresso.unregisterIdlingResources(idlingResource);
     }
 
     @Test
