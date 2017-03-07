@@ -336,6 +336,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         this.doorsInformation = doors;
         //Si une recherche a été lancée, localiser l'utilisateur à la réponse de l'API.
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+        //setUserLocation();
+>>>>>>> parent of 01b06d2... added next step for path
 =======
         //setUserLocation();
 >>>>>>> parent of 01b06d2... added next step for path
