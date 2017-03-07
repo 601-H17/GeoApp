@@ -29,6 +29,7 @@ import com.example.julien.geoapp.adapter.CustomAdapterQuery;
 import com.example.julien.geoapp.api.setDoorsList;
 import com.example.julien.geoapp.api.setGeoJsonMaps;
 import com.example.julien.geoapp.api.setPathGeoJson;
+import com.example.julien.geoapp.api.setSpecificDoor;
 import com.example.julien.geoapp.models.Doors;
 import com.example.julien.geoapp.services.doorsService.DrawGeoJsonDoorsService;
 import com.example.julien.geoapp.services.doorsService.IDrawGeoJsonDoorsService;
@@ -67,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private LatLng centerCoordinates;
     private SimpleCursorAdapter searchAdapter;
 
+    private String specificDoors = "";
     private String MENU_ID = "id";
     private String MENU_REF = "ref";
     private String FROM = "localA=";
@@ -89,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private IDrawGeoJsonDoorsService doorsDrawService;
     private IDrawGeoJsonPathService pathDrawService;
     private DoorsRepositoryService doorsRepositoryService;
+    private DoorsRepositoryService specificDoorsRepositoryService;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -112,7 +115,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onCameraChange(CameraPosition position) {
                 setCenterCoordinates(width, height, projection);
                 positionZoom = position.zoom;
-                showDoors();
+//                try {
+//                    showDoors();
+//                }catch (Exception e){
+//                    Log.d(Message.ERROR[0],e.toString());
+//                }
                 centerUser();
             }
         });
@@ -143,7 +150,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mapView = (MapView) findViewById(R.id.mapview);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
-        new setGeoJsonMaps(MainActivity.this, getString(R.string.map)).execute();
+        // new setGeoJsonMaps(MainActivity.this, getString(R.string.map)).execute();
     }
 
     private void setAdapter() {
@@ -174,7 +181,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         searchView.setQuery(listSearch.get(i), true);
         searchLocal = searchView.getQuery().toString().toUpperCase();
         isQueryNavBar = false;
-        setUserLocation();
+        new setSpecificDoor(MainActivity.this, getString(R.string.getDoorsQuery) + typingQueryNavbar).execute();
+        // setUserLocation();
+        // setUserLocationNoStair();
     }
 
     private void searchQuery() {
@@ -215,7 +224,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void setUserLocation() {
         //Lorsqu'un local est entré, centrer la position du local sur le point vert (l'utilisateur).
         try {
-            Doors door = doorsRepositoryService.getSpecificDoor(searchLocal);
+            Doors door = specificDoorsRepositoryService.getSpecificDoor(searchLocal);
+            //mapboxMap.clear();
             setStair(door);
             LatLng user = new LatLng(door.getlongi() - CENTER_VS_USER[0], door.getLati() - CENTER_VS_USER[1]);
             int positionZoomCameraMove = 19;
@@ -228,7 +238,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             mapboxMap.animateCamera(CameraUpdateFactory
                     .newCameraPosition(position));
             positionZoom = positionZoomCameraMove;
-            showDoors();
+            //showDoors();
         } catch (Exception e) {
             Log.d(Message.ERROR[0], e.toString());
         }
@@ -263,13 +273,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void showDoors() {
         //Trace ou cache les portes du cégep.
-        if (doorsDrawService != null) {
-            int positionForShowingPins = 18;
-            if (positionZoom >= positionForShowingPins) {
-                doorsDrawService.drawDoors();
-            } else {
-                doorsDrawService.hideDoors();
-            }
+        int positionForShowingPins = 18;
+        if (positionZoom >= positionForShowingPins) {
+            doorsDrawService.drawDoors();
+        } else {
+            doorsDrawService.hideDoors();
         }
     }
 
@@ -317,26 +325,28 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mapsDrawService = new DrawGeoJsonMapsService(mapboxMap, mapGeoJson);
         doorsDrawService = new DrawGeoJsonDoorsService(mapboxMap, this, mapGeoJson);
         mapsDrawService.drawMaps();
+        //doorsDrawService.drawDoors();
         showDoors();
     }
 
     private void initPath() {
         //Vérifier si un trajet existe déjà, s'il existe, effacer la carte (dont le trajet fait partie) et la re-dessiner.
-        pathDrawService = new DrawGeoJsonPathService(mapboxMap);
-        if (pathGeoJson.length() > 20) {
-            mapboxMap.clear();
+        if (pathDrawService != null) {
+            pathDrawService.deletePath();
         }
-        mapsDrawService.drawMaps();
+        pathDrawService = new DrawGeoJsonPathService(mapboxMap);
+        // mapsDrawService.drawMaps();
         pathDrawService.drawPath(pathGeoJson);
         //doorsDrawService.addFromToMarkers(pathGeoJson);
         pathDrawService.drawLinesCorridorsStep();
         if (pathGeoJson.length() > 20) {
+            //mapboxMap.clear();
             if (pathDrawService.isLastStep()) {
                 nextStepButton.setVisibility(View.INVISIBLE);
                 finishButton.setVisibility(View.VISIBLE);
             } else {
                 nextStepButton.setVisibility(View.VISIBLE);
-                nextStepButton.setText("NEXT: "+ Integer.toString(pathDrawService.getStep()));
+                nextStepButton.setText("NEXT: " + Integer.toString(pathDrawService.getStep()));
                 finishButton.setVisibility(View.INVISIBLE);
             }
         }
@@ -375,10 +385,20 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             mapboxMap.animateCamera(CameraUpdateFactory
                     .newCameraPosition(position));
             positionZoom = positionZoomCameraMove;
-            showDoors();
+            //showDoors();
         } catch (Exception e) {
             Log.d(Message.ERROR[0], e.toString());
         }
+    }
+
+    public void setSpecificDoorsListCallback(String request) {
+        specificDoors = request;
+        initSpecificDoors();
+    }
+
+    private void initSpecificDoors() {
+        specificDoorsRepositoryService = new DoorsRepositoryService(specificDoors);
+        setUserLocation();
     }
 
     @Override
@@ -428,7 +448,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     finishButton.setVisibility(View.VISIBLE);
                 } else {
                     nextStepButton.setVisibility(View.VISIBLE);
-                    nextStepButton.setText("NEXT: "+ Integer.toString(pathDrawService.getStep()));
+                    nextStepButton.setText("NEXT: " + Integer.toString(pathDrawService.getStep()));
                 }
 
 
@@ -466,7 +486,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 isQueryHelpBar = false;
                 InputMethodManager in = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 in.hideSoftInputFromWindow(adapterView.getApplicationWindowToken(), 0);
-                setUserLocation();
+                setUserLocationNoStair();
                 researchPath();
             }
         });
@@ -499,7 +519,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         finishButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                setUserLocationNoStair();
+                // setUserLocationNoStair();
                 finishButton.setVisibility(View.INVISIBLE);
             }
         });

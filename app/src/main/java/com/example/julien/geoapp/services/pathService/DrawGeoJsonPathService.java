@@ -14,6 +14,7 @@ import com.mapbox.mapboxsdk.annotations.Annotation;
 import com.mapbox.mapboxsdk.annotations.Icon;
 import com.mapbox.mapboxsdk.annotations.IconFactory;
 import com.mapbox.mapboxsdk.annotations.MarkerViewOptions;
+import com.mapbox.mapboxsdk.annotations.Polyline;
 import com.mapbox.mapboxsdk.annotations.PolylineOptions;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
@@ -82,9 +83,11 @@ public class DrawGeoJsonPathService implements IDrawGeoJsonPathService {
     public int getFloor() {
         return stepsPath.get(steps).getFloor();
     }
+
     public int getStep() {
         return steps;
     }
+
     public boolean isLastStep() {
         boolean last = false;
         if (stepsPath.size() == steps)
@@ -94,5 +97,14 @@ public class DrawGeoJsonPathService implements IDrawGeoJsonPathService {
 
     public int getTotalStep() {
         return stepsPath.size();
+    }
+
+    public void deletePath() {
+        List<Polyline> line = mapboxMap.getPolylines();
+        for (int i = 0; i < line.size(); i++) {
+            if (line.get(i).getColor() == Color.parseColor(Message.COLOR_PATH)) {
+                mapboxMap.removePolyline(line.get(i));
+            }
+        }
     }
 }

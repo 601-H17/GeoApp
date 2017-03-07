@@ -120,7 +120,7 @@ public class DrawGeoJsonDoorsService implements IDrawGeoJsonDoorsService {
         MarkerViewOptions mark = new MarkerViewOptions()
                 .position(new LatLng(doorsInformationForPins.get(i).getLati(), doorsInformationForPins.get(i).getlongi()))
                 .title(doorsInformationForPins.get(i).getTitle())
-                .snippet(doorsInformationForPins.get(i).getDescription())
+                //.snippet(doorsInformationForPins.get(i).getDescription())
                 .icon(icon);
         markers.add(mark);
     }
@@ -135,9 +135,8 @@ public class DrawGeoJsonDoorsService implements IDrawGeoJsonDoorsService {
 
     public void hideDoors() {
         if (!mapboxMap.getMarkers().isEmpty()) {
-            List<Marker> listDoors = mapboxMap.getMarkers();
-            for (int i = 0; i < listDoors.size(); i++)
-                mapboxMap.removeMarker(listDoors.get(i));
+            for (int i = 0; i < mapboxMap.getMarkers().size(); i++)
+                mapboxMap.removeMarker(mapboxMap.getMarkers().get(i));
         }
     }
 

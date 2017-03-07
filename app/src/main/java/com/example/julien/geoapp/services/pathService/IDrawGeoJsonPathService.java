@@ -11,4 +11,5 @@ public interface IDrawGeoJsonPathService {
    void drawPath(String requestapi);
    boolean isLastStep();
    int getStep();
+   void deletePath();
 }
