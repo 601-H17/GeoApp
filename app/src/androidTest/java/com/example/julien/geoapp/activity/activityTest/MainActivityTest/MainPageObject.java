@@ -28,13 +28,14 @@ import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
 
-/**
- * Created by eric3 on 2017-02-28.
- */
-
 public class MainPageObject {
     static final int OBJECT_ID_MARKER_VIEW_CONTAINER = R.id.markerViewContainer;
     static final int OBJECT_ID_AUTO_COMPLETE_TEXT_VIEW_2 = R.id.autoCompleteTextView2;
+    static final int OBJECT_ID_SEARCH_MENU = R.id.searchMenu;
+    static final int OBJECT_ID_ACTIVITY_MAIN = R.id.activity_main;
+    static final int OBJECT_ID_IMAGE = R.id.image;
+    static final int OBJECT_ID_MARKER_VIEW_CONTAINTER = R.id.markerViewContainer;
+    static final int OBJECT_ID_MAP_VIEW = R.id.mapview;
 
     public static void ClickFloor(int floor){
         int ressourceId = 0;
@@ -53,13 +54,12 @@ public class MainPageObject {
     }
 
     public static ViewInteraction GetFirstMarkerFound(){
-        ViewInteraction imageView2 = null;
-        imageView2 = onView(
-                Matchers.allOf(withId(R.id.image),
+        ViewInteraction imageView2 = onView(
+                Matchers.allOf(withId(OBJECT_ID_IMAGE),
                         childAtPosition(
-                                Matchers.allOf(withId(R.id.markerViewContainer),
+                                Matchers.allOf(withId(OBJECT_ID_MARKER_VIEW_CONTAINTER),
                                         childAtPosition(
-                                                withId(R.id.mapview),
+                                                withId(OBJECT_ID_MAP_VIEW ),
                                                 1)),
                                 1),
                         isDisplayed()));
@@ -95,7 +95,7 @@ public class MainPageObject {
     }
 
     public static void SearchForLocal(String local){
-        onView(withId(R.id.searchMenu)).perform(typeText(local), closeSoftKeyboard());
+        onView(withId(OBJECT_ID_SEARCH_MENU)).perform(typeText(local), closeSoftKeyboard());
     }
 
     public static void SearchForDestination(String destination){
@@ -104,40 +104,33 @@ public class MainPageObject {
     }
 
     public static void SelectFirstLocalInAutoCompleteMenu(){
-        onView(withId(R.id.searchMenu)).perform(pressKey(KeyEvent.KEYCODE_DPAD_DOWN), pressKey(KeyEvent.KEYCODE_ENTER));
+        onView(withId(OBJECT_ID_SEARCH_MENU)).perform(pressKey(KeyEvent.KEYCODE_DPAD_DOWN), pressKey(KeyEvent.KEYCODE_ENTER));
     }
 
     public static void ZoomInTheMap(int zoom){
         for(int i = 0; i < zoom; i++){
-            onView(withId(R.id.activity_main)).perform(ViewActions.doubleClick());
+            onView(withId(OBJECT_ID_ACTIVITY_MAIN)).perform(ViewActions.doubleClick());
         }
     }
 
     public static void ClickOnClearQueryButton(){
+        String contentDescription = "Clear query";
+
         ViewInteraction appCompatImageView = onView(
-                allOf(withClassName(is("android.support.v7.widget.AppCompatImageView")), withContentDescription("Clear query"),
+                allOf(withClassName(is("android.support.v7.widget.AppCompatImageView")), withContentDescription(contentDescription),
                         withParent(allOf(withClassName(is("android.widget.LinearLayout")),
                                 withParent(withClassName(is("android.widget.LinearLayout"))))),
                         isDisplayed()));
         appCompatImageView.perform(click());
     }
 
-    // settings overflow item
-    public static void navigateToSettings() {
-        //clickOverflowItem(R.string.action_settings);
-    }
-
-    // post overflow item
-    public static void navigateToPost() {
-        //clickOverflowItem(R.string.action_post);
-    }
-
     public static ViewInteraction ZoomToLocalMarker() {
-        ClickFloor(1);
-        ZoomInTheMap(3);
-
-        //Page Object
+        int floorToClick = 1;
+        int numberOfZoom = 3;
         ViewInteraction imageView = null;
+
+        ClickFloor(floorToClick);
+        ZoomInTheMap(numberOfZoom);
         while(imageView == null){
             imageView = GetFirstMarkerFound();
         }
