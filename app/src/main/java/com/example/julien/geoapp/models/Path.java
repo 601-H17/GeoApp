@@ -26,10 +26,6 @@ public class Path {
         return path;
     }
 
-    public LatLng getLastPath() {
-        return path.get(path.size()-1);
-    }
-
     public int getFloor() {
         return floor;
     }

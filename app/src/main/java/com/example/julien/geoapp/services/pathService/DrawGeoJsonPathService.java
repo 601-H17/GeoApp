@@ -2,18 +2,12 @@ package com.example.julien.geoapp.services.pathService;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.example.julien.geoapp.Externalization.Message;
-import com.example.julien.geoapp.R;
 import com.example.julien.geoapp.models.Path;
 import com.mapbox.mapboxsdk.annotations.Annotation;
-import com.mapbox.mapboxsdk.annotations.Icon;
-import com.mapbox.mapboxsdk.annotations.IconFactory;
-import com.mapbox.mapboxsdk.annotations.MarkerViewOptions;
 import com.mapbox.mapboxsdk.annotations.PolylineOptions;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
@@ -36,17 +30,15 @@ public class DrawGeoJsonPathService implements IDrawGeoJsonPathService {
 
     private MapboxMap mapboxMap;
     private ArrayList<Path> stepsPath;
-    private Context context;
+    private String request;
     private int steps = 0;
 
-    public DrawGeoJsonPathService(MapboxMap mapboxMap, Context context) {
+    public DrawGeoJsonPathService(MapboxMap mapboxMap) {
         this.mapboxMap = mapboxMap;
-        this.context = context;
     }
 
     public void drawPath(String drawPath) {
         this.stepsPath = new ArrayList<>();
-        steps = 0;
         try {
             JSONObject fullPath = new JSONObject(drawPath);
             JSONArray json = fullPath.getJSONArray("fullPath");
@@ -75,7 +67,8 @@ public class DrawGeoJsonPathService implements IDrawGeoJsonPathService {
                     .addAll(stepsPath.get(steps).getPath())
                     .color(Color.parseColor(Message.COLOR_PATH))
                     .width(2));
-            steps++;
+            if (stepsPath.size() > steps + 1)
+                steps++;
         } catch (Exception e) {
             Log.d(Message.ERROR[0], e.toString());
         }
@@ -83,13 +76,6 @@ public class DrawGeoJsonPathService implements IDrawGeoJsonPathService {
 
     public int getFloor() {
         return stepsPath.get(steps).getFloor();
-    }
-
-    public boolean isLastStep() {
-        boolean last = false;
-        if (stepsPath.size() == steps)
-            last = true;
-        return last;
     }
 
     public int getTotalStep() {

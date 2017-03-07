@@ -91,17 +91,8 @@
         android:id="@+id/next"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="NEXT STEP !"
-        android:background="@color/theme_color"
-        android:layout_below="@+id/button2"
-        android:layout_centerHorizontal="true" />
-    <Button
-        android:id="@+id/finish"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="FINISH"
-        android:background="@color/theme_color"
-        android:layout_below="@+id/button2"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignParentBottom="true"
+        android:layout_toStartOf="@+id/button"
+        android:text="NEXT" />
 
 </RelativeLayout>
