@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private double[] BOUNDS_CEGEP = {46.78800596023283, -71.28548741340637, 46.784788302609186, -71.28870606422424};
     private double[] CENTER_VS_USER = {0.00002295716656, 0.00000000000007};
     private double positionZoom;
-    private int DISTANCE_BEFORE_RELOCATION = 200;
+    private int DISTANCE_BEFORE_RELOCATION = 300;
 
     private IDrawGeoJsonMapsService mapsDrawService;
     private IDrawGeoJsonDoorsService doorsDrawService;
@@ -521,6 +521,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onClick(View view) {
                 // setUserLocationNoStair();
                 finishButton.setVisibility(View.INVISIBLE);
+                pathDrawService.deletePath();
             }
         });
         toLocal.setVisibility(View.GONE);
