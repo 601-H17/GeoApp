@@ -6,7 +6,6 @@ import android.support.test.espresso.ViewInteraction;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import com.example.julien.geoapp.Externalization.Message;
 import com.example.julien.geoapp.R;
 import com.example.julien.geoapp.activity.MainActivity;
 import com.example.julien.geoapp.activity.activityTest.MainActivityTest.services.CustomFailureHandler;
@@ -26,15 +25,15 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.ClickFloor;
+import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.ClickOnClearQueryButton;
+import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.GetFirstMarkerFound;
 import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.OBJECT_ID_AUTO_COMPLETE_TEXT_VIEW_2;
-import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.SearchForLocal;
 import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.SearchForDestination;
+import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.SearchForLocal;
+import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.SelectFirstLocalInAutoCompleteMenu;
+import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.SwipingToADirection;
 import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.ZoomInTheMap;
 import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.ZoomToLocalMarker;
-import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.ClickOnClearQueryButton;
-import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.SwipingToADirection;
-import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.SelectFirstLocalInAutoCompleteMenu;
-import static com.example.julien.geoapp.activity.activityTest.MainActivityTest.MainPageObject.GetFirstMarkerFound;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.startsWith;
 
@@ -47,6 +46,7 @@ import static org.hamcrest.Matchers.startsWith;
 @RunWith(AndroidJUnit4.class)
 public class MainActivityUiTest {
     private MainActivityIdlingResource idlingResource;
+    private SlidingUpResource idlingResourceSlideUp;
     private final String LOCAL = "G-159";
     private final String DESTINATION = "G-170";
     private final int NUMBER_OF_SWIPING = 2;
@@ -66,8 +66,9 @@ public class MainActivityUiTest {
     public void registerIntentServiceIdlingResource() {
         MainActivity activity = mActivityTestRule.getActivity();
         idlingResource = new MainActivityIdlingResource(activity);
+        idlingResourceSlideUp = new SlidingUpResource(activity);
         setFailureHandler(new CustomFailureHandler(getInstrumentation().getTargetContext()));
-        Espresso.registerIdlingResources(idlingResource);
+
     }
 
     @After
@@ -85,10 +86,14 @@ public class MainActivityUiTest {
         // ACT
         ClickFloor(floorNumber);
         ZoomInTheMap();
-        while (viewMarker == null) {
-            viewMarker = GetFirstMarkerFound();
-        }
+        Espresso.registerIdlingResources(idlingResource);
+        viewMarker = GetFirstMarkerFound();
+        Espresso.unregisterIdlingResources(idlingResource);
         viewMarker.perform(click());
+
+        Espresso.registerIdlingResources(idlingResourceSlideUp);
+        onView(withId(OBJECT_ID_LOCAL_NAME)).check(matches(isDisplayed()));
+        Espresso.unregisterIdlingResources(idlingResourceSlideUp);
 
         //ASSERT
         onView(withId(OBJECT_ID_LOCAL_NAME)).check(matches(withText(startsWith(resultLocal))));
@@ -99,16 +104,21 @@ public class MainActivityUiTest {
         //ARRANGE
         int floorNumber = 2;
         String resultLocal = "G-2";
+        ViewInteraction viewMarker = null;
 
         // ACT
         ClickFloor(floorNumber);
         ZoomInTheMap();
-        ViewInteraction viewMarker = null;
-        while (viewMarker == null){
-            viewMarker = GetFirstMarkerFound();
-        }
-        viewMarker.check(matches(isDisplayed()));
+        Espresso.registerIdlingResources(idlingResource);
+        viewMarker = GetFirstMarkerFound();
+        Espresso.unregisterIdlingResources(idlingResource);
         viewMarker.perform(click());
+
+        Espresso.registerIdlingResources(idlingResourceSlideUp);
+        onView(withId(OBJECT_ID_LOCAL_NAME)).check(matches(isDisplayed()));
+        Espresso.unregisterIdlingResources(idlingResourceSlideUp);
+
+        //ASSERT
         onView(withId(OBJECT_ID_LOCAL_NAME)).check(matches(withText(startsWith(resultLocal))));
     }
 
@@ -236,9 +246,10 @@ public class MainActivityUiTest {
         onView(withId(OBJECT_ID_BUTTON_OK)).perform(click());
         ViewInteraction imageView = GetFirstMarkerFound();
         imageView.perform(click());
-
         //ASSERT
+        Espresso.registerIdlingResources(idlingResourceSlideUp);
         onView(withId(OBJECT_ID_DRAG_VIEW)).check(matches(isDisplayed()));
+        Espresso.unregisterIdlingResources(idlingResourceSlideUp);
     }
 
     @Test

@@ -5,15 +5,15 @@ import android.support.test.espresso.IdlingResource;
 import com.example.julien.geoapp.activity.MainActivity;
 
 /**
- * Created by eric3 on 2017-02-27.
+ * Created by eric3 on 2017-03-06.
  */
 
-public class MainActivityIdlingResource implements IdlingResource {
+class SlidingUpResource implements IdlingResource {
 
     private MainActivity activity;
     private ResourceCallback callback;
 
-    public MainActivityIdlingResource(MainActivity activity) {
+    public SlidingUpResource(MainActivity activity) {
         this.activity = activity;
     }
 
@@ -30,7 +30,7 @@ public class MainActivityIdlingResource implements IdlingResource {
     }
 
     public boolean isIdle() {
-        return activity != null && activity.isLoaded();
+        return activity != null && activity.slidingPanelShowed();
     }
 
     @Override
@@ -38,3 +38,4 @@ public class MainActivityIdlingResource implements IdlingResource {
         this.callback = resourceCallback;
     }
 }
+

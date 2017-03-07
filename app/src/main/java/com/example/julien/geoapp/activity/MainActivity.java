@@ -89,6 +89,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private TextView currentFloor;
     private SlidingUpPanelLayout mLayout;
     private static final String TAG = "MainActivity";
+    private boolean isLoaded = false;
+    private boolean panelIsShowed = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -263,8 +265,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             int positionForShowingPins = 18;
             if (positionZoom >= positionForShowingPins) {
                 doorsDrawService.drawDoors();
+                isLoaded = true;
             } else {
                 doorsDrawService.hideDoors();
+                isLoaded = false;
             }
         }
     }
@@ -354,6 +358,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         localNameTextView.setText(specificDoor.getTitle());
         localDescriptionTextView.setText(specificDoor.getDescription());
         mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+        panelIsShowed = true;
     }
 
     @Override
@@ -531,8 +536,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onMapClick(@NonNull LatLng point) {
                 mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+                panelIsShowed = false;
             }
         });
+    }
+
+    public boolean isLoaded(){
+        return isLoaded;
+    }
+
+    public boolean slidingPanelShowed(){
+        return panelIsShowed;
     }
 
 
