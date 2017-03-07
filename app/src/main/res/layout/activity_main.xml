@@ -74,16 +74,16 @@
         </RelativeLayout>
 
 
-        <!--<com.mapbox.mapboxsdk.maps.MapView-->
-            <!--android:id="@+id/mapview"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--mapbox:center_latitude="46.78642133499"-->
-            <!--mapbox:center_longitude="-71.28739276585"-->
-            <!--mapbox:compass_enabled="false"-->
-            <!--mapbox:zoom="16"-->
-            <!--mapbox:zoom_min="16">-->
-        <!--</com.mapbox.mapboxsdk.maps.MapView>-->
+        <com.mapbox.mapboxsdk.maps.MapView
+            android:id="@+id/mapview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            mapbox:center_latitude="46.78642133499"
+            mapbox:center_longitude="-71.28739276585"
+            mapbox:compass_enabled="false"
+            mapbox:zoom="16"
+            mapbox:zoom_min="16">
+        </com.mapbox.mapboxsdk.maps.MapView>
 
     </LinearLayout>
 
