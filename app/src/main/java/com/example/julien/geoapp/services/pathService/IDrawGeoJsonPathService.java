@@ -5,5 +5,11 @@ package com.example.julien.geoapp.services.pathService;
  */
 
 public interface IDrawGeoJsonPathService {
-   void drawPath(String pathString);
+   void drawLinesCorridorsStep();
+   int getFloor();
+   int getTotalStep();
+   void drawPath(String requestapi);
+   boolean isLastStep();
+   int getStep();
+   void deletePath();
 }

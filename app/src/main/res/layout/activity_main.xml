@@ -50,35 +50,27 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:orientation="vertical"
-        android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
-        android:backgroundTint="@color/theme_color">
+        android:layout_alignParentTop="true"
+        android:background="?attr/colorPrimary"
+        android:backgroundTint="@color/theme_color"
+        android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <Button
-                android:id="@+id/button4"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:elevation="0dp"
-                android:text="GO !"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_toEndOf="@+id/autoCompleteTextView2" />
-
             <AutoCompleteTextView
+                android:id="@+id/autoCompleteTextView2"
                 android:layout_width="320dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/autoCompleteTextView2"
-                android:singleLine="true"
-                android:completionThreshold="1"
-                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"
                 android:layout_alignParentStart="true"
-                android:completionHint="1"/>
+                android:layout_centerVertical="true"
+                android:completionHint="1"
+                android:completionThreshold="1"
+                android:imeOptions="actionSearch"
+                android:maxLines="1" />
         </RelativeLayout>
 
 
@@ -91,13 +83,25 @@
             mapbox:compass_enabled="false"
             mapbox:zoom="16"
             mapbox:zoom_min="16">
-
-            <TextView
-                android:text=""
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/meterdistance" />
         </com.mapbox.mapboxsdk.maps.MapView>
 
     </LinearLayout>
+
+    <Button
+        android:id="@+id/next"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="NEXT STEP !"
+        android:background="@color/theme_color"
+        android:layout_below="@+id/button2"
+        android:layout_centerHorizontal="true" />
+    <Button
+        android:id="@+id/finish"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="FINISH"
+        android:background="@color/theme_color"
+        android:layout_below="@+id/button2"
+        android:layout_centerHorizontal="true" />
+
 </RelativeLayout>

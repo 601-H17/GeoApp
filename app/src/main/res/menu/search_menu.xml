@@ -7,6 +7,5 @@
         android:icon="@android:drawable/ic_menu_search"
         app:actionViewClass="android.widget.SearchView"
         app:showAsAction="always"
-        android:checkable="false"
         android:enabled="true" />
 </menu>
