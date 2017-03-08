@@ -1,5 +1,14 @@
 # GeoApp
 
+## Summary
+
+* [Install Android Studio](https://github.com/601-H17/GeoApp#install-android-studio)
+* [Setup and configure Android Emulator](https://github.com/601-H17/GeoApp#setup-and-configure-android-emulator)
+* [Download the project](https://github.com/601-H17/GeoApp#download-the-project)
+* [Open project](https://github.com/601-H17/GeoApp#open-project)
+
+___
+
 ## Install Android Studio 
 
 1. Setup [Android Studio](https://developer.android.com/studio/index.html) Tutorial
@@ -30,7 +39,6 @@ $ git clone https://github.com/601-H17/GeoApp.git
 
 1. In Android Studio. File -> Open...
 2. Compile.
-
 
 
 
