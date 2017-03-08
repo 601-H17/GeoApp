@@ -30,6 +30,8 @@
             android:paddingRight="0dp"
             android:paddingTop="0dp"
             tools:context="com.example.julien.geoapp.activity.MainActivity">
+
+
             <ImageView
                 android:id="@+id/imageView"
                 android:layout_width="wrap_content"
@@ -67,35 +69,27 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="?attr/colorPrimary"
-                android:orientation="vertical"
-                android:layout_alignParentTop="true"
                 android:layout_alignParentStart="true"
-                android:backgroundTint="@color/theme_color">
+                android:layout_alignParentTop="true"
+                android:background="?attr/colorPrimary"
+                android:backgroundTint="@color/theme_color"
+                android:orientation="vertical">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-                    <Button
-                        android:id="@+id/button4"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:elevation="0dp"
-                        android:text="GO !"
-                        android:layout_alignParentTop="true"
-                        android:layout_alignParentEnd="true"
-                        android:layout_toEndOf="@+id/autoCompleteTextView2" />
-
                     <AutoCompleteTextView
+                        android:id="@+id/autoCompleteTextView2"
                         android:layout_width="320dp"
                         android:layout_height="wrap_content"
-                        android:id="@+id/autoCompleteTextView2"
-                        android:singleLine="true"
-                        android:completionThreshold="1"
-                        android:layout_centerVertical="true"
+                        android:layout_alignParentEnd="true"
                         android:layout_alignParentStart="true"
-                        android:completionHint="1"/>
+                        android:layout_centerVertical="true"
+                        android:completionHint="1"
+                        android:completionThreshold="1"
+                        android:imeOptions="actionSearch"
+                        android:maxLines="1" />
                 </RelativeLayout>
 
 
@@ -107,25 +101,28 @@
                     mapbox:center_longitude="-71.28739276585"
                     mapbox:compass_enabled="false"
                     mapbox:zoom="16"
-                    mapbox:zoom_min="16">
-
-                    <TextView
-                        android:id="@+id/meterdistance"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="" />
-
-                    <TextView
-                        android:id="@+id/currentFloor"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="15dp"
-                        android:lineSpacingExtra="8sp"
-                        android:textColor="@color/colorPrimary"
-                        android:textSize="18sp" />
-                </com.mapbox.mapboxsdk.maps.MapView>
+                    mapbox:zoom_min="16"></com.mapbox.mapboxsdk.maps.MapView>
 
             </LinearLayout>
+
+            <Button
+                android:id="@+id/next"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/button2"
+                android:layout_toEndOf="@+id/imageView"
+                android:background="@color/theme_color"
+                android:text="NEXT" />
+
+            <Button
+                android:id="@+id/before"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/next"
+                android:layout_alignBottom="@+id/next"
+                android:layout_toStartOf="@+id/imageView"
+                android:background="@color/theme_color"
+                android:text="before" />
         </RelativeLayout>
     </FrameLayout>
     <include layout="@layout/sliding_layout" />

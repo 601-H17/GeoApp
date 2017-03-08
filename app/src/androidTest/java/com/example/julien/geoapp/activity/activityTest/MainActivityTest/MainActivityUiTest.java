@@ -38,11 +38,9 @@ public class MainActivityUiTest {
     private final String DESTINATION = "G-170";
     private final int NUMBER_OF_SWIPING = 2;
     final int OBJECT_ID_MARKER_VIEW_CONTAINER = R.id.markerViewContainer;
-    final int OBJECT_ID_CURRENT_FLOOR = R.id.currentFloor;
     final int OBJECT_ID_SEARCH_MENU = R.id.searchMenu;
     final int OBJECT_ID_SEARCH_SRC_TEXT = R.id.search_src_text;
     final int OBJECT_ID_DRAG_VIEW = R.id.dragView;
-    final int OBJECT_ID_BUTTON_OK = R.id.button4;
     final int OBJECT_ID_MARKER = R.id.image;
     final int OBJECT_ID_LOCAL_NAME =  R.id.local_name;
 

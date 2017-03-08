@@ -26,7 +26,6 @@ import com.example.julien.geoapp.R;
 import com.example.julien.geoapp.adapter.CustomAdapterQuery;
 import com.example.julien.geoapp.api.setDoorsList;
 import com.example.julien.geoapp.api.setGeoJsonMaps;
-import com.example.julien.geoapp.api.setPathGeoJson;
 import com.example.julien.geoapp.api.setSpecificDoorInformation;
 import com.example.julien.geoapp.models.Doors;
 import com.example.julien.geoapp.services.doorsService.DrawGeoJsonDoorsService;
@@ -56,7 +55,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private Button firstFloorButton;
     private Button secondFloorButton2;
     private Button thirdFloorButton3;
-    private Button goButton;
 
     private MapboxMap mapboxMap;
     private MapView mapView;
@@ -127,7 +125,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         firstFloorButton = (Button) findViewById(R.id.button);
         secondFloorButton2 = (Button) findViewById(R.id.button2);
         thirdFloorButton3 = (Button) findViewById(R.id.button3);
-        goButton = (Button) findViewById(R.id.button4);
         toLocal = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView2);
         mLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
         mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
@@ -203,10 +200,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         if (typingQueryNavbar.length() >= 1 && typingQueryNavbar != null) {
             toLocal.setVisibility(View.VISIBLE);
-            goButton.setVisibility(View.VISIBLE);
         } else {
             toLocal.setVisibility(View.GONE);
-            goButton.setVisibility(View.GONE);
         }
     }
 
@@ -425,15 +420,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             }
         });
-
-        goButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                new setPathGeoJson(MainActivity.this, FROM + searchView.getQuery().toString().toUpperCase() + TO + toLocal.getText().toString().toUpperCase()).execute();
-                new setDoorsList(MainActivity.this, getString(R.string.getDoorsQuery) + searchView.getQuery().toString().toUpperCase()).execute();
-            }
-        });
         firstFloorButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -458,7 +444,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 mapboxMap.clear();
             }
         });
-        goButton.setVisibility(View.GONE);
         toLocal.setVisibility(View.GONE);
     }
 
