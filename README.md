@@ -2,7 +2,7 @@
 
 ## Summary
 
-* [Introduction](https://github.com/601-H17/GeoApp#Introduction)
+* [Introduction](https://github.com/601-H17/GeoApp#introduction)
 * [Install Android Studio](https://github.com/601-H17/GeoApp#install-android-studio)
 * [Setup and configure Android Emulator](https://github.com/601-H17/GeoApp#setup-and-configure-android-emulator)
 * [Download the project](https://github.com/601-H17/GeoApp#download-the-project)
