@@ -56,7 +56,7 @@ $ git clone https://github.com/601-H17/GeoApp.git
 
 ## Schema of continuous integration of this project
 <p align="center">
-  <img src="https://cloud.githubusercontent.com/assets/5929986/23715737/a0365e38-03fb-11e7-9871-237aed5fe9a4.png" />
+  <img src="https://cloud.githubusercontent.com/assets/5929986/23721169/f604cca6-040e-11e7-9684-603961057cb9.png" />
 </p>
 
 
