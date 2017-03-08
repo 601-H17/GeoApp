@@ -1,5 +1,6 @@
 # ![](http://image.noelshack.com/fichiers/2017/10/1488988686-school.png) GeoApp
 
+![](https://travis-ci.org/601-H17/GeoApp.svg?branch=master)
 ## Summary
 
 * [Introduction](https://github.com/601-H17/GeoApp#introduction)
