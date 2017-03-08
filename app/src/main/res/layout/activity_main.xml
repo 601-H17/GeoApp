@@ -90,19 +90,19 @@
         android:id="@+id/next"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/theme_color"
-        android:text="NEXT"
         android:layout_below="@+id/button2"
-        android:layout_toEndOf="@+id/imageView" />
+        android:layout_toEndOf="@+id/imageView"
+        android:background="@color/theme_color"
+        android:text="NEXT" />
 
     <Button
         android:id="@+id/before"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/theme_color"
-        android:text="before"
         android:layout_alignBaseline="@+id/next"
         android:layout_alignBottom="@+id/next"
-        android:layout_toStartOf="@+id/imageView" />
+        android:layout_toStartOf="@+id/imageView"
+        android:background="@color/theme_color"
+        android:text="before" />
 
 </RelativeLayout>
