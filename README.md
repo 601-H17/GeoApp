@@ -2,14 +2,18 @@
 
 ## Summary
 
+* [Introduction](https://github.com/601-H17/GeoApp#Introduction)
 * [Install Android Studio](https://github.com/601-H17/GeoApp#install-android-studio)
 * [Setup and configure Android Emulator](https://github.com/601-H17/GeoApp#setup-and-configure-android-emulator)
 * [Download the project](https://github.com/601-H17/GeoApp#download-the-project)
 * [Open project](https://github.com/601-H17/GeoApp#open-project)
-* [TestObject Configuration](https://github.com/601-H17/GeoApp#TestObject-Configuration)
-* [](https://github.com/601-H17/GeoApp#Schema-of-continuous-integration-of-this-project)
+* [TestObject Configuration](https://github.com/601-H17/GeoApp#testobject-configuration)
+* [Schema of continuous integration of this project](https://github.com/601-H17/GeoApp#schema-of-continuous-integration-of-this-project)
 
 ___
+
+## Introduction
+    GeoApp is an Android application to searches for a local and proposes the shortest path from a custom map.
 
 ## Install Android Studio 
 
