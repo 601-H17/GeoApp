@@ -1,4 +1,4 @@
-# GeoApp
+# ![](http://image.noelshack.com/fichiers/2017/10/1488988686-school.png) GeoApp
 
 ## Summary
 
@@ -39,6 +39,8 @@ $ git clone https://github.com/601-H17/GeoApp.git
 
 1. In Android Studio. File -> Open...
 2. Compile.
+
+## TestObject
 
 
 
