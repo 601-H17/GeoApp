@@ -43,7 +43,6 @@ public class MainActivityUiTest {
     final int OBJECT_ID_DRAG_VIEW = R.id.dragView;
     final int OBJECT_ID_MARKER = R.id.image;
     final int OBJECT_ID_LOCAL_NAME =  R.id.local_name;
-
     @Rule
     public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
 

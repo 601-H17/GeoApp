@@ -5,6 +5,7 @@ import com.mapbox.mapboxsdk.annotations.Marker;
 import com.mapbox.mapboxsdk.annotations.MarkerOptions;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -16,12 +17,7 @@ import static org.junit.Assert.*;
  */
 public class DrawGeoJsonDoorsServiceTest {
     @Test
-    public void test1(){
-//        MapboxMap mMapboxMap = Mockito.mock(MapboxMap.class);
-//        MainActivity mActivity = Mockito.mock(MainActivity.class);
-//        String json = "";
-//        IDrawGeoJsonDoorsService service = new DrawGeoJsonDoorsService(mMapboxMap,mActivity,json);
-//        service.drawDoors();
+    public void test1() {
+        Assert.assertTrue(true);
     }
-
 }
