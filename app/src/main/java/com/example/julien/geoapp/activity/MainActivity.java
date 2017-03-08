@@ -348,7 +348,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     public void setSpecificDoorInformationCallback(String request) {
         doorsRepositoryService = new DoorsRepositoryService(request);
+        showSlidingUpPanel();
+    }
 
+    private void showSlidingUpPanel() {
         TextView localNameTextView = (TextView) findViewById(R.id.local_name);
         TextView localDescriptionTextView = (TextView) findViewById(R.id.local_description);
         TextView localTagTextView = (TextView) findViewById(R.id.local_tag);
@@ -358,7 +361,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         localNameTextView.setText(specificDoor.getTitle());
         localDescriptionTextView.setText(specificDoor.getDescription());
         localTagTextView.setText(specificDoor.getTag());
-        localFloorTextView.setText(Integer.toString(specificDoor.getEtage()));
+        localFloorTextView.setText(Message.FLOOR_TEXT + Integer.toString(specificDoor.getEtage()));
         mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
         panelIsShowed = true;
     }
@@ -502,7 +505,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void setSearchDoorInformationQuery(String localName) {
-        new setSpecificDoorInformation(MainActivity.this, getString(R.string.getDoorsQuery) + localName).execute();
+        if(localName.charAt(1) != 'E'){
+            new setSpecificDoorInformation(MainActivity.this, getString(R.string.getDoorsQuery) + localName).execute();
+        }
     }
 
     private void setSlidePanelListener(){

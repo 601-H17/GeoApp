@@ -17,7 +17,5 @@ public class Message {
     public static String TO_MARKER = ".png";
     public static String COLOR_WALL = "#ffffff";
     public static String COLOR_PATH = "#cb2c39";
-    public static String FIRST_FLOOR_TEXT = "1st Floor";
-    public static String SECOND_FLOOR_TEXT = "2nd Floor";
-    public static String THIRD_FLOOR_TEXT = "3rd Floor";
+    public static String FLOOR_TEXT = "Étage : ";
 }
