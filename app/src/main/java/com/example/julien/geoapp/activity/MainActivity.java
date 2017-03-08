@@ -1,5 +1,6 @@
 package com.example.julien.geoapp.activity;
 
+import android.content.Context;
 import android.database.MatrixCursor;
 import android.graphics.PointF;
 import android.location.Location;
@@ -14,6 +15,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CursorAdapter;
@@ -27,6 +30,8 @@ import com.example.julien.geoapp.adapter.CustomAdapterQuery;
 import com.example.julien.geoapp.api.setDoorsList;
 import com.example.julien.geoapp.api.setGeoJsonMaps;
 import com.example.julien.geoapp.api.setSpecificDoorInformation;
+import com.example.julien.geoapp.api.setPathGeoJson;
+import com.example.julien.geoapp.api.setSpecificDoor;
 import com.example.julien.geoapp.models.Doors;
 import com.example.julien.geoapp.services.doorsService.DrawGeoJsonDoorsService;
 import com.example.julien.geoapp.services.doorsService.IDrawGeoJsonDoorsService;
@@ -55,6 +60,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private Button firstFloorButton;
     private Button secondFloorButton2;
     private Button thirdFloorButton3;
+    private Button nextStepButton;
+    private Button beforeButton;
 
     private MapboxMap mapboxMap;
     private MapView mapView;
@@ -64,9 +71,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private LatLng centerCoordinates;
     private SimpleCursorAdapter searchAdapter;
 
+    private String specificDoors = "";
     private String MENU_ID = "id";
     private String MENU_REF = "ref";
-    private String FROM = "path?localA=";
+    private String FROM = "localA=";
     private String TO = "&localB=";
     private String mapGeoJson;
     private String doorsInformation;
@@ -74,11 +82,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private String searchLocal;
     private String typingQueryNavbar = "";
     private String typingQueryHelp = "";
+    private boolean isQueryNavBar = false;
+    private boolean isQueryHelpBar = false;
     private double[] CENTER_CEGEP = {46.7867176564811, -71.2869702165109};
     private double[] BOUNDS_CEGEP = {46.78800596023283, -71.28548741340637, 46.784788302609186, -71.28870606422424};
     private double[] CENTER_VS_USER = {0.00002295716656, 0.00000000000007};
     private double positionZoom;
-    private int DISTANCE_BEFORE_RELOCATION = 200;
+    private int DISTANCE_BEFORE_RELOCATION = 300;
 
     private IDrawGeoJsonMapsService mapsDrawService;
     private IDrawGeoJsonDoorsService doorsDrawService;
@@ -88,6 +98,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private static final String TAG = "MainActivity";
     private boolean isLoaded = false;
     private boolean panelIsShowed = false;
+    private DoorsRepositoryService specificDoorsRepositoryService;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -101,7 +112,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onMapReady(final MapboxMap mapboxMap) {
-        //Listener carte.
         this.mapboxMap = mapboxMap;
         final Projection projection = mapboxMap.getProjection();
         final int width = mapView.getMeasuredWidth();
@@ -112,7 +122,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onCameraChange(CameraPosition position) {
                 setCenterCoordinates(width, height, projection);
                 positionZoom = position.zoom;
-                showDoors();
                 centerUser();
             }
         });
@@ -126,6 +135,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         secondFloorButton2 = (Button) findViewById(R.id.button2);
         thirdFloorButton3 = (Button) findViewById(R.id.button3);
         toLocal = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView2);
+        nextStepButton = (Button) findViewById(R.id.next);
+        beforeButton = (Button) findViewById(R.id.before);
+        beforeButton.setVisibility(View.INVISIBLE);
+        nextStepButton.setVisibility(View.INVISIBLE);
         mLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
         mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
     }
@@ -138,6 +151,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         } else {
             super.onBackPressed();
         }
+        nextStepButton = (Button) findViewById(R.id.next);
+        beforeButton = (Button) findViewById(R.id.before);
+        beforeButton.setVisibility(View.INVISIBLE);
+        nextStepButton.setVisibility(View.INVISIBLE);
     }
 
 
@@ -147,7 +164,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mapView = (MapView) findViewById(R.id.mapview);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
-        new setGeoJsonMaps(MainActivity.this, getString(R.string.map)).execute();
     }
 
     private void setAdapter() {
@@ -164,6 +180,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         inflater.inflate(R.menu.search_menu, menu);
         MenuItem item = menu.findItem(R.id.searchMenu);
         searchView = (SearchView) item.getActionView();
+        searchView.setMaxWidth(Integer.MAX_VALUE);
+        searchView.setQueryHint(Message.START_MESSAGE);
         searchView.setSuggestionsAdapter(searchAdapter);
         initSearchView(searchView);
         int autoCompleteTextViewID = getResources().getIdentifier("android:id/search_src_text", null, null);
@@ -175,7 +193,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void setTextSearch(int i) {
         searchView.setQuery(listSearch.get(i), true);
         searchLocal = searchView.getQuery().toString().toUpperCase();
-        setUserLocation();
+        isQueryNavBar = false;
+        new setSpecificDoor(MainActivity.this, getString(R.string.getDoorsQuery) + typingQueryNavbar).execute();
     }
 
     private void searchQuery() {
@@ -185,10 +204,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         try {
             ArrayList<Doors> list = doorsRepositoryService.getAllDoors();
             for (int i = 0; i < list.size(); i++) {
-//                if (list.get(i).getTitle().toLowerCase().startsWith(typingQueryNavbar.toLowerCase()) || list.get(i).getTeacher().toLowerCase().startsWith(typingQueryNavbar.toLowerCase())) {
-//                    mc.addRow(new Object[]{i, list.get(i).getTitle(), list.get(i).getTeacher()});
-//                    listSearch.add(list.get(i).getTitle());
-//                }
                 if (find(list.get(i))) {
                     mc.addRow(new Object[]{i, list.get(i).getTitle(), list.get(i).getTeacher()});
                     listSearch.add(list.get(i).getTitle());
@@ -220,7 +235,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void setUserLocation() {
         //Lorsqu'un local est entré, centrer la position du local sur le point vert (l'utilisateur).
         try {
-            Doors door = doorsRepositoryService.getSpecificDoor(searchLocal);
+            Doors door = specificDoorsRepositoryService.getSpecificDoor(searchLocal);
+            setStair(door);
             LatLng user = new LatLng(door.getlongi() - CENTER_VS_USER[0], door.getLati() - CENTER_VS_USER[1]);
             int positionZoomCameraMove = 19;
             CameraPosition position = new CameraPosition.Builder()
@@ -232,10 +248,23 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             mapboxMap.animateCamera(CameraUpdateFactory
                     .newCameraPosition(position));
             positionZoom = positionZoomCameraMove;
-            showDoors();
         } catch (Exception e) {
             Log.d(Message.ERROR[0], e.toString());
         }
+    }
+
+    private void setStair(Doors door) {
+        if (door.getEtage() == 1)
+            firstFloorButton.performClick();
+        if (door.getEtage() == 2)
+            secondFloorButton2.performClick();
+    }
+
+    private void setStairNumber(int door) {
+        if (door == 1)
+            firstFloorButton.performClick();
+        if (door == 2)
+            secondFloorButton2.performClick();
     }
 
     private void setCenterCoordinates(int width, int height, Projection projection) {
@@ -286,6 +315,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         ArrayList<Doors> doors = doorsRepositoryService.getAllDoors();
         CustomAdapterQuery customAdapter = new CustomAdapterQuery(this, R.layout.spinner_item_test, doors);
         toLocal.setAdapter(customAdapter);
+        toLocal.setHint(Message.DESTINATION_MESSAGE);
         customAdapter.notifyDataSetChanged();
     }
 
@@ -294,29 +324,43 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         //par *things*repository étant donné qu'il n'aura pas seulement des classes.
         doorsRepositoryService = new DoorsRepositoryService(doorsInformation);
         //si l'utilisateur fait une recherche dans l'Action bar, remplir la liste autocomplete
-        searchQuery();
+        if (isQueryNavBar)
+            searchQuery();
         //Lorsque la réponse de l'API est recue, l'adapter charge sa liste de *things*repository pour l'autocomplete.
-        setAdapterString();
+        if (isQueryHelpBar)
+            setAdapterString();
+        setUserLocationNoStair();
     }
 
     private void initDrawableMaps() {
         //Sert à instancier tous les services lorsqu'un nouvel étage est chargé + le dessiner.
         mapsDrawService = new DrawGeoJsonMapsService(mapboxMap, mapGeoJson);
         doorsDrawService = new DrawGeoJsonDoorsService(mapboxMap, this, mapGeoJson);
-        pathDrawService = new DrawGeoJsonPathService(mapboxMap);
         mapsDrawService.drawMaps();
         showDoors();
     }
 
     private void initPath() {
         //Vérifier si un trajet existe déjà, s'il existe, effacer la carte (dont le trajet fait partie) et la re-dessiner.
-        if (pathGeoJson != null) {
-            mapboxMap.clear();
+        if (pathDrawService != null) {
+            pathDrawService.deletePath();
         }
-        mapsDrawService.drawMaps();
+        pathDrawService = new DrawGeoJsonPathService(mapboxMap);
+        // mapsDrawService.drawMaps();
         pathDrawService.drawPath(pathGeoJson);
-        doorsDrawService.addFromToMarkers(pathGeoJson);
-        showDoors();
+        pathDrawService.drawLinesCorridorsStep();
+        if (pathGeoJson.length() > 20) {
+            beforeButton.setVisibility(View.VISIBLE);
+            nextStepButton.setVisibility(View.VISIBLE);
+            if (pathDrawService.isLastStep()) {
+                nextStepButton.setEnabled(true);
+                nextStepButton.setText(Message.FINISH);
+                beforeButton.setEnabled(false);
+            } else {
+                nextStepButton.setEnabled(true);
+                beforeButton.setEnabled(false);
+            }
+        }
     }
 
     public void setPathGeoJsonStringCallback(String path) {
@@ -335,12 +379,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         //Instancier les services lorsque l'API recoit une réponse.
         this.doorsInformation = doors;
         //Si une recherche a été lancée, localiser l'utilisateur à la réponse de l'API.
-        if (searchLocal != null) {
-            setUserLocation();
-        }
         initDoorsList();
     }
-
     public void setSpecificDoorInformationCallback(String request) {
         doorsRepositoryService = new DoorsRepositoryService(request);
         showSlidingUpPanel();
@@ -359,6 +399,34 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         localFloorTextView.setText(Message.FLOOR_TEXT + Integer.toString(specificDoor.getEtage()));
         mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
         panelIsShowed = true;
+    }
+    private void setUserLocationNoStair() {
+        try {
+            Doors door = doorsRepositoryService.getSpecificDoor(searchLocal);
+            LatLng user = new LatLng(door.getlongi() - CENTER_VS_USER[0], door.getLati() - CENTER_VS_USER[1]);
+            int positionZoomCameraMove = 19;
+            CameraPosition position = new CameraPosition.Builder()
+                    .target(user)
+                    .zoom(positionZoomCameraMove)
+                    .tilt(0)
+                    .bearing(0)
+                    .build();
+            mapboxMap.animateCamera(CameraUpdateFactory
+                    .newCameraPosition(position));
+            positionZoom = positionZoomCameraMove;
+        } catch (Exception e) {
+            Log.d(Message.ERROR[0], e.toString());
+        }
+    }
+
+    public void setSpecificDoorsListCallback(String request) {
+        specificDoors = request;
+        initSpecificDoors();
+    }
+
+    private void initSpecificDoors() {
+        specificDoorsRepositoryService = new DoorsRepositoryService(specificDoors);
+        setUserLocation();
     }
 
     @Override
@@ -391,37 +459,92 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void setButtonListener() {
-        //Une requête à l'API est lancée pour chaque touche entrée lors de la recherche dans l'action bar.
+        //Une requête à l'API est lancée pour chaque touche entrée lors de la recherche dans helper bar.
+        beforeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setStairNumber(pathDrawService.getFloorBefore());
+                pathDrawService.drawLinesCorridorsBack();
+                if (nextStepButton.getText().equals(Message.FINISH)) {
+                    nextStepButton.setText(Message.NEXT);
+                }
+                if (pathDrawService.isLastStep()) {
+                    nextStepButton.setText(Message.FINISH);
+                    beforeButton.setEnabled(true);
+                }
+                if (pathDrawService.isLastStep()) {
+                    nextStepButton.setText(Message.FINISH);
+                    beforeButton.setEnabled(true);
+                } else if (pathDrawService.isFistStep()) {
+                    beforeButton.setEnabled(false);
+                    nextStepButton.setEnabled(true);
+                } else {
+                    nextStepButton.setEnabled(true);
+                    beforeButton.setEnabled(true);
+                }
+            }
+        });
+        nextStepButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (nextStepButton.getText().equals(Message.FINISH)) {
+                    nextStepButton.setVisibility(View.INVISIBLE);
+                    beforeButton.setVisibility(View.INVISIBLE);
+                    nextStepButton.setText(Message.NEXT);
+                    pathDrawService.deletePath();
+                } else {
+                    setStairNumber(pathDrawService.getFloor());
+                    pathDrawService.drawLinesCorridorsStep();
+                    if (pathDrawService.isLastStep()) {
+                        nextStepButton.setText(Message.FINISH);
+                        beforeButton.setEnabled(true);
+                    } else if (pathDrawService.isFistStep()) {
+                        beforeButton.setEnabled(false);
+                        nextStepButton.setEnabled(true);
+                    } else {
+                        nextStepButton.setEnabled(true);
+                        beforeButton.setEnabled(true);
+                    }
+                }
+            }
+        });
+
         toLocal.addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                isQueryHelpBar = true;
                 typingQueryHelp = s.toString();
                 searchApiQueryHelper();
             }
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                isQueryHelpBar = true;
                 typingQueryHelp = s.toString();
                 searchApiQueryHelper();
-
             }
 
             @Override
             public void afterTextChanged(Editable s) {
+                isQueryHelpBar = true;
                 typingQueryHelp = s.toString();
                 searchApiQueryHelper();
-
             }
         });
 
-        toLocal.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        toLocal.setOnItemClickListener(new AdapterView.OnItemClickListener()
 
+        {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                isQueryHelpBar = false;
+                InputMethodManager in = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                in.hideSoftInputFromWindow(adapterView.getApplicationWindowToken(), 0);
+                setUserLocation();
+                researchPath();
             }
         });
         firstFloorButton.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 new setGeoJsonMaps(MainActivity.this, getString(R.string.map)).execute();
@@ -429,14 +552,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
         secondFloorButton2.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 new setGeoJsonMaps(MainActivity.this, getString(R.string.map2)).execute();
                 mapboxMap.clear();
             }
         });
-        thirdFloorButton3.setOnClickListener(new View.OnClickListener() {
+        thirdFloorButton3.setOnClickListener(new View.OnClickListener()
+
+        {
 
             @Override
             public void onClick(View v) {
@@ -445,6 +569,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
         toLocal.setVisibility(View.GONE);
+    }
+
+    private void researchPath() {
+        nextStepButton.setText(Message.NEXT);
+        new setPathGeoJson(MainActivity.this, FROM + searchView.getQuery().toString().toUpperCase() + TO + toLocal.getText().toString().toUpperCase()).execute();
+        new setDoorsList(MainActivity.this, getString(R.string.getDoorsQuery) + searchView.getQuery().toString().toUpperCase()).execute();
     }
 
     private void initSearchView(SearchView searchView) {
@@ -458,6 +588,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public boolean onSuggestionClick(int i) {
                 setTextSearch(i);
+                researchPath();
                 return false;
             }
         });
@@ -466,6 +597,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             @Override
             public boolean onQueryTextSubmit(String query) {
+                isQueryNavBar = true;
                 typingQueryNavbar = query;
                 //Lance la requête.
                 searchApiQueryNavbar();
@@ -474,6 +606,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                isQueryNavBar = true;
                 typingQueryNavbar = newText;
                 searchApiQueryNavbar();
                 return true;
@@ -537,7 +670,5 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public boolean slidingPanelShowed(){
         return panelIsShowed;
     }
-
-
 
 }
