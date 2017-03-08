@@ -17,4 +17,9 @@ public class Message {
     public static String TO_MARKER = ".png";
     public static String COLOR_WALL = "#ffffff";
     public static String COLOR_PATH = "#cb2c39";
+    public static String START_MESSAGE = "EMPLACEMENT DE DÉPART";
+    public static String NEXT = "NEXT";
+    public static String FINISH = "FINISH";
+    public static String DESTINATION_MESSAGE = "EMPLACEMENT DE DESTINATION";
+
 }
