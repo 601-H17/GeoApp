@@ -283,14 +283,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void showDoors() {
         //Trace ou cache les portes du cégep.
         if (doorsDrawService != null) {
-            int positionForShowingPins = 18;
-            if (positionZoom >= positionForShowingPins) {
+           // int positionForShowingPins = 18;
+            //if (positionZoom >= positionForShowingPins) {
                 doorsDrawService.drawDoors();
                 isLoaded = true;
-            } else {
-                doorsDrawService.hideDoors();
-                isLoaded = false;
-            }
+//            } else {
+//                doorsDrawService.hideDoors();
+//                isLoaded = false;
+//            }
         }
     }
 
