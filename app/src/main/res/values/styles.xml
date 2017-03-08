@@ -19,6 +19,7 @@
         <item name="actionModeSplitBackground">@drawable/cab_background_bottom_app_theme</item>
         <item name="actionModeCloseButtonStyle">@style/ActionButton.CloseMode.App_theme</item>
         <item name="android:navigationBarColor">@color/theme_color</item>
+        <item name="android:windowActionBarOverlay">true</item>
     </style>
 
     <style name="ActionBar.Solid.App_theme" parent="@style/Widget.AppCompat.Light.ActionBar.Solid">

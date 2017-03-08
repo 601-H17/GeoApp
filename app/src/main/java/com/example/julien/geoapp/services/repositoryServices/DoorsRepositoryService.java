@@ -6,7 +6,6 @@ import com.example.julien.geoapp.Externalization.Message;
 import com.example.julien.geoapp.models.Doors;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -36,7 +35,7 @@ public class DoorsRepositoryService implements IDoorsRepositoryService {
                 double lat = json.getJSONObject(fn).getJSONObject(Message.FEATURES_JSON_PATH[3]).getDouble(Message.FEATURES_JSON_PATH[4]);
                 double longi = json.getJSONObject(fn).getJSONObject(Message.FEATURES_JSON_PATH[3]).getDouble(Message.FEATURES_JSON_PATH[5]);
                 String teacher = "Paul Moisant";
-                Doors classToAdd = new Doors(ref, description, teacher, floor, lat, longi);
+                Doors classToAdd = new Doors(ref, description, teacher, floor, lat, longi, "Laboratoire Informatique");
                 doors.add(classToAdd);
             }
         } catch (Exception exception) {

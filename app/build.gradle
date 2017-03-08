@@ -90,6 +90,7 @@ dependencies {
     compile('com.mapbox.mapboxsdk:mapbox-android-sdk:4.2.2@aar') {
         transitive = true
     }
+    compile 'com.sothree.slidinguppanel:library:3.3.1'
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.github.arimorty:floatingsearchview:2.0.3'
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
@@ -107,20 +108,25 @@ dependencies {
     androidTestCompile 'com.android.support.test.espresso:espresso-web:2.2.2'
     // https://mvnrepository.com/artifact/io.appium/java-client
     compile 'com.android.support:design:25.1.1'
-    /*androidTestCompile("com.android.support.test.espresso:espresso-contrib:2.2.2") {
+    androidTestCompile("com.android.support.test.espresso:espresso-contrib:2.2.2") {
         exclude group: 'com.android.support', module: 'appcompat'
         exclude group: 'com.android.support', module: 'support-v4'
         exclude group: 'com.android.support', module: 'support-v7'
         exclude group: 'com.android.support', module: 'design'
-        exclude module: 'support-annotations'
         exclude module: 'recyclerview-v7'
-    }*/
+    }
 
     compile 'com.android.support:recyclerview-v7:25.1.1'
     androidTestCompile 'com.android.support:recyclerview-v7:25.1.1'
 
     compile 'com.google.guava:guava:18.0'
     androidTestCompile 'com.google.guava:guava:18.0'
+
+    compile 'com.android.support:multidex:1.0.1'
+    androidTestCompile('com.android.support:multidex-instrumentation:1.0.1') {
+        exclude module: 'multidex'
+    }
+
 }
 repositories {
     jcenter()

@@ -125,6 +125,15 @@ public class DrawGeoJsonDoorsService implements IDrawGeoJsonDoorsService {
         markers.add(mark);
     }
 
+    public String getLocalName(Marker localToFind){
+        for(Entity door : doorsInformationForPins){
+            if(door.getLati() == localToFind.getPosition().getLatitude() && door.getlongi() == localToFind.getPosition().getLongitude()){
+                return door.getTitle();
+            }
+        }
+        return "";
+    }
+
     public void drawDoors() {
         if (mapboxMap.getMarkers().isEmpty()) {
             for (int i = 0; i < markers.size(); i++) {

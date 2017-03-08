@@ -22,12 +22,14 @@ import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.SearchView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
 
 import com.example.julien.geoapp.Externalization.Message;
 import com.example.julien.geoapp.R;
 import com.example.julien.geoapp.adapter.CustomAdapterQuery;
 import com.example.julien.geoapp.api.setDoorsList;
 import com.example.julien.geoapp.api.setGeoJsonMaps;
+import com.example.julien.geoapp.api.setSpecificDoorInformation;
 import com.example.julien.geoapp.api.setPathGeoJson;
 import com.example.julien.geoapp.api.setSpecificDoor;
 import com.example.julien.geoapp.models.Doors;
@@ -48,6 +50,7 @@ import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Projection;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.ArrayList;
 
@@ -91,6 +94,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private IDrawGeoJsonDoorsService doorsDrawService;
     private IDrawGeoJsonPathService pathDrawService;
     private DoorsRepositoryService doorsRepositoryService;
+    private SlidingUpPanelLayout mLayout;
+    private static final String TAG = "MainActivity";
+    private boolean isLoaded = false;
+    private boolean panelIsShowed = false;
     private DoorsRepositoryService specificDoorsRepositoryService;
 
     @Override
@@ -98,6 +105,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         setView();
         setButtonListener();
+        setSlidePanelListener();
         setMap(savedInstanceState);
         setAdapter();
     }
@@ -117,12 +125,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 centerUser();
             }
         });
-        this.mapboxMap.setOnMarkerClickListener(new MapboxMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(@NonNull Marker marker) {
-                return false;
-            }
-        });
+        setMarkerListener();
+        setMapClickListener();
     }
 
     private void setView() {
@@ -131,6 +135,22 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         secondFloorButton2 = (Button) findViewById(R.id.button2);
         thirdFloorButton3 = (Button) findViewById(R.id.button3);
         toLocal = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView2);
+        nextStepButton = (Button) findViewById(R.id.next);
+        beforeButton = (Button) findViewById(R.id.before);
+        beforeButton.setVisibility(View.INVISIBLE);
+        nextStepButton.setVisibility(View.INVISIBLE);
+        mLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
+        mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mLayout != null &&
+                (mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED || mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.ANCHORED)) {
+            mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+        } else {
+            super.onBackPressed();
+        }
         nextStepButton = (Button) findViewById(R.id.next);
         beforeButton = (Button) findViewById(R.id.before);
         beforeButton.setVisibility(View.INVISIBLE);
@@ -262,11 +282,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void showDoors() {
         //Trace ou cache les portes du cégep.
-        int positionForShowingPins = 18;
-        if (positionZoom >= positionForShowingPins) {
-            doorsDrawService.drawDoors();
-        } else {
-            doorsDrawService.hideDoors();
+        if (doorsDrawService != null) {
+            int positionForShowingPins = 18;
+            if (positionZoom >= positionForShowingPins) {
+                doorsDrawService.drawDoors();
+                isLoaded = true;
+            } else {
+                doorsDrawService.hideDoors();
+                isLoaded = false;
+            }
         }
     }
 
@@ -306,7 +330,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (isQueryHelpBar)
             setAdapterString();
         setUserLocationNoStair();
-
     }
 
     private void initDrawableMaps() {
@@ -358,7 +381,25 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         //Si une recherche a été lancée, localiser l'utilisateur à la réponse de l'API.
         initDoorsList();
     }
+    public void setSpecificDoorInformationCallback(String request) {
+        doorsRepositoryService = new DoorsRepositoryService(request);
+        showSlidingUpPanel();
+    }
 
+    private void showSlidingUpPanel() {
+        TextView localNameTextView = (TextView) findViewById(R.id.local_name);
+        TextView localDescriptionTextView = (TextView) findViewById(R.id.local_description);
+        TextView localTagTextView = (TextView) findViewById(R.id.local_tag);
+        TextView localFloorTextView = (TextView) findViewById(R.id.local_floor);
+
+        Doors specificDoor = doorsRepositoryService.getAllDoors().get(0);
+        localNameTextView.setText(specificDoor.getTitle());
+        localDescriptionTextView.setText(specificDoor.getDescription());
+        localTagTextView.setText(specificDoor.getTag());
+        localFloorTextView.setText(Message.FLOOR_TEXT + Integer.toString(specificDoor.getEtage()));
+        mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+        panelIsShowed = true;
+    }
     private void setUserLocationNoStair() {
         try {
             Doors door = doorsRepositoryService.getSpecificDoor(searchLocal);
@@ -503,8 +544,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 researchPath();
             }
         });
-
-
         firstFloorButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -582,4 +621,54 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void searchApiQueryHelper() {
         new setDoorsList(MainActivity.this, getString(R.string.getDoorsQuery) + typingQueryHelp).execute();
     }
+
+    private void setSearchDoorInformationQuery(String localName) {
+        if(localName.charAt(1) != 'E'){
+            new setSpecificDoorInformation(MainActivity.this, getString(R.string.getDoorsQuery) + localName).execute();
+        }
+    }
+
+    private void setSlidePanelListener(){
+        mLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
+            @Override
+            public void onPanelSlide(View panel, float slideOffset) {
+                Log.i(TAG, "onPanelSlide, offset " + slideOffset);
+            }
+
+            @Override
+            public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
+                Log.i(TAG, "onPanelStateChanged " + newState);
+            }
+        });
+    }
+
+    private void setMarkerListener() {
+        mapboxMap.setOnMarkerClickListener(new MapboxMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(@NonNull Marker marker) {
+                String localName = doorsDrawService.getLocalName(marker);
+                setSearchDoorInformationQuery(localName);
+                return false;
+            }
+        });
+    }
+
+    private void setMapClickListener() {
+        this.mapboxMap.setOnMapClickListener(new MapboxMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(@NonNull LatLng point) {
+                mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+                panelIsShowed = false;
+            }
+        });
+    }
+
+    public boolean isLoaded(){
+        return isLoaded;
+    }
+
+    public boolean slidingPanelShowed(){
+        return panelIsShowed;
+    }
+
 }

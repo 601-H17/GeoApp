@@ -12,6 +12,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+
 /**
  * Created by Julien on 2017-02-10.
  */
@@ -56,6 +57,8 @@ abstract class ApiRequest extends AsyncTask<Void, Void, String> {
         } catch (Exception exception) {
             Log.e(Message.ERROR[0], exception.toString());
         }
+
+
         return request;
     }
 

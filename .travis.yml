@@ -23,7 +23,7 @@ before_script:
 script:
   - "./gradlew build"
   - "./gradlew assembleRelease"
-  - "./gradlew testobjectUpload --info"
+  - "./gradlew testobjectUpload --info --continue"
 deploy:
   provider: releases
   api_key:
