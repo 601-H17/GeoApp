@@ -6,6 +6,8 @@
 * [Setup and configure Android Emulator](https://github.com/601-H17/GeoApp#setup-and-configure-android-emulator)
 * [Download the project](https://github.com/601-H17/GeoApp#download-the-project)
 * [Open project](https://github.com/601-H17/GeoApp#open-project)
+* [TestObject Configuration](https://github.com/601-H17/GeoApp#TestObject-Configuration)
+* [](https://github.com/601-H17/GeoApp#Schema-of-continuous-integration-of-this-project)
 
 ___
 
@@ -40,7 +42,21 @@ $ git clone https://github.com/601-H17/GeoApp.git
 1. In Android Studio. File -> Open...
 2. Compile.
 
-## TestObject
+## TestObject Configuration
+1. Create your free account [TestObject](https://app.testobject.com/#/signup) . 
+ 
+2. Create your Android projet on dashboard and follow this tutorial: [Espresso Setup](https://help.testobject.com/docs/testing-tools/robotium-espresso/setup/) 
+
+3. When APK configuration is done, read the README of this project :  [TestObject gradle plugin](https://github.com/testobject/testobject-gradle-plugin)
+
+## Schema of continuous integration of this project
+<p align="center">
+  <img src="https://cloud.githubusercontent.com/assets/5929986/23715737/a0365e38-03fb-11e7-9871-237aed5fe9a4.png" />
+</p>
 
 
 
+
+
+__
+> E.g.: Icon made by [Freepik](http://www.freepik.com/) from [www.flaticon.com](www.flaticon.com) 
