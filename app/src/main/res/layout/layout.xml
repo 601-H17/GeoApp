@@ -5,11 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/light_gray_inactive_icon"
-    android:orientation="vertical"
     android:clickable="true"
     android:focusable="false"
     android:id="@+id/dragView"
-    tools:showIn="@layout/activity_main">
+    android:orientation="vertical">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -65,7 +65,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textAlignment="inherit"
+            android:textAlignment="center"
             android:textSize="14sp"
             android:layout_above="@+id/local_floor"
             android:layout_alignParentStart="true" />
@@ -75,9 +75,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textAlignment="inherit"
+            android:textAlignment="center"
             android:textSize="14sp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentStart="true" />
     </RelativeLayout>
+
 </LinearLayout>
