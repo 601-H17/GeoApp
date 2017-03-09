@@ -1,15 +1,20 @@
 # ![](http://image.noelshack.com/fichiers/2017/10/1488988686-school.png) GeoApp
 
+[![Build Status](https://travis-ci.org/601-H17/GeoApp.svg?branch=master)](https://travis-ci.org/601-H17/GeoApp)
 ## Summary
 
+* [Introduction](https://github.com/601-H17/GeoApp#introduction)
 * [Install Android Studio](https://github.com/601-H17/GeoApp#install-android-studio)
 * [Setup and configure Android Emulator](https://github.com/601-H17/GeoApp#setup-and-configure-android-emulator)
 * [Download the project](https://github.com/601-H17/GeoApp#download-the-project)
 * [Open project](https://github.com/601-H17/GeoApp#open-project)
-* [TestObject Configuration](https://github.com/601-H17/GeoApp#TestObject-Configuration)
-* [](https://github.com/601-H17/GeoApp#Schema-of-continuous-integration-of-this-project)
+* [TestObject Configuration](https://github.com/601-H17/GeoApp#testobject-configuration)
+* [Schema of continuous integration of this project](https://github.com/601-H17/GeoApp#schema-of-continuous-integration-of-this-project)
 
 ___
+
+## Introduction
+    GeoApp is an Android application to searches for a local and proposes the shortest path from a custom map.
 
 ## Install Android Studio 
 
@@ -51,7 +56,7 @@ $ git clone https://github.com/601-H17/GeoApp.git
 
 ## Schema of continuous integration of this project
 <p align="center">
-  <img src="https://cloud.githubusercontent.com/assets/5929986/23715737/a0365e38-03fb-11e7-9871-237aed5fe9a4.png" />
+  <img src="https://cloud.githubusercontent.com/assets/5929986/23721169/f604cca6-040e-11e7-9684-603961057cb9.png" />
 </p>
 
 
