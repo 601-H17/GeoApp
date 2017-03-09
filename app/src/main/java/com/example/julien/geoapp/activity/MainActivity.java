@@ -20,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CursorAdapter;
+import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
@@ -29,9 +30,9 @@ import com.example.julien.geoapp.R;
 import com.example.julien.geoapp.adapter.CustomAdapterQuery;
 import com.example.julien.geoapp.api.setDoorsList;
 import com.example.julien.geoapp.api.setGeoJsonMaps;
-import com.example.julien.geoapp.api.setSpecificDoorInformation;
 import com.example.julien.geoapp.api.setPathGeoJson;
 import com.example.julien.geoapp.api.setSpecificDoor;
+import com.example.julien.geoapp.api.setSpecificDoorInformation;
 import com.example.julien.geoapp.models.Doors;
 import com.example.julien.geoapp.services.doorsService.DrawGeoJsonDoorsService;
 import com.example.julien.geoapp.services.doorsService.IDrawGeoJsonDoorsService;
@@ -151,10 +152,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         } else {
             super.onBackPressed();
         }
-        nextStepButton = (Button) findViewById(R.id.next);
-        beforeButton = (Button) findViewById(R.id.before);
-        beforeButton.setVisibility(View.INVISIBLE);
-        nextStepButton.setVisibility(View.INVISIBLE);
     }
 
 
@@ -391,6 +388,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         TextView localDescriptionTextView = (TextView) findViewById(R.id.local_description);
         TextView localTagTextView = (TextView) findViewById(R.id.local_tag);
         TextView localFloorTextView = (TextView) findViewById(R.id.local_floor);
+        ImageView hidePanel = (ImageView) findViewById(R.id.hidePanel);
+        hidePanel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hidePanel();
+            }
+        });
 
         Doors specificDoor = doorsRepositoryService.getAllDoors().get(0);
         localNameTextView.setText(specificDoor.getTitle());
@@ -657,10 +661,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         this.mapboxMap.setOnMapClickListener(new MapboxMap.OnMapClickListener() {
             @Override
             public void onMapClick(@NonNull LatLng point) {
-                mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
-                panelIsShowed = false;
+                hidePanel();
             }
         });
+    }
+
+    private void hidePanel(){
+        mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+        panelIsShowed = false;
     }
 
     public boolean isLoaded(){
