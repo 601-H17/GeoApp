@@ -7,6 +7,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.support.annotation.NonNull;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -278,17 +279,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void showDoors() {
-        //Trace ou cache les portes du cégep.
-        if (doorsDrawService != null) {
-            int positionForShowingPins = 18;
-            if (positionZoom >= positionForShowingPins) {
-                doorsDrawService.drawDoors();
-                isLoaded = true;
-            } else {
-                doorsDrawService.hideDoors();
-                isLoaded = false;
-            }
-        }
+        doorsDrawService.drawDoors();
     }
 
     private void centerUser() {
@@ -343,19 +334,21 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             pathDrawService.deletePath();
         }
         pathDrawService = new DrawGeoJsonPathService(mapboxMap);
-        // mapsDrawService.drawMaps();
         pathDrawService.drawPath(pathGeoJson);
         pathDrawService.drawLinesCorridorsStep();
         if (pathGeoJson.length() > 20) {
             beforeButton.setVisibility(View.VISIBLE);
             nextStepButton.setVisibility(View.VISIBLE);
+            hideStairButton();
             if (pathDrawService.isLastStep()) {
                 nextStepButton.setEnabled(true);
                 nextStepButton.setText(Message.FINISH);
                 beforeButton.setEnabled(false);
+                hideStairButton();
             } else {
                 nextStepButton.setEnabled(true);
                 beforeButton.setEnabled(false);
+                hideStairButton();
             }
         }
     }
@@ -378,6 +371,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         //Si une recherche a été lancée, localiser l'utilisateur à la réponse de l'API.
         initDoorsList();
     }
+
     public void setSpecificDoorInformationCallback(String request) {
         doorsRepositoryService = new DoorsRepositoryService(request);
         showSlidingUpPanel();
@@ -391,6 +385,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         TextView localTagTextView = (TextView) findViewById(R.id.local_tag);
         TextView localFloorTextView = (TextView) findViewById(R.id.local_floor);
         ImageView hidePanel = (ImageView) findViewById(R.id.hidePanel);
+        hideStairButton();
         hidePanel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -406,6 +401,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
         panelIsShowed = true;
     }
+
     private void setUserLocationNoStair() {
         try {
             Doors door = doorsRepositoryService.getSpecificDoor(searchLocal);
@@ -498,18 +494,22 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     beforeButton.setVisibility(View.INVISIBLE);
                     nextStepButton.setText(Message.NEXT);
                     pathDrawService.deletePath();
+                    showStairButton();
                 } else {
                     setStairNumber(pathDrawService.getFloor());
                     pathDrawService.drawLinesCorridorsStep();
                     if (pathDrawService.isLastStep()) {
                         nextStepButton.setText(Message.FINISH);
                         beforeButton.setEnabled(true);
+                        hideStairButton();
                     } else if (pathDrawService.isFistStep()) {
                         beforeButton.setEnabled(false);
                         nextStepButton.setEnabled(true);
+                        hideStairButton();
                     } else {
                         nextStepButton.setEnabled(true);
                         beforeButton.setEnabled(true);
+                        hideStairButton();
                     }
                 }
             }
@@ -629,21 +629,21 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void setSearchDoorInformationQuery(String localName) {
-        if(localName.charAt(1) != 'E'){
+        if (localName.charAt(1) != 'E') {
             new setSpecificDoorInformation(MainActivity.this, getString(R.string.getDoorsQuery) + localName).execute();
         }
     }
 
-    private void setSlidePanelListener(){
+    private void setSlidePanelListener() {
         mLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
             @Override
             public void onPanelSlide(View panel, float slideOffset) {
-                Log.i(TAG, "onPanelSlide, offset " + slideOffset);
+                Log.i(TAG, Message.ERROR[1]);
             }
 
             @Override
             public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
-                Log.i(TAG, "onPanelStateChanged " + newState);
+                Log.i(TAG, Message.ERROR[1]);
             }
         });
     }
@@ -668,16 +668,33 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
     }
 
-    private void hidePanel(){
+    private void hidePanel() {
         mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
         panelIsShowed = false;
+        if (beforeButton.getVisibility() == View.VISIBLE) {
+            hideStairButton();
+        } else {
+            showStairButton();
+        }
     }
 
-    public boolean isLoaded(){
+    public void hideStairButton() {
+        firstFloorButton.setVisibility(View.INVISIBLE);
+        secondFloorButton2.setVisibility(View.INVISIBLE);
+        thirdFloorButton3.setVisibility(View.INVISIBLE);
+    }
+
+    private void showStairButton() {
+        firstFloorButton.setVisibility(View.VISIBLE);
+        secondFloorButton2.setVisibility(View.VISIBLE);
+        thirdFloorButton3.setVisibility(View.VISIBLE);
+    }
+
+    public boolean isLoaded() {
         return isLoaded;
     }
 
-    public boolean slidingPanelShowed(){
+    public boolean slidingPanelShowed() {
         return panelIsShowed;
     }
 

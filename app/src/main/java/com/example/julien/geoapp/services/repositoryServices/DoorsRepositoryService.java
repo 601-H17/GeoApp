@@ -34,8 +34,9 @@ public class DoorsRepositoryService implements IDoorsRepositoryService {
                 int floor = json.getJSONObject(fn).getInt(Message.FEATURES_JSON_PATH[2]);
                 double lat = json.getJSONObject(fn).getJSONObject(Message.FEATURES_JSON_PATH[3]).getDouble(Message.FEATURES_JSON_PATH[4]);
                 double longi = json.getJSONObject(fn).getJSONObject(Message.FEATURES_JSON_PATH[3]).getDouble(Message.FEATURES_JSON_PATH[5]);
-                String teacher = "Paul Moisant";
-                Doors classToAdd = new Doors(ref, description, teacher, floor, lat, longi, "Laboratoire Informatique");
+                String teacher = "";
+                String type = "Local";
+                Doors classToAdd = new Doors(ref, description, type, floor, lat, longi, type);
                 doors.add(classToAdd);
             }
         } catch (Exception exception) {
