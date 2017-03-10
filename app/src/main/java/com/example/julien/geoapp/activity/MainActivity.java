@@ -7,7 +7,6 @@ import android.location.Location;
 import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.support.annotation.NonNull;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -22,6 +21,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
@@ -55,6 +55,8 @@ import com.mapbox.mapboxsdk.maps.Projection;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.ArrayList;
+
+import me.gujun.android.taggroup.TagGroup;
 
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -142,7 +144,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         beforeButton.setVisibility(View.INVISIBLE);
         nextStepButton.setVisibility(View.INVISIBLE);
         mLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
+        mLayout.setPanelHeight(500);
         mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+        setPanelOnClickListener();
     }
 
     @Override
@@ -382,9 +386,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         TextView localNameTextView = (TextView) findViewById(R.id.local_name);
         TextView localDescriptionTextView = (TextView) findViewById(R.id.local_description);
-        TextView localTagTextView = (TextView) findViewById(R.id.local_tag);
         TextView localFloorTextView = (TextView) findViewById(R.id.local_floor);
         ImageView hidePanel = (ImageView) findViewById(R.id.hidePanel);
+        TagGroup tagGroup = (TagGroup) findViewById(R.id.tag_group);
+
         hideStairButton();
         hidePanel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -396,7 +401,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         Doors specificDoor = doorsRepositoryService.getAllDoors().get(0);
         localNameTextView.setText(specificDoor.getTitle());
         localDescriptionTextView.setText(specificDoor.getDescription());
-        localTagTextView.setText(specificDoor.getTag());
+
+        //Initialize les tags
+        tagGroup.setTags(specificDoor.getTags());
         localFloorTextView.setText(Message.FLOOR_TEXT + Integer.toString(specificDoor.getEtage()));
         mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
         panelIsShowed = true;
@@ -609,7 +616,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 searchApiQueryNavbar();
                 return true;
             }
-
             @Override
             public boolean onQueryTextChange(String newText) {
                 isQueryNavBar = true;
@@ -641,7 +647,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Log.i(TAG, Message.ERROR[1]);
             }
 
-            @Override
+                @Override
             public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
                 Log.i(TAG, Message.ERROR[1]);
             }
@@ -664,6 +670,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onMapClick(@NonNull LatLng point) {
                 hidePanel();
+            }
+        });
+    }
+
+    private void setPanelOnClickListener() {
+        LinearLayout panel = (LinearLayout) findViewById(R.id.dragView);
+        panel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
             }
         });
     }

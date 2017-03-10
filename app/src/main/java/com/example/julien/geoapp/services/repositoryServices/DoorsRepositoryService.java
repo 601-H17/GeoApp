@@ -8,6 +8,7 @@ import com.example.julien.geoapp.models.Doors;
 import org.json.JSONArray;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Julien on 2017-02-10.
@@ -36,7 +37,14 @@ public class DoorsRepositoryService implements IDoorsRepositoryService {
                 double longi = json.getJSONObject(fn).getJSONObject(Message.FEATURES_JSON_PATH[3]).getDouble(Message.FEATURES_JSON_PATH[5]);
                 String teacher = "";
                 String type = "Local";
-                Doors classToAdd = new Doors(ref, description, type, floor, lat, longi, type);
+                JSONArray tags = json.getJSONObject(fn).getJSONArray(Message.FEATURES_JSON_PATH[6]);
+
+                List<String> listTags = new ArrayList<>();
+                for (int j = 0; j < tags.length(); j++){
+                    String tagToAdd = tags.getJSONObject(j).getString("name");
+                     listTags.add(tagToAdd);
+                }
+                Doors classToAdd = new Doors(ref, description, type, floor, lat, longi, listTags);
                 doors.add(classToAdd);
             }
         } catch (Exception exception) {

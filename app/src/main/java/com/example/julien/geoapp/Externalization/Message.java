@@ -9,7 +9,7 @@ public class Message {
     public static String[] FEATURES_JSON = {"features", "geometry", "type", "Point", "coordinates", "properties", "ref", "entrance", "doors: ", "path", "LineString","floorPath"};
     public static String REQUEST_NULL = "";
     public static String ENTER = "\n";
-    public static String[] FEATURES_JSON_PATH = {"name", "description", "floor", "point", "lat", "lng"};
+    public static String[] FEATURES_JSON_PATH = {"name", "description", "floor", "point", "lat", "lng","tags"};
     public static String[] ERROR = {"TAG", "Exception Loading GeoJSON "};
     public static String[] ENTITY_TYPE = {"doors", "stairs", "image"};
     public static String PATH_FILE = "data/data/com.example.julien.geoapp/files/";
