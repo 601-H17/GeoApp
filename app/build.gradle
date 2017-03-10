@@ -126,6 +126,7 @@ dependencies {
     androidTestCompile('com.android.support:multidex-instrumentation:1.0.1') {
         exclude module: 'multidex'
     }
+    compile 'me.gujun.android.taggroup:library:1.4@aar'
 
 }
 repositories {
