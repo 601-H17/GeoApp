@@ -9,6 +9,7 @@
 * [Download the project]
 * [Open project]
 * [TestObject Configuration]
+* [Release APK with Tag]
 * [Schema of continuous integration of this project]
 
 ___
@@ -53,6 +54,19 @@ $ git clone https://github.com/601-H17/GeoApp.git
 
 3. When APK configuration is done, read the README of this project :  [TestObject gradle plugin]
 
+## Release APK with Tag
+```bash
+$ git tag -a [tagname] -m [description]
+$ git push origin [tagname]
+```
+1. Example: 
+```bash
+$ git tag -a v1.4 -m "Release 1.4"
+$ git push origin v1.4
+```
+2. You can see the release location: [here][Release-Location]
+> Need help with tag ? [Read this][Git-Tag-Help]
+
 ## Schema of continuous integration of this project
 <p align="center">
   <img src="https://cloud.githubusercontent.com/assets/5929986/23721169/f604cca6-040e-11e7-9684-603961057cb9.png" />
@@ -69,6 +83,7 @@ __
 [travis-url-geo]: https://travis-ci.org/601-H17/GeoApp
 [Introduction]: https://github.com/601-H17/GeoApp#introduction
 [Install Android Studio]: https://github.com/601-H17/GeoApp#install-android-studio
+[Release APK with Tag]: https://github.com/601-H17/GeoApp#release-apk-with-tag
 [Setup and configure Android Emulator]: https://github.com/601-H17/GeoApp#setup-and-configure-android-emulator
 [Download the project]: https://github.com/601-H17/GeoApp#download-the-project
 [Open project]: https://github.com/601-H17/GeoApp#open-project
@@ -80,3 +95,5 @@ __
 [TestObject]: https://app.testobject.com/#/signup
 [Espresso Setup]: https://help.testobject.com/docs/testing-tools/robotium-espresso/setup/
 [TestObject gradle plugin]: https://github.com/testobject/testobject-gradle-plugin
+[Git-Tag-Help]: https://git-scm.com/book/en/v2/Git-Basics-Tagging
+[Release-Location]: https://github.com/601-H17/GeoApp/releases
