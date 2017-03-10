@@ -59,12 +59,13 @@ $ git clone https://github.com/601-H17/GeoApp.git
 $ git tag -a [tagname] -m [description]
 $ git push origin [tagname]
 ```
-1. Example: 
+**Example:** 
 ```bash
 $ git tag -a v1.4 -m "Release 1.4"
 $ git push origin v1.4
 ```
-2. You can see the release location: [here][Release-Location]
+>You can see the release location: [here][Release-Location]
+
 > Need help with tag ? [Read this][Git-Tag-Help]
 
 ## Schema of continuous integration of this project
