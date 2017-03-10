@@ -382,7 +382,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void showSlidingUpPanel() {
-        //Montre le sliding up panel
+        //Montre le sliding up panels
 
         TextView localNameTextView = (TextView) findViewById(R.id.local_name);
         TextView localDescriptionTextView = (TextView) findViewById(R.id.local_description);
