@@ -15,7 +15,7 @@
 ___
 
 ## Introduction
-    GeoApp is an Android application to searches for a local and proposes the shortest path from a custom map.
+    GeoApp is an Android application to searches for a local and offers the shortest path from a custom map.
 
 ## Install Android Studio 
 
