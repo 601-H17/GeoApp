@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.DragEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -144,8 +145,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         beforeButton.setVisibility(View.INVISIBLE);
         nextStepButton.setVisibility(View.INVISIBLE);
         mLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
-        mLayout.setPanelHeight(500);
+        //mLayout.setPanelHeight(400);
         mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+
         setPanelOnClickListener();
     }
 
@@ -680,6 +682,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onClick(View v) {
                 mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+            }
+        });
+
+        panel.setOnDragListener(new View.OnDragListener() {
+            @Override
+            public boolean onDrag(View v, DragEvent event) {
+                mLayout.onDragEvent(event);
+                return false;
             }
         });
     }
